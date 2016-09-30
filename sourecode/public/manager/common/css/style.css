@@ -1,0 +1,118 @@
+body {
+    width: 1024px;
+    margin: auto;
+    font-size: 12px;
+    font-family: Verdana, sans-serif;
+}
+
+.pl20, .pl2 {
+    padding-left: 20px;
+}
+
+.pl40,.pl3 {
+    padding-left: 40px;
+}
+
+.pl60,.pl4{
+    padding-left: 60px;
+}
+.pl80,.pl5{
+    padding-left: 80px;
+}
+.mr20{
+    margin-right: 20px;
+}
+#wrapper {
+    background: white;
+    border: 1px solid #dddddd;
+    min-height: 768px;
+}
+
+#top {
+    height: 1.8em;
+    display: block;
+    background: #3E5B76;
+
+}
+
+#account {
+    float: right;
+    color: #fff;
+}
+
+#account i {
+    margin: 0 10px 0px 20px;
+}
+#account i:hover{
+    cursor: pointer;
+}
+
+#header {
+    margin: 0;
+    background-color: #628DB6;
+    position: relative;
+}
+
+#header > ul.nav-tabs > li a {
+    color: #fff;
+    min-width: 100px;
+    text-align: center;
+    font-weight: bold;
+    padding: 4px 10px 4px 10px;
+}
+
+#header > ul.nav-tabs > li a:focus, #header > ul.nav-tabs > li a:hover {
+    background: #759FCF;
+    color: #fff;
+
+}
+
+#header > ul.nav-tabs > li.active a, #header > ul.nav-tabs > li.active a:hover {
+    color: #555;
+    background: #fff;
+}
+
+.main-module {
+    padding: 20px 10px;
+}
+.main-module button.btn-form{
+    min-width: 100px;
+}
+.btn {
+    min-width: 60px;
+}
+
+.divRightAlign {
+    float: right;
+}
+
+.row {
+    margin: 0;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+/*************************param tab************************/
+.row-param, .row-param1 {
+    border-bottom: 1px solid #dddddd;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.row-param label, .row-param button {
+    margin-left: 10px;
+}
+
+.row-param:hover {
+    background-color: #dddddd;
+}
+
+/*********************floor tab*****************************/
+#floor .row{
+    margin-top: 20px;
+}
+#floor .borderless td,#floor .borderless th{
+    border: none;
+}
