@@ -1,4 +1,9 @@
 <ng-include src="'menu.html'"></ng-include>
 <div class="main-module" ng-controller="CompanyCtrl">
-    {{text}}
+    <div class="row">
+        <button class="btn btn-sm btn-success divRightAlign btn-form" ng-click="add()">Add</button>
+    </div>
 </div>
+<ng-include src="'company/popup/add.html'"></ng-include>
+<ng-include src="'company/popup/edit.html'"></ng-include>
+<ng-include src="'company/popup/delete.html'"></ng-include>

@@ -110,9 +110,13 @@ body {
 }
 
 /*********************floor tab*****************************/
-#floor .row{
+#floor .row,#sector .row{
     margin-top: 20px;
 }
-#floor .borderless td,#floor .borderless th{
+#floor .borderless td,#floor .borderless th, #sector .borderless td,#sector .borderless th{
     border: none;
+}
+.table > tbody > tr:hover{
+    cursor: pointer;
+    background-color: #fee599;
 }

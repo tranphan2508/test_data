@@ -47,7 +47,7 @@ myApp.controller('ParamsCtrl', function ($scope, $uibModal, RestAPI) {
         RestAPI.do('get', 'params/params', {'type': type},
             function (data, status) {
                 if (data.success) {
-                    $scope.datas = data.result;console.log($scope.datas);
+                    $scope.datas = data.result;
                 } else {
                     //alert(data.error);
                 }

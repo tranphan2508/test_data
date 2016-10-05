@@ -1,14 +1,14 @@
 <?php
 
-class Controller_Floor extends Controller_Base
+class Controller_Sector extends Controller_Base
 {
-    public function get_floors()
+    public function get_sectors()
     {
         $result = array();
         $success = true;
         $error = '';
         try {
-            $result = \Model_Floor::getAllFloors();
+            $result = \Model_Sector::getAllSectors();
         } catch (Database_exception $e) {
             $error = $e->getMessage();
             $success = false;
@@ -20,21 +20,19 @@ class Controller_Floor extends Controller_Base
 
     }
 
-    public function post_floor()
+    public function post_sector()
     {
         $id = Input::post('params.id', null);
         $name = Input::post('params.name', null);
-        $code = Input::post('params.code', null);
-        $link = Input::post('params.link', null);
         $success = true;
         $error = '';
         $result = 0;
-        if (empty($name) || empty($code) || empty($link)) {
+        if (empty($name)) {
             $success = false;
             $error = \Lang::get('error.MISS_PARAM');
         } else {
             try {
-                $result = \Model_Floor::saveFloor($id, $name, $code, $link);
+                $result = \Model_Sector::saveSector($id, $name);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
@@ -46,7 +44,7 @@ class Controller_Floor extends Controller_Base
         $this->do_response($success, $error, $result);
     }
 
-    public function put_floor()
+    public function put_sector()
     {
         $id = Input::put('id', null);
         $success = true;
@@ -56,7 +54,7 @@ class Controller_Floor extends Controller_Base
             $error = \Lang::get('error.MISS_PARAM');
         } else {
             try {
-                $success = \Model_Floor::delFloor($id);
+                $success = \Model_Sector::delSector($id);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
@@ -68,4 +66,5 @@ class Controller_Floor extends Controller_Base
         $this->do_response($success, $error, '');
     }
 }
+
 ?>

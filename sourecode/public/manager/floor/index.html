@@ -1,8 +1,8 @@
 <ng-include src="'menu.html'"></ng-include>
 <div class="main-module" ng-controller="FloorCtrl" id="floor">
-    <!--<div class="row">
-        <button class="btn btn-sm btn-success divRightAlign btn-form">Add</button>
-    </div>-->
+    <div class="row">
+        <button class="btn btn-sm btn-success divRightAlign btn-form" ng-click="add()">Add</button>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <table class="table table-striped table-bordered table-hover">
@@ -12,18 +12,19 @@
                     <td>ID</td>
                     <td>Name</td>
                     <td>Code</td>
-                    <td>Created at</td>
-                    <td>Updated at</td>
                     <td>Delete</td>
+                    <!--<td>Updated at</td>
+                    <td>Delete</td>-->
                 </tr>
                 </thead>
 
-                <tr ng-repeat="floor in floors">
-                    <td>{{floor.id}}</td>
-                    <td>{{floor.name}}</td>
-                    <td>{{floor.code}}</td>
-                    <td>{{floor.created_date}}</td>
-                    <td>{{floor.updated_date}}</td>
+                <tr ng-repeat="f in floors" ng-click="edit(f)">
+                    <td>{{f.id}}</td>
+                    <td>{{f.name}}</td>
+                    <td>{{f.code}}</td>
+                    <!--<td>{{f.created_date}}</td>
+                    <td>{{f.updated_date}}</td>-->
+                    <td><label class="btn btn-sm btn-danger" ng-click="del($event,f.id)">Del</label></td>
                 </tr>
                 </tbody>
 
@@ -37,7 +38,7 @@
                             <label>Name</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="name" ng-model="floor.name" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required="true">
+                            <input type="text" name="name" ng-model="floor.name" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required="true" ng-disabled="flag==0">
                         </div>
                     </div>
                 </div>
@@ -47,7 +48,7 @@
                             <label>Code</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="code" ng-model="floor.code" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required="true">
+                            <input type="text" name="code" ng-model="floor.code" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required="true" ng-disabled="flag==0">
                         </div>
                     </div>
                 </div>
@@ -57,14 +58,14 @@
                             <label>Website</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="link" ng-model="floor.link" class="form-control ng-valid-email ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required="true">
+                            <input type="text" name="link" ng-model="floor.link" class="form-control ng-valid-email ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required="true" ng-disabled="flag==0">
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <button class="btn btn-sm btn-warning divRightAlign btn-form" ng-click="cancel()">Cancel</button>
-                    <button type="submit" class="btn btn-sm btn-success divRightAlign btn-form mr20" ng-click="ok()">{{btnSubmit}}</button>
+                    <button class="btn btn-sm btn-warning divRightAlign btn-form" ng-click="cancel()" ng-disabled="flag==0">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-success divRightAlign btn-form mr20" ng-click="ok()" ng-disabled="flag==0">{{btnSubmit}}</button>
                 </div>
             </form>
 

@@ -1,12 +1,10 @@
 <?php
 
-class Model_Floor extends \Orm\Model
+class Model_Sector extends \Orm\Model
 {
     protected static $_property = array(
         'id',
         'name',
-        'code',
-        'link',
         'del',
         'created_date',
         'updated_date'
@@ -24,38 +22,34 @@ class Model_Floor extends \Orm\Model
         ),
     );
 
-    protected static $_table_name = 'floor';
+    protected static $_table_name = 'sector';
 
-    public static function getAllFloors(){
+    public static function getAllSectors(){
         $res=array();
-        $floors=Model_Floor::query()
+        $sectors=Model_Sector::query()
             ->where('del',0)
             ->get();
-        foreach($floors as $f){
-            $res[]=$f->to_array();
+        foreach($sectors as $s){
+            $res[]=$s->to_array();
         }
         return $res;
     }
 
-    public static function saveFloor($id,$name,$code, $link){
+    public static function saveSector($id,$name){
         if(!empty($id)){
-            $entry = Model_Floor::find($id);
+            $entry = Model_Sector::find($id);
             $entry->name =$name;
-            $entry->code =$code;
-            $entry->link =$link;
             return($entry->save());
         }else{
-            $new = Model_Floor::forge(array(
-                'name' => $name,
-                'code' => $code,
-                'link' => $link));
+            $new = Model_Sector::forge(array(
+                'name' => $name));
             $new->save();
             return $new['id'];
         }
     }
 
-    public static function delFloor($id){
-        $entry = Model_Floor::find($id);
+    public static function delSector($id){
+        $entry = Model_Sector::find($id);
         $entry->del = 1;
         return($entry->save());
     }
