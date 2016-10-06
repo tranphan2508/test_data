@@ -1,9 +1,65 @@
 <script type="text/ng-template" id="addCompanyModal.html">
-    <div class="modal-body" id="modal-body">
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-success" type="button" ng-click="ok()">Add</button>
-        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-    </div>
+    <form name="addCompanyForm"
+          class="ng-scope ng-valid-required ng-valid-maxlength ng-valid-email ng-dirty ng-valid-parse ng-invalid ng-invalid-minlength">
+        <div class="modal-body" id="modal-body">
+            <table class="table borderless">
+                <colgroup>
+                    <col class="col-md-3">
+                    <col class="col-md-9">
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td><label>Name</label></td>
+                    <td><input type="text" name="name" ng-model="name"
+                               class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
+                               required="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Code</label></td>
+                    <td><div class="inline-display">
+                        <input type="text" name="code" ng-model="code" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched code-input" required="true">
+                        <label class="btn btn-sm btn-success"ng-click="">Check</label></div></td>
 
+                </tr>
+                <tr>
+                    <td><label>Sector</label></td>
+                    <td><div class="w60"><select ng-model="sector_id"  class="form-control">
+                        <option value="0">Please choose</option>
+                        <option ng-repeat="s in sectors" value="{{s.id}}">{{s.name}}</option>
+                    </select></div>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Floor</label></td>
+                    <td><div class="w40"><select  ng-model="floor_id" class="form-control">
+                        <option value="0">Please choose</option>
+                        <option ng-repeat="f in floors" value="{{f.id}}">{{f.code}}</option>
+                    </select></div></td>
+                </tr>
+                <tr>
+                    <td><label>Description</label></td>
+                    <td><textarea class="form-control row" rows="10"  ng-model="description"></textarea></td>
+                </tr>
+                <tr>
+                    <td><label>Website</label></td>
+                    <td><input type="text" ng-model="link" class="form-control ng-touched"></td>
+                </tr>
+                <tr>
+                    <td><label>Status</label></td>
+                    <td><label class="radio-inline"><input type="radio"  ng-model="public" value="1">public</label>
+                        <label class="radio-inline"><input type="radio"  ng-model="public" value="0">private</label>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit" ng-click="ok()">Add</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </form>
 </script>

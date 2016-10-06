@@ -3,7 +3,7 @@ myApp.controller('SectorCtrl', function($scope, $uibModal, RestAPI) {
     $scope.flag = 0;//0-default, 1-edit, 2-add
     $scope.sectors = [];
 
-    $scope.getAllFloors = function () {
+    $scope.getAllSectors = function () {
         RestAPI.do('get', 'sector/sectors', '',
             function (data, status) {
                 if (data.success) {
@@ -12,7 +12,7 @@ myApp.controller('SectorCtrl', function($scope, $uibModal, RestAPI) {
             }, function (data, status) {
             })
     }
-    $scope.getAllFloors();
+    $scope.getAllSectors();
 
     $scope.edit=function(s){
         $scope.flag=1;
@@ -31,7 +31,7 @@ myApp.controller('SectorCtrl', function($scope, $uibModal, RestAPI) {
         RestAPI.do('put','sector/sector',{'id':id},
             function(data,status){
                 if(data.success){
-                    $scope.getAllFloors();
+                    $scope.getAllSectors();
                 }else{
                     alert(data.error);
                 }
@@ -44,7 +44,7 @@ myApp.controller('SectorCtrl', function($scope, $uibModal, RestAPI) {
                 if (data.success) {
                     reset();
                     $scope.flag=0;
-                    $scope.getAllFloors();
+                    $scope.getAllSectors();
                 } else {
                     alert(data.error);
                 }
@@ -54,7 +54,7 @@ myApp.controller('SectorCtrl', function($scope, $uibModal, RestAPI) {
         $scope.flag=0;
         reset();
     }
-    init();
+
     function init() {
         $scope.sector = new Object();
         $scope.sector.id = '';
@@ -68,4 +68,6 @@ myApp.controller('SectorCtrl', function($scope, $uibModal, RestAPI) {
         $scope.sector.name = '';
         $scope.btnSubmit = btnType[$scope.flag];
     }
+
+    init();
 });

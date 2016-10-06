@@ -56,7 +56,7 @@ myApp.controller('FloorCtrl', function ($scope, $uibModal, RestAPI) {
         $scope.flag=0;
         reset();
     }
-    init();
+
     function init() {
         $scope.floor = new Object();
         $scope.floor.id = '';
@@ -74,4 +74,6 @@ myApp.controller('FloorCtrl', function ($scope, $uibModal, RestAPI) {
         $scope.floor.link = '';
         $scope.btnSubmit = btnType[$scope.flag];
     }
+
+    init();
 });

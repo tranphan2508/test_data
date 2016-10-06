@@ -6,6 +6,7 @@ myApp.config(['$routeProvider',
         $routeProvider.
             when('/', {templateUrl: 'params/index.html'}).
             when('/company/', {templateUrl: 'company/index.html'}).
+            when('/company/:id', {templateUrl: 'company/detail/index.html'}).
             when('/sector/', {templateUrl: 'sector/index.html'}).
             when('/floor/', {templateUrl: 'floor/index.html'}).
             when('/params/', {templateUrl: 'params/index.html'}).

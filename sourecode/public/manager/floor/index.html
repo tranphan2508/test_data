@@ -5,19 +5,23 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <table class="table table-striped table-bordered table-hover">
-                <tbody>
+            <table class="table table-striped table-bordered table-hover stripped">
+                <colgroup>
+                    <col width="5%">
+                    <col width="60%">
+                    <col width="15%">
+                </colgroup>
                 <thead class="thead-inverse">
                 <tr>
-                    <td>ID</td>
-                    <td>Name</td>
-                    <td>Code</td>
-                    <td>Delete</td>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Delete</th>
                     <!--<td>Updated at</td>
                     <td>Delete</td>-->
                 </tr>
                 </thead>
-
+                <tbody>
                 <tr ng-repeat="f in floors" ng-click="edit(f)">
                     <td>{{f.id}}</td>
                     <td>{{f.name}}</td>
@@ -32,7 +36,7 @@
         </div>
         <div class="col-md-6">
             <form name="adjustFloorForm" class="ng-scope ng-valid-required ng-valid-maxlength ng-valid-email ng-dirty ng-valid-parse ng-invalid ng-invalid-minlength">
-                <div class="row">
+                <div class="row first_row">
                     <div class="form-group" ng-class="{'has-error':adjustFloorForm.name.$dirty && !adjustFloorForm.name.$valid, 'has-success':adjustFloorForm.name.$dirty && adjustFloorForm.name.$valid}">
                         <div class="col-md-4">
                             <label>Name</label>

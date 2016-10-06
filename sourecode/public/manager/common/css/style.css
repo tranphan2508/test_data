@@ -110,13 +110,36 @@ body {
 }
 
 /*********************floor tab*****************************/
-#floor .row,#sector .row{
+#floor .row,#sector .row, #company .row{
     margin-top: 20px;
 }
-#floor .borderless td,#floor .borderless th, #sector .borderless td,#sector .borderless th{
+table.borderless > tbody > tr > td{
     border: none;
 }
-.table > tbody > tr:hover{
+.table.stripped > tbody > tr:hover{
     cursor: pointer;
     background-color: #fee599;
+}
+
+#company .table.stripped > tbody > tr:hover{
+    cursor: default;
+}
+input.code-input{
+    width: 40%;
+}
+.inline-display{
+    display: inline-flex;
+}
+.inline-display label{
+    margin-left: 20px;
+}
+
+.w60{
+    width: 60%;
+}
+.w40{
+    width:40%;
+}
+#floor .first_row, #sector .first_row{
+    margin-top: 0;
 }
