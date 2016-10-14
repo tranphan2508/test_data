@@ -29,7 +29,17 @@ myApp.controller('CompanyCtrl', function ($scope, $uibModal, RestAPI) {
             //size: '200x200',
             resolve: {
                 'company': function () {
-                    return comp;
+                    var company={
+                        'id': comp.id,
+                        'name':comp.name,
+                        'code':comp.code,
+                        'sector_id':comp.sector_id,
+                        'floor_id':comp.floor_id,
+                        'description':comp.description,
+                        'link':comp.link,
+                        'public':comp.public
+                    }
+                    return company;
                 }
             }
         });

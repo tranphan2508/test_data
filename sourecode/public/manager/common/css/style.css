@@ -143,3 +143,7 @@ input.code-input{
 #floor .first_row, #sector .first_row{
     margin-top: 0;
 }
+
+.article{
+    margin-top: 20px;
+}

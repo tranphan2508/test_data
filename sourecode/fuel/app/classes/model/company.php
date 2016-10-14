@@ -47,10 +47,14 @@ class Model_Company extends \Orm\Model
         )
     );
 
+    private $BALANCE_SHEET_TYPE = 1;
+    private $INCOME_STATEMENT = 2;
+    private $CASHFLOW = 3;
+
     public static function getAllCompanies()
     {
         $res = array();
-        $floors = Model_Company::query()
+        $companies = Model_Company::query()
             ->related(
                 array(
                     'floor',
@@ -59,14 +63,25 @@ class Model_Company extends \Orm\Model
             )
             ->where('del', 0)
             ->get();
-        foreach ($floors as $f) {
-            $row=$f->to_array();
-            $row['sector_name']=$row['sector']['name'];
-            $row['floor_code']=$row['floor']['code'];
+        foreach ($companies as $f) {
+            $row = $f->to_array();
+            $row['sector_name'] = $row['sector']['name'];
+            $row['floor_code'] = $row['floor']['code'];
             unset($row['sector']);
             unset($row['floor']);
-            $res[] =$row;
+            $res[] = $row;
         }
+        return $res;
+    }
+
+    public static function getCompanyByID($id)
+    {
+        $res = Model_Company::query()
+            ->select('id', 'code', 'name')
+            ->where('del', 0)
+            ->where('id', $id)
+            ->get_one()
+            ->to_array();
         return $res;
     }
 

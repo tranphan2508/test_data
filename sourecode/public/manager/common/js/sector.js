@@ -38,7 +38,7 @@ myApp.controller('SectorCtrl', function($scope, $uibModal, RestAPI) {
             });
     }
 
-    $scope.ok = function () {
+    $scope.ok = function (){
         RestAPI.do('post', 'sector/sector', {'params': {'id': $scope.sector.id, 'name': $scope.sector.name}},
             function (data, status) {
                 if (data.success) {

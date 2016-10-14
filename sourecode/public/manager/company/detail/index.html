@@ -1,4 +1,54 @@
-<ng-include src="'menu.html'"></ng-include>
+<ng-include src="'menu.html'" xmlns="http://www.w3.org/1999/html"></ng-include>
 <div class="main-module" ng-controller="DetailCompanyCtrl" id="detail">
+    <div class="row">
+        <span style="font-size: 20px; color: red ">{{companyInfo.code}}  </span><span>{{companyInfo.name}}</span>
+    </div>
+    <form id="detailReportForm">
+        <div class="article">
+            <div class="row">
+                <span class="col-md-1">Type</span>
 
+                <div class="col-md-3">
+                    <select class="form-control" ng-model="type_report"
+                            ng-options="type_report as type_report.name for type_report in type_reports track by type_report.value"
+                            ng-change="getAllParams()">
+                    </select>
+                </div>
+                <span class="col-md-1">Year</span>
+                <div class="col-md-2">
+                    <select class="form-control" ng-model="year"
+                            ng-options="y for y in years"
+                            ng-change="getValues()">
+                    </select>
+                </div>
+
+                <button class="btn btn-sm btn-success divRightAlign btn-form " ng-click="edit=!edit" ng-show="!edit">Edit</button>
+                <button class="btn btn-sm btn-success divRightAlign btn-form " type="submit" ng-click="save()" ng-show="edit">Save</button>
+                <button class="btn btn-sm btn-warning divRightAlign btn-form mr20" ng-show="edit" ng-click="cancel()">Cancel</button>
+            </div>
+
+
+        </div>
+        <div class="article">
+            <script type="text/ng-template" id="paramsTree">
+                <div class="row row-param pl{{data.level}}" ng-click="data.open=!data.open">
+                    <i class="pull-left glyphicon"
+                       ng-class="{'glyphicon-plus-sign': !data.open && data.has_child, 'glyphicon-minus-sign': data.open && data.has_child}"></i>
+                    <span>{{data.title}}</span>
+                    <div class="col-md-3 divRightAlign">
+                        <span class="divRightAlign" ng-hide="edit" >{{values[data.id].value | toNumber | number }}</span>
+                        <input ng-show="edit && !data.has_child" type="text" name="p{{data.id}}_v{{values[data.id].id}}" ng-model="values[data.id].value"
+                                class="form-control ng-pristine" ng-class="{'update': values[data.id].id >0}" number-input update-status="values[data.id].value" ></div>
+
+                </div>
+                <div ng-show="data.open">
+                    <div ng-repeat="data in data.datas" ng-include="'paramsTree'"></div>
+                </div>
+            </script>
+
+            <div ng-repeat="data in params" ng-include="'paramsTree'"></div>
+
+
+        </div>
+    </form>
 </div>

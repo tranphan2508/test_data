@@ -2,6 +2,7 @@
 
 class Controller_Company extends Controller_Base
 {
+    //get all companies
     public function get_companies()
     {
         $result = array();
@@ -18,6 +19,30 @@ class Controller_Company extends Controller_Base
         }
         $this->do_response($success, $error, $result);
 
+    }
+
+    //get company by id
+    public function get_companyByID()
+    {
+        $result = array();
+        $success = true;
+        $error = '';
+        $id = Input::get('id', null);
+        if (empty($id)) {
+            $success = false;
+            $error = \Lang::get('error.MISS_PARAM');
+        } else {
+            try {
+                $result = \Model_Company::getCompanyByID($id);
+            } catch (Database_exception $e) {
+                $error = $e->getMessage();
+                $success = false;
+            } catch (Exception $e) {
+                $error = $e->getMessage();
+                $success = false;
+            }
+        }
+        $this->do_response($success, $error, $result);
     }
 
     //add new company
@@ -100,6 +125,82 @@ class Controller_Company extends Controller_Base
                 $success = false;
             }
         }
+        $this->do_response($success, $error, '');
+    }
+
+    public function get_values()
+    {
+        $company_id = Input::get('id', null);
+        $year = Input::get('year', null);
+        $type = Input::get('type', null);
+        $success = true;
+        $error = '';
+        $result = array();
+        if (empty($company_id) || empty($year) || empty($type)) {
+            $success = false;
+            $error = \Lang::get('error.MISS_PARAM');
+        } else {
+            try {
+                switch ($type) {
+                    case '2':
+                        $result = \Model_IncomeStatement::getDataByCompany($company_id, $year);
+                        break;
+                    case '3':
+                        $result = \Model_Cashflow::getDataByCompany($company_id, $year);
+                        break;
+                    default:
+                        $result = \Model_BalanceSheet::getDataByCompany($company_id, $year);
+                        break;
+                }
+            } catch (Database_exception $e) {
+                $error = $e->getMessage();
+                $success = false;
+            } catch (Exception $e) {
+                $error = $e->getMessage();
+                $success = false;
+            }
+        }
+        $this->do_response($success, $error, $result);
+    }
+
+    //insert, update, del financial report
+    public function post_values()
+    {
+        $update_str=Input::post('params.update',null);
+        $insert_str=Input::post('params.insert',null);
+        $type=Input::post('params.type',null);
+        $year=Input::post('params.year');
+        $company_id=Input::post('params.company_id',null);
+        $success = true;
+        $error = '';
+        if(empty($type) || empty($year) || empty($company_id)){
+            $success = false;
+            $error = \Lang::get('error.MISS_PARAM');
+        }else{
+            try{
+                switch($type){
+                    case '1':
+                        $success &= \Model_BalanceSheet::updateData($company_id,$year,json_decode($update_str));
+                        $success &= \Model_BalanceSheet::insertData($company_id,$year,json_decode($insert_str));
+                        break;
+                    case '2':
+                        $success &= \Model_IncomeStatement::updateData($company_id,$year,json_decode($update_str));
+                        $success &= \Model_IncomeStatement::insertData($company_id,$year,json_decode($insert_str));
+                        break;
+                    default:
+                        $success &= \Model_Cashflow::updateData($company_id,$year,json_decode($update_str));
+                        $success &= \Model_Cashflow::insertData($company_id,$year,json_decode($insert_str));
+
+                }
+            }catch (Database_exception $e) {
+                $error = $e->getMessage();
+                $success = false;
+            } catch (Exception $e) {
+                $error = $e->getMessage();
+                $success = false;
+            }
+        }
+
         $this->do_response($success, $error, '');
     }
 }
