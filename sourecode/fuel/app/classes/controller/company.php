@@ -142,10 +142,10 @@ class Controller_Company extends Controller_Base
         } else {
             try {
                 switch ($type) {
-                    case '2':
+                    case \Model_Company::$INCOME_STATEMENT_TYPE:
                         $result = \Model_IncomeStatement::getDataByCompany($company_id, $year);
                         break;
-                    case '3':
+                    case \Model_Company::$CASHFLOW_TYPE:
                         $result = \Model_Cashflow::getDataByCompany($company_id, $year);
                         break;
                     default:
@@ -166,7 +166,6 @@ class Controller_Company extends Controller_Base
     //insert, update, del financial report
     public function post_values()
     {
-        $update_str=Input::post('params.update',null);
         $insert_str=Input::post('params.insert',null);
         $type=Input::post('params.type',null);
         $year=Input::post('params.year');
@@ -179,16 +178,13 @@ class Controller_Company extends Controller_Base
         }else{
             try{
                 switch($type){
-                    case '1':
-                        $success &= \Model_BalanceSheet::updateData($company_id,$year,json_decode($update_str));
+                    case \Model_Company::$BALANCE_SHEET_TYPE:
                         $success &= \Model_BalanceSheet::insertData($company_id,$year,json_decode($insert_str));
                         break;
-                    case '2':
-                        $success &= \Model_IncomeStatement::updateData($company_id,$year,json_decode($update_str));
+                    case \Model_Company::$INCOME_STATEMENT_TYPE:
                         $success &= \Model_IncomeStatement::insertData($company_id,$year,json_decode($insert_str));
                         break;
                     default:
-                        $success &= \Model_Cashflow::updateData($company_id,$year,json_decode($update_str));
                         $success &= \Model_Cashflow::insertData($company_id,$year,json_decode($insert_str));
 
                 }

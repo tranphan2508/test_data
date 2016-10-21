@@ -3,8 +3,10 @@ myApp.directive('numberInput', function ($filter, $browser) {
         require: 'ngModel',
         link: function ($scope, $element, $attrs, ngModelCtrl) {
             var listener = function () {
-                var value = $element.val().replace(/,/g, '')
-                $element.val($filter('number')(value, false))
+                var value = $element.val().replace(/,/g, '');
+                var type=$element.val[0];
+                if(type== undefined || (type!='-' && type!='+'))type='';
+                $element.val($filter('number')(type+value, false));
             }
 
             // This runs when we update the text field
@@ -14,16 +16,18 @@ myApp.directive('numberInput', function ($filter, $browser) {
 
             // This runs when the model gets updated on the scope directly and keeps our view in sync
             ngModelCtrl.$render = function () {
-                $element.val($filter('number')(ngModelCtrl.$viewValue, false))
+                $element.val($filter('number')(ngModelCtrl.$viewValue, false));
             }
 
-            $element.bind('change', listener)
+            //$element.bind('change', listener)
             $element.bind('keydown', function (event) {
-                var key = event.keyCode
+                /*var key = event.keyCode
                 // If the keys include the CTRL, SHIFT, ALT, or META keys, or the arrow keys, do nothing.
                 // This lets us support copy and paste too
                 if (key == 91 || (15 < key && key < 19) || (37 <= key && key <= 40))
-                    return
+                    return*/
+
+
                 $browser.defer(listener) // Have to do this or changes don't get picked up properly
             })
 
@@ -37,6 +41,14 @@ myApp.directive('numberInput', function ($filter, $browser) {
 // display string to number format
 myApp.filter('toNumber', function() {
     return function(input) {
-        return parseInt(input, 10);
+        var i=new BigNumber(input);
+        return i.intPart;
+    }
+});
+
+myApp.filter('nozero', function() {
+    return function(input) {
+        if(input==0) input=null;
+        return input;
     }
 });

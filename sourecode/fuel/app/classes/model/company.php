@@ -47,9 +47,9 @@ class Model_Company extends \Orm\Model
         )
     );
 
-    private $BALANCE_SHEET_TYPE = 1;
-    private $INCOME_STATEMENT = 2;
-    private $CASHFLOW = 3;
+    public static $BALANCE_SHEET_TYPE = '1';
+    public static $INCOME_STATEMENT_TYPE = '2';
+    public static $CASHFLOW_TYPE = '3';
 
     public static function getAllCompanies()
     {

@@ -19,7 +19,6 @@ myApp.directive('updateStatus', function () {
                 if (element.data('old-value') != element.val()) {
                     element.addClass('insert');
                     scope.$apply(function () {
-                        scope.myDirective = element.val();
                         element.data('old-value', element.val());
                     });
                 }

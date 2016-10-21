@@ -63,6 +63,22 @@ class Model_Params extends \Orm\Model
         $entry->title = $title;
         return($entry->save());
     }
+
+    public static function getParentParamsInfo($type)
+    {
+        $res=array();
+        $params = Model_Params::query()
+            ->select('id','parent_id')
+            ->where('type',$type)
+            ->where('del', 0)
+            ->get();
+        foreach($params as $p){
+            $row=$p->to_array();
+            $res[$row['id']]=$row['parent_id'];
+        }
+        return $res;
+    }
+
 }
 
 ?>

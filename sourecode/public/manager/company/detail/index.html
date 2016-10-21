@@ -33,12 +33,14 @@
             <script type="text/ng-template" id="paramsTree">
                 <div class="row row-param pl{{data.level}}" ng-click="data.open=!data.open">
                     <i class="pull-left glyphicon"
-                       ng-class="{'glyphicon-plus-sign': !data.open && data.has_child, 'glyphicon-minus-sign': data.open && data.has_child}"></i>
+                       ng-class="{'glyphicon-plus-sign': (!data.open && data.has_child && type_report.value !='2') || data.id==119  , 'glyphicon-minus-sign': (data.open && data.has_child && type_report.value !='2') || data.id==119}"></i>
                     <span>{{data.title}}</span>
                     <div class="col-md-3 divRightAlign">
-                        <span class="divRightAlign" ng-hide="edit" >{{values[data.id].value | toNumber | number }}</span>
-                        <input ng-show="edit && !data.has_child" type="text" name="p{{data.id}}_v{{values[data.id].id}}" ng-model="values[data.id].value"
-                                class="form-control ng-pristine" ng-class="{'update': values[data.id].id >0}" number-input update-status="values[data.id].value" ></div>
+                        <span class="divRightAlign" ng-hide="edit" >{{values[data.id].value | nozero | number }}</span>
+                        <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187" type="text" name="p{{data.id}}"
+                               ng-model="values[data.id].value"
+                                class="form-control ng-pristine"
+                                 update-status="values[data.id].value" number-input></div>
 
                 </div>
                 <div ng-show="data.open">
