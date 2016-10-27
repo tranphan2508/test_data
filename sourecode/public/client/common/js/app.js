@@ -4,17 +4,16 @@ var myApp = angular.module('myApp', ['ngRoute','ui.bootstrap']);
 myApp.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
-            when('/', {templateUrl: 'company/index.html'}).
-            when('/company/', {templateUrl: 'company/index.html'}).
-            when('/company/:id', {templateUrl: 'company/detail/index.html'}).
-            when('/sector/', {templateUrl: 'sector/index.html'}).
-            when('/floor/', {templateUrl: 'floor/index.html'}).
-            when('/params/', {templateUrl: 'params/index.html'}).
+            when('/', {templateUrl: 'company/a_z.html'}).
+            when('/market-watch/watchlists', {templateUrl: 'company/a_z.html'}).
+            when('/company-AZ', {templateUrl: 'company/a_z.html'}).
+            when('/company-data/:id', {templateUrl: 'company/detail.html'}).
+            when('/stock-screener', {templateUrl: 'company/screener.html'}).
             otherwise({redirectTo: '/'});
     }]);
 myApp.config(function ($httpProvider) {
     $httpProvider.interceptors.push('myHttpInterceptor');
-});
+})
 myApp.factory('myHttpInterceptor', function ($q) {
     var numLoadings = 0;
     return {

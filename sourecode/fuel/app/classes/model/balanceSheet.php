@@ -45,7 +45,8 @@ class Model_BalanceSheet extends \Orm\Model
         return $res;
     }
 
-    public static function insertData($company_id, $year, $val_arr){
+    public static function insertData($company_id, $year, $val_arr)
+    {
         $arr_val = array();
         foreach ($val_arr as $key => $val) {
             $str = explode('_', $val);
@@ -58,6 +59,22 @@ class Model_BalanceSheet extends \Orm\Model
             $sql = 'INSERT INTO `balance_sheet` (`company_id`,`year`,`param_id`,`value`,`created_date`,`updated_date`) VALUES ' . implode(',', $arr_val) . ' ON DUPLICATE KEY UPDATE `value`= VALUES(`value`),`updated_date`= VALUES(`updated_date`)';
             $res = DB::query($sql)->as_object('Model_BalanceSheet')->execute();
         }else $res=true;
+        return $res;
+    }
+    public static function getDataByCompanyInYears($id, $year_from, $year_to){
+        $res = array();
+        $values = Model_BalanceSheet::query()
+            ->select('year', 'param_id', 'value')
+            ->where('company_id', $id)
+            ->where('year', '<=', $year_to)
+            ->where('year', '>=', $year_from)
+            ->where('del', 0)
+            ->order_by('param_id','year')
+            ->get();
+        foreach ($values as $value) {
+            $row = $value->to_array();
+            $res[$row['param_id']][$row['year']] = $row['value'];
+        }
         return $res;
     }
 }

@@ -1,0 +1,118 @@
+<div class="row" ng-controller="financialReportCtrl">
+    <div class="col-md-12">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold uppercase">Báo cáo tài chính</span>
+                </div>
+                <div class="actions">
+                    <div class="btn-group">
+                        <a class="btn green-haze btn-circle btn-sm" href="javascript:;"
+                           ng-click="viewFinancialSnapshot()">
+                            <i class="fa fa-chevron-left"></i> Chỉ tiêu tài chính
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" data-target="#report" ng-click="changeType('1')">Balance Sheet</a>
+                    </li>
+                    <li class="ng-isolate-scope">
+                        <a data-toggle="tab" data-target="#report" ng-click="changeType('2')">Income
+                            Statement</a>
+                    </li>
+                    <li class="ng-isolate-scope">
+                        <a data-toggle="tab" data-target="#report" ng-click="changeType('3')">Cashflow</a>
+                    </li>
+                    <li class="ng-isolate-scope">
+                        <a data-toggle="tab" data-target="#f_index" ng-click="changeType('4')">Financial Index</a>
+                    </li>
+                    <li class="ng-isolate-scope">
+                        <a data-toggle="tab" data-target="#f_target" ng-click="changeType('5')">Target</a>
+                    </li>
+                    <li class="ng-isolate-scope">
+                        <a data-toggle="tab" data-target="#f_download" ng-click="changeType('6')">Download</a>
+                    </li>
+                </ul>
+
+                <div class="tab-pane active">
+                    <div class="row ng-scope" ng-if="display_filter">
+                        <div class="col-md-8 col-sm-8">
+                            <div class="form-group">
+                                <table>
+                                    <tr>
+                                        <td class="col-md-1"><label class="control-label">Unit</label></td>
+                                        <td class="col-md-5"><select ng-model="display.unit"
+                                                                     class="form-control ng-pristine ng-valid ng-touched"
+                                                                     ng-change="changeUnit()">
+                                            <option value="1000000" class="ng-binding">1,000,000</option>
+                                            <option value="1000" class="ng-binding">1,000</option>
+                                            <option value="1" class="ng-binding">1</option>
+                                        </select></td>
+                                        <td class="col-md-3"><label class="control-label">Number of years</label></td>
+                                        <td class="col-md-3"><select ng-model="display.n_year"
+                                                                     class="form-control ng-pristine ng-valid ng-touched"
+                                                                     ng-change="changeNumberOfYear()">
+                                            <option value="10" class="ng-binding">10</option>
+                                            <option value="5" class="ng-binding">5</option>
+                                            <option value="3" class="ng-binding">3</option>
+                                        </select></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <div class="btn-group pull-right btn-group-circle">
+                                <label class="btn green btn-sm ng-pristine ng-untouched ng-valid"
+                                       ng-model="display.format" uib-btn-radio="1">Number</label>
+                                <label class="btn green btn-sm ng-pristine ng-untouched ng-valid active"
+                                       ng-model="display.format" uib-btn-radio="0">%</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="report">
+                        <div class="row" ng-include="'report_template'"></div>
+                    </div>
+
+                    <div class="tab-pane" id="f_index">Index</div>
+
+                    <div class="tab-pane" id="f_target">Target</div>
+
+                    <div class="tab-pane" id="f_download">Download</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" id="report_template">
+
+        <table class="table table-light table-hover">
+            <thead>
+            <tr class="uppercase">
+                <th></th>
+                <th></th>
+                <th ng-repeat="year in year_arrange">{{year}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in params track by $index" ng-click="expandRows(data)" class="{{data.class}}"
+                name="{{$index}}" id="{{data.id}}" ng-show="{{data.level < 4}}">
+                <td ng-style="{'padding-left':(data.level-1)*30+'px'}"><i class="pull-left glyphicon"
+                                                                          ng-class="{'glyphicon-plus-sign': (!data.open && data.has_child && type !='2') || data.id==119  , 'glyphicon-minus-sign': (data.open && data.has_child && type !='2') || data.id==119}"></i>
+                    <span class="">{{data.title}}</span></td>
+                <td></td>
+                <td ng-repeat="year in year_arrange">
+                    <span>{{values[data.id][year] | nozero: type: display.unit : display.format : year: values[params[0].id][year] :  values[params[params.length-1].id][year]  | number}}</span></td>
+            </tr>
+            </tbody>
+        </table>
+    </script>
+</div>
+
+
+

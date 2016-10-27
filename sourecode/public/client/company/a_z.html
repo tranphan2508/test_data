@@ -1,0 +1,101 @@
+<ng-include src="'menu.html'"></ng-include>
+<div class="page-content-wrapper" ng-controller="AZCtrl">
+    <div class="page-content" style="min-height:570px">
+        <div ui-view="" class="fade-in-up ng-scope" autoscroll="true">
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar ng-scope">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <i class="fa fa-home"></i>
+                        <a href="javascript:;">Cổ phiếu</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <a href="javascript:;">A-Z</a>
+                    </li>
+                </ul>
+            </div>
+            <h3 class="page-title ng-scope">
+                Công ty A-Z
+                <small>Danh sách doanh nghiệp niêm yết</small>
+            </h3>
+            <div class="row margin-bottom-20 ng-scope">
+                <div class="col-md-4">
+                    <div class="input-group" id="stock-search-button">
+            <span class="input-group-addon">
+                <i class="icon-magnifier"></i>
+            </span>
+                        <input type="text" class="form-control ng-pristine ng-untouched ng-valid" ng-model="search"
+                               placeholder="Tìm kiếm...">
+                    </div>
+                </div>
+            </div>
+            <div class="row ng-scope">
+                <div class="col-md-12">
+                    <div class="tabbable-line tabbable-full-width">
+                        <div class="tab-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="portlet light" id="stock-list">
+                                        <div class="portlet-body">
+                                            <table class="table table-hover table-light table-stock">
+                                                <colgroup>
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                </colgroup>
+                                                <thead>
+                                                <tr class="uppercase">
+                                                    <th style="cursor:pointer">
+                                                        MÃ CK
+                                                        <span ng-show="sort.Type == 'Symbol' &amp;&amp; sort.Reverse"
+                                                              class="fa fa-caret-down ng-hide"></span>
+                                                        <span ng-show="sort.Type == 'Symbol' &amp;&amp; !sort.Reverse"
+                                                              class="fa fa-caret-up"></span>
+                                                    </th>
+                                                    <th style="cursor:pointer">
+                                                        Sàn
+                                                        <span ng-show="sort.Type == 'Market.ExchangeName' &amp;&amp; sort.Reverse"
+                                                              class="fa fa-caret-down ng-hide"></span>
+                                                        <span ng-show="sort.Type == 'Market.ExchangeName' &amp;&amp; !sort.Reverse"
+                                                              class="fa fa-caret-up ng-hide"></span>
+                                                    </th>
+                                                    <th style="cursor:pointer">
+                                                        Ngành
+                                                        <span ng-show="sort.Type == 'Market.ExchangeName' &amp;&amp; sort.Reverse"
+                                                              class="fa fa-caret-down ng-hide"></span>
+                                                        <span ng-show="sort.Type == 'Market.ExchangeName' &amp;&amp; !sort.Reverse"
+                                                              class="fa fa-caret-up ng-hide"></span>
+                                                    </th>
+                                                    <th style="cursor:pointer">
+                                                        TÊN
+                                                        <span ng-show="sort.Type == 'Name' &amp;&amp; sort.Reverse"
+                                                              class="fa fa-caret-down ng-hide"></span>
+                                                        <span ng-show="sort.Type == 'Name' &amp;&amp; !sort.Reverse"
+                                                              class="fa fa-caret-up ng-hide"></span>
+                                                    </th>
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="company in companies">
+                                                    <td><a href="#/company-data/{{company.id}}">{{company.code}}</a></td>
+                                                    <td>{{company.floor_code}}</td>
+                                                    <td>{{company.sector_name}}</td>
+                                                    <td>{{company.name}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -60,6 +60,22 @@ class Model_Cashflow extends \Orm\Model
         }else $res=true;
         return $res;
     }
+    public static function getDataByCompanyInYears($id, $year_from, $year_to){
+        $res = array();
+        $values = Model_Cashflow::query()
+            ->select('year', 'param_id', 'value')
+            ->where('company_id', $id)
+            ->where('year', '<=', $year_to)
+            ->where('year', '>=', $year_from)
+            ->where('del', 0)
+            ->order_by('param_id','year')
+            ->get();
+        foreach ($values as $value) {
+            $row = $value->to_array();
+            $res[$row['param_id']][$row['year']] = $row['value'];
+        }
+        return $res;
+    }
 }
 
 ?>

@@ -1,0 +1,41 @@
+<ng-include src="'menu.html'"></ng-include>
+<div class="page-content-wrapper" ng-controller="DetailCompanyCtrl">
+    <div class="page-content" style="min-height:570px">
+        <div ui-view="" class="fade-in-up ng-scope" autoscroll="true">
+            <div class="page-bar ng-scope">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <i class="fa fa-home"></i>
+                        <a href="#/company-data/{{companyInfo.id}}">Cổ phiếu</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="ng-binding">{{companyInfo.code}}</a>
+                    </li>
+                </ul>
+            </div>
+            <h3 class="page-title ng-binding ng-scope">
+                {{companyInfo.name}}
+                <small class="ng-binding">{{companyInfo.code}}</small>
+            </h3>
+            <div class="tabbable-line tabbable-full-width ng-isolate-scope">
+                <ul class="nav nav-tabs">
+                    <li class="active" class="ng-isolate-scope">
+                        <a data-toggle="tab" data-target="#profile" tab-heading-transclude=""
+                           class="ng-binding">Profile</a>
+                    </li>
+                    <li class="ng-isolate-scope">
+                        <a data-toggle="tab" data-target="#finance" tab-heading-transclude=""
+                           class="ng-binding">Finance</a>
+                    </li>
+
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="profile" ng-include="'company/profile/index.html'"></div>
+
+                    <div class="tab-pane" id="finance" ng-include="'company/finance/index.html'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

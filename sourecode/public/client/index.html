@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="myApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Big Data</title>
+
+    <link rel="stylesheet" href="common/lib/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="common/lib/jquery/jquery-ui.min.css">
+
+    <link rel="stylesheet" href="common/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="common/css/simple-line-icons/simple-line-icons.css">
+    <link rel="stylesheet" href="common/css/style.css">
+    <link rel="stylesheet" href="common/css/layout.css">
+    <link rel="stylesheet" href="common/css/theme/darkblue.css">
+
+<!-------------------------------------------------------------------->
+    <script src="common/lib/jquery/jquery.js"></script>
+    <script src="common/lib/jquery/jquery-ui.min.js"></script>
+
+    <script src="common/lib/angular/angular.js"></script>
+    <script src="common/lib/angular/angular-route.js"></script>
+    <script src="common/lib/angular/angular-animate.js"></script>
+  <!--  <script src="common/lib/angular/angular-sanitize.js"></script>-->
+    <script src="common/lib/bootstrap/ui-bootstrap-tpls-1.2.4.js"></script>
+    <script src="common/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="common/lib/big_bumber/bignumber.js"></script>
+    <!-- asset-->
+    <script src="common/js/asset/layout1.js"></script>
+
+
+
+    <script src="common/js/app.js"></script>
+
+    <!--directive-->
+    <script src="common/js/directive/format.js"></script>
+    <script src="common/js/directive/status.js"></script>
+
+    <!--RestAPI-->
+    <script src="common/js/service/rest_api.js"></script>
+
+    <!--controller-->
+    <script src="common/js/menu.js"></script>
+    <script src="common/js/company/az.js"></script>
+    <script src="common/js/company/detail.js"></script>
+
+
+
+</head>
+
+<body>
+<div id="wrapper" ng-view></div>
+<script>
+
+    jQuery(document).ready(function () {
+        Layout.init(); // init layout
+    });
+
+</script>
+</body>
+</html>
