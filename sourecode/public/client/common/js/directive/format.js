@@ -64,6 +64,9 @@ myApp.filter('nozero', function () {
                         case '1000000':
                             input = input.length > 6 ? input.substring(0, input.length - 6) : '0';
                             break;
+                        case '1000000000':
+                            input = input.length > 9 ? input.substring(0, input.length - 9) : '0';
+                            break;
                     }
                 }
             } else {

@@ -82,6 +82,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
             if ($scope.type_report.value == '3') updateCashflowValue(p_insert_value);
 
             for (var p_id in p_insert_value) {
+                if (p_id == 149)p_insert_value[p_id] = p_insert_value[135].subtract(p_insert_value[p_id]);
                 insert_values.push('p' + p_id + '_' + p_insert_value[p_id]);
             }
 

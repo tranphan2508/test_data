@@ -47,14 +47,16 @@
                                         <td class="col-md-5"><select ng-model="display.unit"
                                                                      class="form-control ng-pristine ng-valid ng-touched"
                                                                      ng-change="changeUnit()">
-                                            <option value="1000000" class="ng-binding">1,000,000</option>
-                                            <option value="1000" class="ng-binding">1,000</option>
                                             <option value="1" class="ng-binding">1</option>
+                                            <option value="1000" class="ng-binding">1,000</option>
+                                            <option value="1000000" class="ng-binding">1,000,000</option>
+                                            <option value="1000000000" class="ng-binding">1,000,000,000</option>
                                         </select></td>
                                         <td class="col-md-3"><label class="control-label">Number of years</label></td>
                                         <td class="col-md-3"><select ng-model="display.n_year"
                                                                      class="form-control ng-pristine ng-valid ng-touched"
                                                                      ng-change="changeNumberOfYear()">
+                                            <option value="15" class="ng-binding">15</option>
                                             <option value="10" class="ng-binding">10</option>
                                             <option value="5" class="ng-binding">5</option>
                                             <option value="3" class="ng-binding">3</option>
