@@ -22,7 +22,7 @@
             <label class="btn btn-sm btn-success divRightAlign"
                    ng-click="add($event,data.id, data.level, data.title)">Add</label>
             <label class="btn btn-sm btn-warning divRightAlign"
-                   ng-click="edit($event,data.id,data.level, data.title)">Edit</label>
+                   ng-click="edit($event,data.id,data.level, data.title, data.description)">Edit</label>
             <label class="btn btn-sm btn-danger divRightAlign" ng-click="del($event,data.id,data.level, data.title)"
                    ng-show="!data.has_child">Del</label>
         </div>
@@ -37,8 +37,24 @@
         <div>
             <span>{{message}}</span>
         </div>
-
-        <input type="text" ng-show="{{info.flag!=3}}" ng-model="title"/>
+        <table class="table borderless">
+            <colgroup>
+                <col class="col-md-3">
+                <col class="col-md-9">
+            </colgroup>
+            <tbody>
+            <tr ng-show="{{info.flag!=3}}">
+                <td><label>Title</label></td>
+                <td><input  type="text" ng-model="info.title" class="form-control ng-pristine">
+                </td>
+            </tr>
+            <tr ng-show="{{info.type==4 && info.flag!=3}}">
+                <td><label>Description</label></td>
+                <td><textarea class="form-control row ng-pristine ng-valid ng-not-empty ng-touched" rows="3" ng-model="info.description"></textarea>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" type="button" ng-click="ok()">{{btnSubmit}}</button>

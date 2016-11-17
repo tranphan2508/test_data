@@ -31,7 +31,7 @@ class Model_Params extends \Orm\Model
     {
         $res=array();
         $params = Model_Params::query()
-            ->select('id','title','parent_id','level')
+            ->select('id','title','parent_id','level','description')
             ->where('type',$type)
             ->where('del', 0)
             ->get();
@@ -41,13 +41,15 @@ class Model_Params extends \Orm\Model
         return $res;
     }
 
-    public static function addParam($title, $type, $parent_id, $level)
+    public static function addParam($title, $type, $parent_id, $level, $description)
     {
         $new = Model_Params::forge(array(
             'title' => $title,
             'type' => $type,
             'parent_id' => $parent_id,
-            'level' => $level));
+            'level' => $level,
+            'description' => $description
+        ));
         $new->save();
         return $new['id'];
     }
@@ -58,9 +60,10 @@ class Model_Params extends \Orm\Model
         return($entry->save());
     }
 
-    public static function updateTitle($id,$title){
+    public static function updateTitle($id,$title,$description){
         $entry = Model_Params::find($id);
         $entry->title = $title;
+        $entry->description = $description;
         return($entry->save());
     }
 

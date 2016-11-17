@@ -76,6 +76,21 @@ class Model_IncomeStatement extends \Orm\Model
         }
         return $res;
     }
+    public static function getDataForCalcIndicator($id,$year,$p_id)
+    {
+        $res=array();
+        $data=DB::select('param_id','value')
+            ->from('income_statement')
+            ->where('company_id', $id)
+            ->where('year', '=', $year)
+            ->where('param_id',' IN ', explode(',',$p_id))
+            ->where('del', 0)
+            ->execute();
+        foreach ($data as $key => $val) {
+            $res[$val['param_id']] = $val['value'];
+        }
+        return $res;
+    }
 }
 
 ?>

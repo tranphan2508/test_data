@@ -22,8 +22,8 @@
                     </select>
                 </div>
 
-                <button class="btn btn-sm btn-success divRightAlign btn-form " ng-click="edit=!edit" ng-show="!edit">Edit</button>
-                <button class="btn btn-sm btn-success divRightAlign btn-form " type="submit" ng-click="save()" ng-show="edit">Save</button>
+                <button class="btn btn-sm btn-success divRightAlign btn-form " ng-click="edit=!edit" ng-show="!edit && type_report.value!=4">Edit</button>
+                <button class="btn btn-sm btn-success divRightAlign btn-form " type="submit" ng-click="save()" ng-show="edit && type_report.value!=4">Save</button>
                 <button class="btn btn-sm btn-warning divRightAlign btn-form mr20" ng-show="edit" ng-click="cancel()">Cancel</button>
             </div>
 
@@ -34,7 +34,7 @@
                 <div class="row row-param pl{{data.level}}" ng-click="data.open=!data.open">
                     <i class="pull-left glyphicon"
                        ng-class="{'glyphicon-plus-sign': (!data.open && data.has_child && type_report.value !='2') || data.id==119  , 'glyphicon-minus-sign': (data.open && data.has_child && type_report.value !='2') || data.id==119}"></i>
-                    <span>{{data.title}}</span>
+                    <span uib-tooltip="{{data.description}}">{{data.title}}</span>
                     <div class="col-md-3 divRightAlign">
                         <span class="divRightAlign" ng-hide="edit" >{{values[data.id].value | nozero | number }}</span>
                         <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187" type="text" name="p{{data.id}}"

@@ -1,6 +1,6 @@
 <?php
 
-class Model_Cashflow extends \Orm\Model
+class Model_Indicator extends \Orm\Model
 {
     protected static $_property = array(
         'id',
@@ -26,12 +26,12 @@ class Model_Cashflow extends \Orm\Model
         ),
     );
 
-    protected static $_table_name = 'cashflow';
+    protected static $_table_name = 'indicators';
 
     public static function getDataByCompany($company_id, $year)
     {
         $res = array();
-        $values = Model_Cashflow::query()
+        $values = Model_Indicator::query()
             ->select('id', 'company_id', 'year', 'param_id', 'value')
             ->where('company_id', $company_id)
             ->where('year', $year)
@@ -55,14 +55,15 @@ class Model_Cashflow extends \Orm\Model
         }
         // UPDATE by using INSERT with DUPLICATE KEY
         if($arr_val){
-            $sql = 'INSERT INTO `cashflow` (`company_id`,`year`,`param_id`,`value`,`created_date`,`updated_date`) VALUES ' . implode(',', $arr_val) . ' ON DUPLICATE KEY UPDATE `value`= VALUES(`value`),`updated_date`= VALUES(`updated_date`)';
-            $res = DB::query($sql)->as_object('Model_Cashflow')->execute();
+            $sql = 'INSERT INTO `indicators` (`company_id`,`year`,`param_id`,`value`,`created_date`,`updated_date`) VALUES ' . implode(',', $arr_val) . ' ON DUPLICATE KEY UPDATE `value`= VALUES(`value`),`updated_date`= VALUES(`updated_date`)';
+            $res = DB::query($sql)->as_object('Model_Indicator')->execute();
         }else $res=true;
         return $res;
     }
+
     public static function getDataByCompanyInYears($id, $year_from, $year_to){
         $res = array();
-        $values = Model_Cashflow::query()
+        $values = Model_Indicator::query()
             ->select('year', 'param_id', 'value')
             ->where('company_id', $id)
             ->where('year', '<=', $year_to)
@@ -76,21 +77,7 @@ class Model_Cashflow extends \Orm\Model
         }
         return $res;
     }
-    public static function getDataForCalcIndicator($id,$year,$p_id)
-    {
-        $res=array();
-        $data=DB::select('param_id','value')
-            ->from('cashflow')
-            ->where('company_id', $id)
-            ->where('year', '=', $year)
-            ->where('param_id',' IN ', explode(',',$p_id))
-            ->where('del', 0)
-            ->execute();
-        foreach ($data as $key => $val) {
-            $res[$val['param_id']] = $val['value'];
-        }
-        return $res;
-    }
+
 }
 
 ?>

@@ -8,7 +8,8 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
     $scope.type_reports = [
         {'value': 1, 'name': 'Balance Sheet'},
         {'value': 2, 'name': 'Income Statement'},
-        {'value': 3, 'name': 'Statement of Cashflow'}
+        {'value': 3, 'name': 'Statement of Cashflow'},
+        {'value': 4, 'name': 'Financial Indicators'}
     ];
     $scope.type_report = $scope.type_reports[0];
 
@@ -23,7 +24,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
         RestAPI.do('get', 'params/params', {'type': $scope.type_report.value},
             function (data, status) {
                 if (data.success) {
-                    param_arr=data.result;
+                    param_arr = data.result;
                     $scope.params = data.result;
                     $scope.getValues();
                 } else {
@@ -77,7 +78,6 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
                 if (p_id in original_values) old_value = new BigNumber(original_values[p_id].value);
                 if ($scope.type_report.value != '2') updateParentParamValue(p_insert_value, p_id, old_value, new_value);
             }
-
             if ($scope.type_report.value == '2') updateIncomeValue(p_insert_value);
             if ($scope.type_report.value == '3') updateCashflowValue(p_insert_value);
 
@@ -98,12 +98,13 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
                 function (data, status) {
                     if (data.success) {
                         $scope.edit = false;
-                        $scope.params=null;
+                        $scope.params = null;
                         RestAPI.do('get', 'params/params', {'type': $scope.type_report.value},
                             function (data, status) {
                                 if (data.success) {
                                     $scope.params = data.result;
                                     $scope.getValues();
+                                    updateIndicators($scope.type_report.value, p_insert_value);
                                 } else {
                                     alert(data.error);
                                 }
@@ -207,6 +208,108 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
         val2.set($scope.values[185] ? $scope.values[185].value : 0)
         val3.set($scope.values[186] ? $scope.values[186].value : 0)
         arr[187] = val1.add(val2).add(val3);
+    }
+
+    //compute indicators
+    function updateIndicators(type, ary_value) {
+        var ary_indicator = [];
+        var insert_values = [];
+        RestAPI.do('get', 'company/valueForCalcIndicator', {'id': id, 'year': $scope.year, 'p_id': '1,92,113,120,128,134,138'},
+            function (data, status) {
+                if (data.success) {
+                    var tmp_values = data.result;
+                    switch (type) {
+                        case 1:
+                            if (defaultNumber(ary_value[62], 62).compare(0) != 0) {
+                                // thanh toan nhanh
+                                ary_indicator[198] = formatNumber((defaultNumber(ary_value[3], 3).subtract(defaultNumber(ary_value[8], 8))).divide(defaultNumber(ary_value[62], 62)));
+
+                                // thanh toan hien hanh
+                                ary_indicator[199] = formatNumber(defaultNumber(ary_value[3], 3).divide(defaultNumber(ary_value[62], 62)));
+                            }
+
+                            if (defaultNumber(ary_value[92], 92).compare(0) != 0) {
+                                // tong no/von CSH
+                                ary_indicator[200] = formatNumber(defaultNumber(ary_value[61], 61).multiply(100).divide(defaultNumber(ary_value[92], 92)),2);
+                            }
+
+                            if (defaultNumber(ary_value[1], 1).compare(0) != 0) {
+                                // tong no/ tong tai san
+                                ary_indicator[201] = formatNumber(defaultNumber(ary_value[61], 61).multiply(100).divide(defaultNumber(ary_value[1], 1)),2);
+                            }
+
+                            break;
+                        case 2:
+                            if (defaultNumber(ary_value[113], 113).compare(0) != 0) {
+                                //ty le lai gop
+                                ary_indicator[207] = formatNumber(defaultNumber(ary_value[117], 117).multiply(100).divide(defaultNumber(ary_value[113], 113)), 2);
+
+                                //ty le EBIT
+                                ary_indicator[208] = formatNumber((defaultNumber(ary_value[128], 128).add(defaultNumber(ary_value[120], 120))).multiply(100).divide(defaultNumber(ary_value[113], 113)), 2);
+
+                                //ty le lai rong
+                                ary_indicator[214] = formatNumber(defaultNumber(ary_value[134], 134).multiply(100).divide(defaultNumber(ary_value[113], 113)), 2);
+                            }
+                            break;
+                        case 3:
+                            break;
+                    }
+                    if (defaultNumber(tmp_values[113], 113).compare(0) != 0) {
+                        //ty le EBITDA
+                        ary_indicator[209] = formatNumber((defaultNumber(tmp_values[128], 128).add(defaultNumber(tmp_values[120], 120)).add(defaultNumber(tmp_values[138], 138))).multiply(100).divide(defaultNumber(tmp_values[113], 113)), 2);
+                    }
+
+                    if (defaultNumber(tmp_values[1], 1).compare(0) != 0) {
+                        //ROA
+                        ary_indicator[211] = formatNumber(defaultNumber(tmp_values[134], 134).multiply(100).divide(defaultNumber(tmp_values[1], 1)), 2);
+                    }
+
+                    if (defaultNumber(tmp_values[92], 92).compare(0) != 0) {
+                        //ROE
+                        ary_indicator[212] = formatNumber(defaultNumber(tmp_values[134], 134).multiply(100).divide(defaultNumber(tmp_values[92], 92)), 2);
+                    }
+
+
+                    for (var p_id in ary_indicator) {
+                        insert_values.push('p' + p_id + '_' + ary_indicator[p_id]);
+                    }
+                    var data_json = {
+                        'params': {
+                            'company_id': id,
+                            'year': $scope.year,
+                            'insert': JSON.stringify(insert_values)
+                        }
+                    }
+                    RestAPI.do('post', 'company/indicator', data_json,
+                        function (data, status) {
+                            if (data.success) {
+                            } else {
+                                alert(data.error);
+                            }
+                        }, function (data) {
+                            alert(data);
+                        });
+                } else {
+
+                    alert(data.error);
+                }
+            }, function (data) {
+                alert(data);
+            });
+
+    }
+
+    function defaultNumber(n, id) {
+        var d = n ? n : ($scope.values[id] ? $scope.values[id].value : 0 );
+        return new BigNumber(d);
+    }
+
+    function formatNumber(n, digit) {
+        if (digit == undefined) digit = 4;
+        var str = n + '';
+        var d = str.indexOf('.');
+        if (d) return str.substr(0, d + digit + 1);
+        return n;
     }
 
     function init() {

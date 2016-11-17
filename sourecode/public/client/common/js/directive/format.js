@@ -79,7 +79,7 @@ myApp.filter('nozero', function () {
                     }
                     var b_input = new BigNumber(input);
                     var percent = (b_input.comparedTo(0) == 0) ? '0' : b_input.dividedBy(b_total);
-                    input = (percent != '0') ? percent.toFormat(2) : '0';
+                    input = (percent != '0') ? percent.toFormat(4) : '0';
                 } else input = '0';
             }
 

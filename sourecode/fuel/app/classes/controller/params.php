@@ -33,6 +33,7 @@ class Controller_Params extends Controller_Base
                     $param['title'] = $value['title'];
                     $param['parent_id'] = $value['parent_id'];
                     $param['id'] = $value['id'];
+                    $param['description'] = $value['description'];
                     $param['open'] = true;
                     $param['datas'] = array();
                     $param['has_child'] = false;
@@ -59,6 +60,7 @@ class Controller_Params extends Controller_Base
         $type = Input::post('params.type', null);
         $parent_id = Input::post('params.parent_id', null);
         $level = Input::post('params.level', null);
+        $description = Input::post('params.description', null);
         $success = true;
         $error = '';
         $result = 0;
@@ -67,7 +69,7 @@ class Controller_Params extends Controller_Base
             $error = \Lang::get('error.MISS_PARAM');
         } else {
             try {
-                $result = \Model_Params::addParam($title, $type, $parent_id, $level);
+                $result = \Model_Params::addParam($title, $type, $parent_id, $level,$description);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
@@ -105,6 +107,7 @@ class Controller_Params extends Controller_Base
     {
         $id = Input::put('id', null);
         $title = Input::put('title', null);
+        $description = Input::put('description', null);
         $success = true;
         $error = '';
         if (empty($id)) {
@@ -112,7 +115,7 @@ class Controller_Params extends Controller_Base
             $error = \Lang::get('error.MISS_PARAM');
         } else {
             try {
-                $success = \Model_Params::updateTitle($id, $title);
+                $success = \Model_Params::updateTitle($id, $title,$description);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
@@ -177,6 +180,7 @@ class Controller_Params extends Controller_Base
                     $param['level'] = $value['level'];
                     $param['title'] = $value['title'];
                     $param['parent_id'] = $value['parent_id'];
+                    $param['description'] = $value['description'];
                     $param['id'] = $value['id'];
                     $param['open'] = true;
                     if($value['level']>2)$param['open']=false;
