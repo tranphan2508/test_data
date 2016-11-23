@@ -47,7 +47,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
         var params = {'id': id,
             'year': $scope.year,
             'type': $scope.type_report.value};
-        RestAPI.do('get', 'company/values', params,
+        RestAPI.do('get', 'company/finance/values', params,
             function (data, status) {
                 if (data.success) {
                     $scope.values = data.result;
@@ -94,7 +94,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
                     'insert': JSON.stringify(insert_values)
                 }
             }
-            RestAPI.do('post', 'company/values', data_json,
+            RestAPI.do('post', 'company/finance/values', data_json,
                 function (data, status) {
                     if (data.success) {
                         $scope.edit = false;
@@ -214,7 +214,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
     function updateIndicators(type, ary_value) {
         var ary_indicator = [];
         var insert_values = [];
-        RestAPI.do('get', 'company/valueForCalcIndicator', {'id': id, 'year': $scope.year, 'p_id': '1,92,113,120,128,134,138'},
+        RestAPI.do('get', 'company/finance/valueForCalcIndicator', {'id': id, 'year': $scope.year, 'p_id': '1,92,113,120,128,134,138'},
             function (data, status) {
                 if (data.success) {
                     var tmp_values = data.result;
@@ -280,7 +280,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
                             'insert': JSON.stringify(insert_values)
                         }
                     }
-                    RestAPI.do('post', 'company/indicator', data_json,
+                    RestAPI.do('post', 'company/finance/indicator', data_json,
                         function (data, status) {
                             if (data.success) {
                             } else {

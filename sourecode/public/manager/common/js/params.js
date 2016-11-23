@@ -10,7 +10,7 @@ myApp.controller('ParamsCtrl', function ($scope, $uibModal, RestAPI) {
     $scope.datas = [];
 
     $scope.add = function ($e, parent_id, level, title) {
-        showPopup($e, parent_id, level, '', 1,'');
+        showPopup($e, parent_id, level, '', 1, '');
     }
 
     $scope.edit = function ($e, parent_id, level, title, des) {
@@ -18,13 +18,15 @@ myApp.controller('ParamsCtrl', function ($scope, $uibModal, RestAPI) {
     }
 
     $scope.del = function ($e, parent_id, level, title) {
-        showPopup($e, parent_id, level, title, 3,'');
+        showPopup($e, parent_id, level, title, 3, '');
     };
 
     function showPopup($e, param_id, level, title, flag, description) {
         $e.stopPropagation();
         var modalInstance = $uibModal.open({
             animation: this.animationsEnabled,
+            backdrop: 'static',
+            keyboard: false,
             ariaLabelledBy: 'modal-title',
             ariaDescribedBy: 'modal-body',
             templateUrl: 'addParamContent.html',
@@ -32,7 +34,7 @@ myApp.controller('ParamsCtrl', function ($scope, $uibModal, RestAPI) {
             size: '200x200',
             resolve: {
                 info: function () {
-                    var info = {'id': param_id, 'title': title, 'type': $scope.type_report.value, 'flag': flag, 'level': level,'description':description};
+                    var info = {'id': param_id, 'title': title, 'type': $scope.type_report.value, 'flag': flag, 'level': level, 'description': description};
                     return info;
                 }
             }
@@ -43,8 +45,7 @@ myApp.controller('ParamsCtrl', function ($scope, $uibModal, RestAPI) {
     };
 
 
-
-    $scope.getAllParams=function(type) {
+    $scope.getAllParams = function (type) {
         RestAPI.do('get', 'params/params', {'type': type},
             function (data, status) {
                 if (data.success) {
@@ -72,13 +73,12 @@ myApp.controller('ParamsAdjustCtrl', function ($scope, info, $uibModalInstance, 
         $scope.btnSubmit = 'Del';
         $scope.message = 'Are you sure to delete "' + $scope.info.title + '"';
     }
-    $scope.ok = function () {
-        if($scope.info.title==undefined && $scope.info.flag!=3 ){alert('Please fill title');}
-        else{
-            switch ($scope.info.flag) {
-                case 1:
-                    var data_json={
-                        'params':{'title': $scope.info.title, 'parent_id': $scope.info.id, 'type': $scope.info.type, 'level': parseInt($scope.info.level) + 1,'description':$scope.info.description}
+    $scope.ok = function (valid) {
+        switch ($scope.info.flag) {
+            case 1:
+                if (valid) {
+                    var data_json = {
+                        'params': {'title': $scope.info.title, 'parent_id': $scope.info.id, 'type': $scope.info.type, 'level': parseInt($scope.info.level) + 1, 'description': $scope.info.description}
                     };
                     RestAPI.do('post', 'params/param', data_json,
                         function (data, status) {
@@ -90,9 +90,11 @@ myApp.controller('ParamsAdjustCtrl', function ($scope, info, $uibModalInstance, 
                         }, function (data, status) {
                             $uibModalInstance.close();
                         });
-                    break;
-                case 2:
-                    RestAPI.do('put', 'params/updateTitle', {'id':$scope.info.id,'title': $scope.info.title,'description':$scope.info.description},
+                }
+                break;
+            case 2:
+                if (valid) {
+                    RestAPI.do('put', 'params/updateTitle', {'id': $scope.info.id, 'title': $scope.info.title, 'description': $scope.info.description},
                         function (data, status) {
                             if (data.success) {
                             }
@@ -102,25 +104,23 @@ myApp.controller('ParamsAdjustCtrl', function ($scope, info, $uibModalInstance, 
                         }, function (data, status) {
                             $uibModalInstance.close();
                         });
-                    break;
-                case 3:
-                    RestAPI.do('put', 'params/delParam', {'id':$scope.info.id},
-                        function (data, status) {
-                            if (data.success) {
-                            }
-                            else alert(data.error);
-                            $uibModalInstance.close();
+                }
+                break;
+            case 3:
+                RestAPI.do('put', 'params/delParam', {'id': $scope.info.id},
+                    function (data, status) {
+                        if (data.success) {
+                        }
+                        else alert(data.error);
+                        $uibModalInstance.close();
 
-                        }, function (data, status) {
-                            $uibModalInstance.close();
-                        });
-                    break
-                default:
-                    break;
-            }
-
+                    }, function (data, status) {
+                        $uibModalInstance.close();
+                    });
+                break
+            default:
+                break;
         }
-
     };
 
     $scope.cancel = function () {

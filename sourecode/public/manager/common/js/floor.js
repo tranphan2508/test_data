@@ -28,29 +28,50 @@ myApp.controller('FloorCtrl', function ($scope, $uibModal, RestAPI) {
         reset();
     };
 
-    $scope.del=function($e, id){
+    $scope.del=function($e, floor){
         $e.stopPropagation();
-        RestAPI.do('put','floor/floor',{'id':id},
-        function(data,status){
-            if(data.success){
-                $scope.getAllFloors();
-            }else{
-                alert(data.error);
+        var modalInstance = $uibModal.open({
+            animation: this.animationsEnabled,
+            backdrop: 'static',
+            keyboard: false,
+            ariaLabelledBy: 'modal-title',
+            ariaDescribedBy: 'modal-body',
+            templateUrl: 'messageModal.html',
+            controller: 'messageModalCtrl',
+            //size: '200x200',
+            resolve: {
+                'message': function () {
+                    var message='Are you sure to delete "'+floor.name+'" ?';
+                    return message;
+                }
             }
         });
+        modalInstance.result.then(function () {
+            RestAPI.do('put','floor/floor',{'id':floor.id},
+                function(data,status){
+                    if(data.success){
+                        $scope.getAllFloors();
+                    }else{
+                        alert(data.error);
+                    }
+                });
+        });
+
     }
 
-    $scope.ok = function () {
-        RestAPI.do('post', 'floor/floor', {'params': {'id': $scope.floor.id, 'name': $scope.floor.name, 'code': $scope.floor.code, 'link': $scope.floor.link}},
-            function (data, status) {
-                if (data.success) {
-                    reset();
-                    $scope.flag=0;
-                    $scope.getAllFloors();
-                } else {
-                    alert(data.error);
-                }
-            });
+    $scope.ok = function (valid) {
+        if(valid){
+            RestAPI.do('post', 'floor/floor', {'params': {'id': $scope.floor.id, 'name': $scope.floor.name, 'code': $scope.floor.code, 'link': $scope.floor.link}},
+                function (data, status) {
+                    if (data.success) {
+                        reset();
+                        $scope.flag=0;
+                        $scope.getAllFloors();
+                    } else {
+                        alert(data.error);
+                    }
+                });
+        }
     }
     $scope.cancel = function () {
         $scope.flag=0;

@@ -26,30 +26,52 @@ myApp.controller('SectorCtrl', function($scope, $uibModal, RestAPI) {
         reset();
     };
 
-    $scope.del=function($e, id){
+    $scope.del=function($e, sector){
         $e.stopPropagation();
-        RestAPI.do('put','sector/sector',{'id':id},
-            function(data,status){
-                if(data.success){
-                    $scope.getAllSectors();
-                }else{
-                    alert(data.error);
+        var modalInstance = $uibModal.open({
+            animation: this.animationsEnabled,
+            backdrop: 'static',
+            keyboard: false,
+            ariaLabelledBy: 'modal-title',
+            ariaDescribedBy: 'modal-body',
+            templateUrl: 'messageModal.html',
+            controller: 'messageModalCtrl',
+            //size: '200x200',
+            resolve: {
+                'message': function () {
+                    var message='Are you sure to delete "'+sector.name+'" ?';
+                    return message;
                 }
-            });
+            }
+        });
+        modalInstance.result.then(function () {
+            RestAPI.do('put','sector/sector',{'id':sector.id},
+                function(data,status){
+                    if(data.success){
+                        $scope.getAllSectors();
+                    }else{
+                        alert(data.error);
+                    }
+                });
+        });
+
     }
 
-    $scope.ok = function (){
-        RestAPI.do('post', 'sector/sector', {'params': {'id': $scope.sector.id, 'name': $scope.sector.name}},
-            function (data, status) {
-                if (data.success) {
-                    reset();
-                    $scope.flag=0;
-                    $scope.getAllSectors();
-                } else {
-                    alert(data.error);
-                }
-            });
-    }
+    $scope.ok = function (valid){
+        if(valid){
+            RestAPI.do('post', 'sector/sector', {'params': {'id': $scope.sector.id, 'name': $scope.sector.name}},
+                function (data, status) {
+                    if (data.success) {
+                        reset();
+                        $scope.flag=0;
+                        $scope.getAllSectors();
+                    } else {
+                        alert(data.error);
+                    }
+                });
+        }
+    };
+
     $scope.cancel = function () {
         $scope.flag=0;
         reset();

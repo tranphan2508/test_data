@@ -44,7 +44,7 @@
                 <td><label class="btn btn-sm btn-warning divRightAlign"
                            ng-click="edit($event,company)">Edit</label></td>
                 <td><label class="btn btn-sm btn-danger divRightAlign"
-                           ng-click="del($event,company.id)">Del</label></td>
+                           ng-click="del($event,company)">Del</label></td>
             </tr>
             </tbody>
         </table>
@@ -52,4 +52,4 @@
 </div>
 <ng-include src="'company/popup/add.html'"></ng-include>
 <ng-include src="'company/popup/edit.html'"></ng-include>
-<ng-include src="'company/popup/delete.html'"></ng-include>
+<ng-include src="'popup/message.html'"></ng-include>

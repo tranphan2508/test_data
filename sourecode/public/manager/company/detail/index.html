@@ -3,54 +3,83 @@
     <div class="row">
         <span style="font-size: 20px; color: red ">{{companyInfo.code}}  </span><span>{{companyInfo.name}}</span>
     </div>
-    <form id="detailReportForm">
-        <div class="article">
-            <div class="row">
-                <span class="col-md-1">Type</span>
+    <div class="tabbable-line tabbable-full-width ng-isolate-scope">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" data-target="#finance" tab-heading-transclude=""
+                   class="ng-binding">Finance</a>
+            </li>
+            <li class="ng-isolate-scope" class="ng-isolate-scope">
+                <a data-toggle="tab" data-target="#capital" tab-heading-transclude=""
+                   class="ng-binding">Capital</a>
+            </li>
 
-                <div class="col-md-3">
-                    <select class="form-control" ng-model="type_report"
-                            ng-options="type_report as type_report.name for type_report in type_reports track by type_report.value"
-                            ng-change="getAllParams()">
-                    </select>
-                </div>
-                <span class="col-md-1">Year</span>
-                <div class="col-md-2">
-                    <select class="form-control" ng-model="year"
-                            ng-options="y for y in years"
-                            ng-change="getValues()">
-                    </select>
-                </div>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="finance">
+                <form id="detailReportForm">
+                    <div class="article">
+                        <div class="row">
+                            <span class="col-md-1">Type</span>
 
-                <button class="btn btn-sm btn-success divRightAlign btn-form " ng-click="edit=!edit" ng-show="!edit && type_report.value!=4">Edit</button>
-                <button class="btn btn-sm btn-success divRightAlign btn-form " type="submit" ng-click="save()" ng-show="edit && type_report.value!=4">Save</button>
-                <button class="btn btn-sm btn-warning divRightAlign btn-form mr20" ng-show="edit" ng-click="cancel()">Cancel</button>
+                            <div class="col-md-3">
+                                <select class="form-control" ng-model="type_report"
+                                        ng-options="type_report as type_report.name for type_report in type_reports track by type_report.value"
+                                        ng-change="getAllParams()">
+                                </select>
+                            </div>
+                            <span class="col-md-1">Year</span>
+
+                            <div class="col-md-2">
+                                <select class="form-control" ng-model="year"
+                                        ng-options="y for y in years"
+                                        ng-change="getValues()">
+                                </select>
+                            </div>
+
+                            <button class="btn btn-sm btn-success divRightAlign btn-form " ng-click="edit=!edit"
+                                    ng-show="!edit && type_report.value!=4">Edit
+                            </button>
+                            <button class="btn btn-sm btn-success divRightAlign btn-form " type="submit"
+                                    ng-click="save()" ng-show="edit && type_report.value!=4">Save
+                            </button>
+                            <button class="btn btn-sm btn-warning divRightAlign btn-form mr20" ng-show="edit"
+                                    ng-click="cancel()">Cancel
+                            </button>
+                        </div>
+
+
+                    </div>
+                    <div class="article">
+                        <script type="text/ng-template" id="paramsTree">
+                            <div class="row row-param pl{{data.level}}" ng-click="data.open=!data.open">
+                                <i class="pull-left glyphicon"
+                                   ng-class="{'glyphicon-plus-sign': (!data.open && data.has_child && type_report.value !='2') || data.id==119  , 'glyphicon-minus-sign': (data.open && data.has_child && type_report.value !='2') || data.id==119}"></i>
+                                <span uib-tooltip="{{data.description}}">{{data.title}}</span>
+
+                                <div class="col-md-3 divRightAlign">
+                                    <span class="divRightAlign" ng-hide="edit">{{values[data.id].value | nozero | number }}</span>
+                                    <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187"
+                                           type="text" name="p{{data.id}}"
+                                           ng-model="values[data.id].value"
+                                           class="form-control ng-pristine"
+                                           update-status="values[data.id].value" number-input></div>
+
+                            </div>
+                            <div ng-show="data.open">
+                                <div ng-repeat="data in data.datas" ng-include="'paramsTree'"></div>
+                            </div>
+                        </script>
+
+                        <div ng-repeat="data in params" ng-include="'paramsTree'"></div>
+
+
+                    </div>
+                </form>
             </div>
 
-
+            <div class="tab-pane " id="capital" ng-include="'company/detail/capital.html'"></div>
         </div>
-        <div class="article">
-            <script type="text/ng-template" id="paramsTree">
-                <div class="row row-param pl{{data.level}}" ng-click="data.open=!data.open">
-                    <i class="pull-left glyphicon"
-                       ng-class="{'glyphicon-plus-sign': (!data.open && data.has_child && type_report.value !='2') || data.id==119  , 'glyphicon-minus-sign': (data.open && data.has_child && type_report.value !='2') || data.id==119}"></i>
-                    <span uib-tooltip="{{data.description}}">{{data.title}}</span>
-                    <div class="col-md-3 divRightAlign">
-                        <span class="divRightAlign" ng-hide="edit" >{{values[data.id].value | nozero | number }}</span>
-                        <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187" type="text" name="p{{data.id}}"
-                               ng-model="values[data.id].value"
-                                class="form-control ng-pristine"
-                                 update-status="values[data.id].value" number-input></div>
+    </div>
 
-                </div>
-                <div ng-show="data.open">
-                    <div ng-repeat="data in data.datas" ng-include="'paramsTree'"></div>
-                </div>
-            </script>
-
-            <div ng-repeat="data in params" ng-include="'paramsTree'"></div>
-
-
-        </div>
-    </form>
 </div>

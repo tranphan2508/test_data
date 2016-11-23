@@ -1,0 +1,53 @@
+<script type="text/ng-template" id="editCompanyCapitalModal.html">
+    <form name="editCompCapitalForm">
+        <div class="modal-body" id="modal-body">
+            <table class="table borderless">
+                <colgroup>
+                    <col class="col-md-3">
+                    <col class="col-md-9">
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td><label>Time</label></td>
+                    <td>
+                        <p class="input-group col-md-6">
+                            <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                                   ng-model="capital.list_date"
+                                   is-open="date.opened" datepicker-options="dateOptions" ng-required="true"
+                                   class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
+                                   close-text="Close" />
+                              <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="date.opened=!date.opened"><i
+                                        class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Reason</label></td>
+                    <td>
+                        <textarea type="text" name="reason" ng-model="capital.reason" rows="3"
+                                  class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required></textarea>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td><label>Quantity</label></td>
+                    <td><input type="number" name="quantity" ng-model="capital.quantity"
+                               class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required/></td>
+                </tr>
+                <tr>
+                    <td><label>Price</label></td>
+                    <td><input type="number" name="price" ng-model="capital.price"
+                               class="form-control ng-touched"/></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit" ng-click="ok(editCompCapitalForm.$valid)">Save</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </form>
+</script>

@@ -28,48 +28,48 @@
                     <td>{{f.code}}</td>
                     <!--<td>{{f.created_date}}</td>
                     <td>{{f.updated_date}}</td>-->
-                    <td><label class="btn btn-sm btn-danger" ng-click="del($event,f.id)">Del</label></td>
+                    <td><label class="btn btn-sm btn-danger" ng-click="del($event,f)">Del</label></td>
                 </tr>
                 </tbody>
 
             </table>
         </div>
-        <div class="col-md-6">
-            <form name="adjustFloorForm" class="ng-scope ng-valid-required ng-valid-maxlength ng-valid-email ng-dirty ng-valid-parse ng-invalid ng-invalid-minlength">
+        <div class="col-md-6" ng-show="flag!=0">
+            <form name="adjustFloorForm">
                 <div class="row first_row">
-                    <div class="form-group" ng-class="{'has-error':adjustFloorForm.name.$dirty && !adjustFloorForm.name.$valid, 'has-success':adjustFloorForm.name.$dirty && adjustFloorForm.name.$valid}">
+                    <div class="form-group">
                         <div class="col-md-4">
                             <label>Name</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="name" ng-model="floor.name" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required="true" ng-disabled="flag==0">
+                            <input type="text" name="name" ng-model="floor.name" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required />
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group" ng-class="{'has-error':adjustFloorForm.code.$dirty && !adjustFloorForm.code.$valid, 'has-success':adjustFloorForm.code.$dirty && adjustFloorForm.code.$valid}">
+                    <div class="form-group">
                         <div class="col-md-4">
                             <label>Code</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="code" ng-model="floor.code" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required="true" ng-disabled="flag==0">
+                            <input type="text" name="code" ng-model="floor.code" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required />
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group" ng-class="{'has-error':adjustFloorForm.link.$dirty && !adjustFloorForm.link.$valid, 'has-success':adjustFloorForm.link.$dirty && adjustFloorForm.link.$valid}">
+                    <div class="form-group">
                         <div class="col-md-4">
                             <label>Website</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="link" ng-model="floor.link" class="form-control ng-valid-email ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required="true" ng-disabled="flag==0">
+                            <input type="text" name="link" ng-model="floor.link" class="form-control ng-valid-email ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched" required />
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <button class="btn btn-sm btn-warning divRightAlign btn-form" ng-click="cancel()" ng-disabled="flag==0">Cancel</button>
-                    <button type="submit" class="btn btn-sm btn-success divRightAlign btn-form mr20" ng-click="ok()" ng-disabled="flag==0">{{btnSubmit}}</button>
+                    <button class="btn btn-sm btn-warning divRightAlign btn-form" ng-click="cancel()">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-success divRightAlign btn-form mr20" ng-click="ok(adjustFloorForm.$valid)">{{btnSubmit}}</button>
                 </div>
             </form>
 
@@ -77,3 +77,4 @@
         </div>
     </div>
 </div>
+<ng-include src="'popup/message.html'"></ng-include>

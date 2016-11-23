@@ -60,7 +60,7 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams)
         var params = {'id': id,
             'n_year': $scope.display.n_year,
             'type': type};
-        RestAPI.do('get', 'company/valuesInYears', params,
+        RestAPI.do('get', 'company/finance/valuesInYears', params,
             function (data, status) {
                 if (data.success) {
                     $scope.values = data.result;

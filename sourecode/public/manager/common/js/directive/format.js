@@ -52,3 +52,9 @@ myApp.filter('nozero', function() {
         return input;
     }
 });
+
+myApp.filter('toDate', function($filter) {
+    return function(input) {
+        return $filter('date')(new Date(input),'dd-MM-yyyy');
+    }
+});

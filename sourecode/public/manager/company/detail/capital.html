@@ -1,0 +1,45 @@
+<div class="main-module" ng-controller="DetailCapitalCtrl">
+    <div class="row">
+        <button class="btn btn-sm btn-success divRightAlign btn-form" ng-click="add()">Add</button>
+    </div>
+    <div class="article row">
+        <table class="table table-striped table-bordered table-hover stripped">
+            <colgroup>
+                <col width="15%">
+                <col width="20%">
+                <col width="15%">
+                <col width="15%">
+                <col width="15%">
+
+            </colgroup>
+            <thead>
+            <tr>
+                <th>Thời gian</th>
+                <th>Lý do niêm yết thêm</th>
+                <th>Số lượng</th>
+                <th>Mệnh giá</th>
+                <th>Cổ phiếu đang lưu hành</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr ng-repeat="capital in capitals">
+                <td>{{capital.list_date | toDate}}</td>
+                <td>{{capital.reason}}</td>
+                <td>{{capital.quantity | number}}</td>
+                <td>{{capital.price | number}}</td>
+                <td>{{capital.share_outstanding | number}}</td>
+                <td><label class="btn btn-sm btn-warning divRightAlign"
+                           ng-click="edit(capital)">Edit</label></td>
+                <td><label class="btn btn-sm btn-danger divRightAlign"
+                           ng-click="del(capital)">Del</label></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<ng-include src="'company/detail/popup/capital/add.html'"></ng-include>
+<ng-include src="'company/detail/popup/capital/edit.html'"></ng-include>
+<ng-include src="'popup/message.html'"></ng-include>

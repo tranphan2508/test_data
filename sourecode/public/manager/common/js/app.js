@@ -10,6 +10,7 @@ myApp.config(['$routeProvider',
             when('/sector/', {templateUrl: 'sector/index.html'}).
             when('/floor/', {templateUrl: 'floor/index.html'}).
             when('/params/', {templateUrl: 'params/index.html'}).
+            when('/login', {templateUrl: 'login.html'}).
             otherwise({redirectTo: '/'});
     }]);
 myApp.config(function ($httpProvider) {

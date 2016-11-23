@@ -33,32 +33,35 @@
     <div ng-repeat="data in datas" ng-include="'paramsTree'"></div>
 </div>
 <script type="text/ng-template" id="addParamContent.html">
-    <div class="modal-body" id="modal-body">
-        <div>
-            <span>{{message}}</span>
-        </div>
-        <table class="table borderless">
-            <colgroup>
-                <col class="col-md-3">
-                <col class="col-md-9">
-            </colgroup>
-            <tbody>
-            <tr ng-show="{{info.flag!=3}}">
-                <td><label>Title</label></td>
-                <td><input  type="text" ng-model="info.title" class="form-control ng-pristine">
-                </td>
-            </tr>
-            <tr ng-show="{{info.type==4 && info.flag!=3}}">
-                <td><label>Description</label></td>
-                <td><textarea class="form-control row ng-pristine ng-valid ng-not-empty ng-touched" rows="3" ng-model="info.description"></textarea>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="ok()">{{btnSubmit}}</button>
-        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-    </div>
+    <form name="adjustParamForm">
+        <div class="modal-body" id="modal-body">
+            <div>
+                <span>{{message}}</span>
+            </div>
+            <table class="table borderless">
+                <colgroup>
+                    <col class="col-md-3">
+                    <col class="col-md-9">
+                </colgroup>
+                <tbody>
+                <tr ng-show="{{info.flag!=3}}">
+                    <td><label>Title</label></td>
+                    <td><input type="text" name="title" ng-model="info.title" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
+                               required  />
+                    </td>
+                </tr>
+                <tr ng-show="{{info.type==4 && info.flag!=3}}">
+                    <td><label>Description</label></td>
+                    <td><textarea rows="3"></textarea>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" ng-click="ok(adjustParamForm.$valid)">{{btnSubmit}}</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </form>
 </script>
