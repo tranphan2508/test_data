@@ -1,0 +1,25 @@
+<div ng-controller="LoginCtrl"  id="login" class="center-block">
+    <form name="loginForm">
+        <span ng-show="error" style="color: red">{{error}}</span>
+        <table class="table borderless">
+            <colgroup>
+                <col class="col-md-3">
+            </colgroup>
+            <tr>
+                <td>Username:</td>
+                <td>
+                    <input type="email" name="username" ng-model="username" placeholder="Email" autofocus
+                           class="form-control ng-valid-required ng-touched" required/>
+                </td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td>
+                    <input type="password" name="password" ng-model="password" placeholder="Password"
+                           class="form-control ng-valid-required ng-touched" required="true"/>
+                </td>
+            </tr>
+        </table>
+        <button class="btn btn-success center-block" type="submit" ng-click="login(loginForm.$valid)">Login</button>
+    </form>
+</div>

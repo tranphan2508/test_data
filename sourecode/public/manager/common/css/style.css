@@ -156,3 +156,12 @@ ul.nav-tabs li:focus, ul.nav-tabs li:hover
 {
     cursor: pointer;
 }
+#login{
+    margin-top: 150px;
+    width: 500px;
+}
+.center-block{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}

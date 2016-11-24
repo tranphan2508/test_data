@@ -1,5 +1,5 @@
 'use strict';
-var myApp = angular.module('myApp', ['ngRoute','ui.bootstrap']);
+var myApp = angular.module('myApp', ['ngRoute','ui.bootstrap','angular-md5']);
 
 myApp.config(['$routeProvider',
     function ($routeProvider) {

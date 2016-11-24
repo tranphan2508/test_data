@@ -2,14 +2,14 @@
     <div id="top">
         <div id="account">
             {{accountName}}
-            <i class="pull-right glyphicon glyphicon-log-out" ng-click="alert('logout')"></i>
+            <i class="pull-right glyphicon glyphicon-log-out" ng-click="logout()"></i>
             <!--<a href="" class="logout" data-method="post" rel="nofollow">Sign out</a>-->
         </div>
 
     </div>
     <div id="header">
         <ul class="nav nav-tabs">
-            <li ng-class="{active:hashPart.indexOf('/company/')!=-1}"><a href="#/company">Company</a></li>
+            <li ng-class="{active:hashPart.indexOf('/company/')!=-1} "><a href="#/company">Company</a></li>
             <li ng-class="{active:hashPart.indexOf('/sector/')!=-1}"><a href="#/sector">Sector</a></li>
             <li ng-class="{active:hashPart.indexOf('/floor/')!=-1}"><a href="#/floor">Floor</a></li>
             <li ng-class="{active:hashPart.indexOf('/params/')!=-1}"><a href="#/params">Params</a></li>

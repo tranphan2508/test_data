@@ -46,7 +46,6 @@ myApp.service('RestAPI', function ($http, $location) {
 
     function check_authority(data) {
         if (data.error == 'Authorization is failed') {
-            alert('Authorization is failed')
             $location.path("/login");
             return false;
         }

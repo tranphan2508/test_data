@@ -23,10 +23,9 @@
                 </tr>
                 <tr>
                     <td><label>Sector</label></td>
-                    <td><div class="w60"><select ng-model="company.sector_id"  class="form-control ng-pristine ng-valid ng-touched"
-                                                 ng-options="s.id as s.name for s in sectors"
-                                                 required>
-                        <option value="0">Please choose</option>
+                    <td><div class="w60"><select ng-model="company.sector_id"  class="form-control ng-pristine ng-valid ng-touched" required>
+                        <option value="">Please choose</option>
+                        <option ng-repeat="s in sectors" value="{{s.id}}">{{s.name}}</option>
                     </select></div>
 
                     </td>
@@ -34,9 +33,9 @@
                 <tr>
                     <td><label>Floor</label></td>
                     <td><div class="w40"><select  ng-model="company.floor_id"class="form-control ng-pristine ng-valid ng-touched"
-                                                  ng-options="f.id as f.code for f in floors"
                                                   required>
-                        <option value="0">Please choose</option>
+                        <option value="">Please choose</option>
+                        <option ng-repeat="f in floors" value="{{f.id}}">{{f.code}}</option>
                     </select></div></td>
                 </tr>
                 <tr>
