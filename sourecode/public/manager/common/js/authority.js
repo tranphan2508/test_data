@@ -1,35 +1,35 @@
-myApp.service('UserInfoService', function () {
-    var userInfo = null;
-    this.saveUserInfo = function (data) {
-        this.userInfo = data;
-    };
+myApp.service('UserInfoService', function ($cookies) {
 
-    this.getUserInfo = function () {
-        return this.userInfo;
+    this.saveUserInfo = function (data) {
+        $cookies.put('id', data.id);
+        $cookies.put('username', data.username);
+        $cookies.put('name', data.name);
+        $cookies.put('login_hash', data.login_hash);
     };
 
     this.getName = function () {
-        if (this.userInfo) return this.userInfo.name;
-        return null;
+        return $cookies.get('name');
     };
 
     this.getUserName = function () {
-        if (this.userInfo) return this.userInfo.username;
-        return null;
+        return $cookies.get('username');
     };
 
     this.getLoginHash = function () {
-        if (this.userInfo) return this.userInfo.login_hash;
-        return null;
-    }
+        return $cookies.get('login_hash');
+    };
+
     this.clearUserInfo = function () {
-        this.userInfo = null;
+        $cookies.remove('id');
+        $cookies.remove('username');
+        $cookies.remove('name');
+        $cookies.remove('login_hash');
     }
 });
 
 myApp.controller('LoginCtrl', function ($scope, RestAPI, $location, UserInfoService, md5) {
-    $scope.username='';
-    $scope.password='';
+    $scope.username = '';
+    $scope.password = '';
     $scope.login = function (valid) {
         if (valid) {
             var data_json = {
