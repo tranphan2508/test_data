@@ -27,7 +27,7 @@
                         <a data-toggle="tab" data-target="#report" ng-click="changeType('3')">Cashflow</a>
                     </li>
                     <li class="ng-isolate-scope">
-                        <a data-toggle="tab" data-target="#f_index" ng-click="changeType('4')">Financial Index</a>
+                        <a data-toggle="tab" data-target="#report" ng-click="changeType('4')">Financial Index</a>
                     </li>
                     <li class="ng-isolate-scope">
                         <a data-toggle="tab" data-target="#f_target" ng-click="changeType('5')">Target</a>
@@ -43,8 +43,8 @@
                             <div class="form-group">
                                 <table>
                                     <tr>
-                                        <td class="col-md-1"><label class="control-label">Unit</label></td>
-                                        <td class="col-md-5"><select ng-model="display.unit"
+                                        <td class="col-md-1" ng-hide="type=='4'"><label class="control-label">Unit</label></td>
+                                        <td class="col-md-5" ng-hide="type=='4'"><select ng-model="display.unit"
                                                                      class="form-control ng-pristine ng-valid ng-touched"
                                                                      ng-change="changeUnit()">
                                             <option value="1" class="ng-binding">1</option>
@@ -68,12 +68,15 @@
                             </div>
 
                         </div>
-                        <div class="col-md-4 col-sm-4">
+                        <div class="col-md-4 col-sm-4" ng-hide="type=='4'">
                             <div class="btn-group pull-right btn-group-circle">
                                 <label class="btn green btn-sm ng-pristine ng-untouched ng-valid"
+                                       ng-model="display.format" uib-btn-radio="0">Ratio</label>
+                                <label class="btn green btn-sm ng-pristine ng-untouched ng-valid"
                                        ng-model="display.format" uib-btn-radio="1">Number</label>
-                                <label class="btn green btn-sm ng-pristine ng-untouched ng-valid active"
-                                       ng-model="display.format" uib-btn-radio="0">%</label>
+                                <label class="btn green btn-sm ng-pristine ng-untouched ng-valid"
+                                       ng-model="display.format" uib-btn-radio="2">Growth(ratio)</label>
+
                             </div>
                         </div>
                     </div>
@@ -83,8 +86,6 @@
                     <div class="tab-pane active" id="report">
                         <div class="row" ng-include="'report_template'"></div>
                     </div>
-
-                    <div class="tab-pane" id="f_index">Index</div>
 
                     <div class="tab-pane" id="f_target">Target</div>
 
@@ -104,14 +105,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="data in params track by $index" ng-click="expandRows(data)" class="{{data.class}}"
-                name="{{$index}}" id="{{data.id}}" ng-show="{{data.level < 4}}">
+            <tr ng-repeat="data in params track by $index" ng-click="expandRows(data)" class="{{data.class}}" ng-init="dataIndex=$index"
+                name="{{dataIndex}}" id="{{data.id}}" ng-show="{{data.level < 4}}">
                 <td ng-style="{'padding-left':(data.level-1)*30+'px'}"><i class="pull-left glyphicon"
                                                                           ng-class="{'glyphicon-plus-sign': (!data.open && data.has_child && type !='2') || data.id==119  , 'glyphicon-minus-sign': (data.open && data.has_child && type !='2') || data.id==119}"></i>
-                    <span class="">{{data.title}}</span></td>
+                    <span uib-tooltip="{{data.description}}">{{data.title}}</span></td>
                 <td></td>
-                <td ng-repeat="year in year_arrange">
-                    <span>{{values[data.id][year] | nozero: type: display.unit : display.format : year: values[params[0].id][year] :  values[params[params.length-1].id][year]  | number}}</span></td>
+                <td ng-repeat="year in year_arrange track by $index" ng-init="yearIndex=$index">
+                    <span>{{values[data.id][year] | nozero: values[data.id][year_arrange[yearIndex-1]] :  type: display.unit : display.format : year: values[params[0].id][year] :  values[params[params.length-1].id][year]  | number}}</span></td>
             </tr>
             </tbody>
         </table>

@@ -39,13 +39,13 @@ class Model_Capital extends \Orm\Model
         return $res;
     }
 
-    public static function insertCapital($company_id, $reason, $quantity,$price, $share_outstanding, $list_date)
+    public static function insertCapital($company_id, $reason, $quantity, $price, $share_outstanding, $list_date)
     {
         $new = Model_Capital::forge(array(
             'company_id' => $company_id,
             'reason' => $reason,
             'quantity' => $quantity,
-            'price' => $price ? $price :0,
+            'price' => $price ? $price : 0,
             'share_outstanding' => $share_outstanding,
             'list_date' => $list_date
         ));
@@ -70,7 +70,7 @@ class Model_Capital extends \Orm\Model
         return null;
     }
 
-    public static function updateCapital($id, $reason, $quantity,$price, $share_outstanding, $list_date)
+    public static function updateCapital($id, $reason, $quantity, $price, $share_outstanding, $list_date)
     {
         $res = Model_Capital::find($id);
         $res->reason = $reason;
@@ -81,10 +81,47 @@ class Model_Capital extends \Orm\Model
         return ($res->save());
     }
 
-    public static function delCapital($id){
+    public static function delCapital($id)
+    {
         $data = Model_Capital::find($id);
         $data->del = 1;
-        return($data->save());
+        return ($data->save());
+    }
+
+    public static function averageCapital($id, $year)
+    {
+        $data[$year . '-01-01 00:00:00'] = Model_Capital::getLastShareOutstanding($id, $year . '-01-01 00:00:00');
+        $data[$year . '-12-31 00:00:00'] = Model_Capital::getLastShareOutstanding($id, $year . '-12-31 00:00:00');
+        //get list capital in year
+        $ary_where = array(
+            array('del', 0),
+            array('list_date', '<=', $year . '-12-31 00:00:00'),
+            array('list_date', '>=', $year . '-01-01 00:00:00'),
+            array('company_id', '=', $id)
+        );
+        $ary_cap = Model_Capital::find('all', array(
+            'where' => $ary_where,
+            'order_by' => array(
+                'list_date' => 'asc'
+            )
+        ));
+        $list_date[] = $year . '-01-01 00:00:00';
+        foreach ($ary_cap as $key => $val) {
+            $data[$val['list_date']] = $val['share_outstanding'];
+            $list_date[] = $val['list_date'];
+        }
+        $list_date[] = $year . '-12-31 00:00:00';
+        $avrg_cap = 0;
+        $avrg_date = 0;
+        for ($i = 0; $i < count($list_date) - 1; $i++) {
+            $date1 = new DateTime($list_date[$i]);
+            $date2 = new DateTime($list_date[$i + 1]);
+            $date_diff = intval($date2->diff($date1)->format("%a"));
+            if($i==count($list_date) - 2) $date_diff+=1;
+            $avrg_cap += intval($data[$list_date[$i]]) * ($date_diff);$res[]=array($data[$list_date[$i]], $date_diff);
+            $avrg_date += $date_diff;
+        }
+       return intval($avrg_cap/$avrg_date);
     }
 }
 

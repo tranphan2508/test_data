@@ -62,7 +62,8 @@ class Model_BalanceSheet extends \Orm\Model
         return $res;
     }
 
-    public static function getDataByCompanyInYears($id, $year_from, $year_to){
+    public static function getDataByCompanyInYears($id, $year_from, $year_to)
+    {
         $res = array();
         $values = Model_BalanceSheet::query()
             ->select('year', 'param_id', 'value')
@@ -70,7 +71,7 @@ class Model_BalanceSheet extends \Orm\Model
             ->where('year', '<=', $year_to)
             ->where('year', '>=', $year_from)
             ->where('del', 0)
-            ->order_by('param_id','year')
+            ->order_by('param_id', 'year')
             ->get();
         foreach ($values as $value) {
             $row = $value->to_array();
@@ -79,18 +80,27 @@ class Model_BalanceSheet extends \Orm\Model
         return $res;
     }
 
-    public static function getDataForCalcIndicator($id,$year,$p_id)
+    public static function getDataForCalcIndicator($id, $year, $p_id)
     {
         $res=array();
-        $data=DB::select('param_id','value')
+        $data=DB::select('param_id','value','year')
             ->from('balance_sheet')
             ->where('company_id', $id)
+            ->and_where_open()
             ->where('year', '=', $year)
             ->where('param_id',' IN ', explode(',',$p_id))
+            ->or_where_open()
+            ->where('year', '=', intval($year)-1)
+            ->where('param_id',' IN ', array(1,7,8,30))
+            ->or_where_close()
+            ->and_where_close()
             ->where('del', 0)
             ->execute();
         foreach ($data as $key => $val) {
-            $res[$val['param_id']] = $val['value'];
+            if(in_array($val['param_id'],array(1,7,8,30))){
+                $res[$val['param_id']][$val['year']]=$val['value'];
+            }
+            else $res[$val['param_id']] = $val['value'];
         }
         return $res;
     }

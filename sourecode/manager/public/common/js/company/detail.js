@@ -196,17 +196,17 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
 
     //compute cashflow value
     function updateCashflowValue(arr) {
-        var val1 = new BigNumber(arr[135] ? arr[135] : $scope.values[135].value);
-        var val2 = new BigNumber(arr[159] ? arr[159] : $scope.values[159].value);
-        var val3 = new BigNumber(arr[172] ? arr[172] : $scope.values[172].value);
+        var val1 = defaultNumber(arr, 135);
+        var val2 = defaultNumber(arr, 159);
+        var val3 = defaultNumber(arr, 172);
 
         //Luu chuyen tien thuan trong ky
         arr[184] = val1.add(val2).add(val3);
 
         //tien va tuong duong tien cuoi ky
         val1.set(arr[184]);
-        val2.set($scope.values[185] ? $scope.values[185].value : 0)
-        val3.set($scope.values[186] ? $scope.values[186].value : 0)
+        val2.set(defaultNumber(arr, 185));
+        val3.set(defaultNumber(arr, 186))
         arr[187] = val1.add(val2).add(val3);
     }
 
@@ -214,65 +214,111 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
     function updateIndicators(type, ary_value) {
         var ary_indicator = [];
         var insert_values = [];
-        RestAPI.do('get', 'company/finance/valueForCalcIndicator', {'id': id, 'year': $scope.year, 'p_id': '1,92,113,120,128,134,138'},
+        RestAPI.do('get', 'company/finance/valueForCalcIndicator', {'id': id, 'year': $scope.year, 'p_id': '1,7,8,30,92,113,115,116,120,128,134,138,188'},
             function (data, status) {
                 if (data.success) {
                     var tmp_values = data.result;
+                    tmp_values[1] = averageNumber(tmp_values[1][$scope.year], tmp_values[1][$scope.year - 1]);
+                    tmp_values[7] = averageNumber(tmp_values[7][$scope.year], tmp_values[7][$scope.year - 1]);
+                    tmp_values[8] = averageNumber(tmp_values[8][$scope.year], tmp_values[8][$scope.year - 1]);
+                    tmp_values[30] = averageNumber(tmp_values[30][$scope.year], tmp_values[30][$scope.year - 1]);
                     switch (type) {
                         case 1:
-                            if (defaultNumber(ary_value[62], 62).compare(0) != 0) {
+                            if(tmp_values['share_holding'] && tmp_values['share_holding']!=0){
+                                //Book value
+                                ary_indicator[216]=formatNumber((defaultNumber(tmp_values,92).subtract(defaultNumber(ary_value, 188))).divide(new BigNumber(tmp_values['share_holding'])),2);
+                            }
+                            if (defaultNumber(ary_value, 62).compare(0) != 0) {
                                 // thanh toan nhanh
-                                ary_indicator[198] = formatNumber((defaultNumber(ary_value[3], 3).subtract(defaultNumber(ary_value[8], 8))).divide(defaultNumber(ary_value[62], 62)));
+                                ary_indicator[198] = formatNumber((defaultNumber(ary_value, 3).subtract(defaultNumber(ary_value, 8))).divide(defaultNumber(ary_value, 62)));
 
                                 // thanh toan hien hanh
-                                ary_indicator[199] = formatNumber(defaultNumber(ary_value[3], 3).divide(defaultNumber(ary_value[62], 62)));
+                                ary_indicator[199] = formatNumber(defaultNumber(ary_value, 3).divide(defaultNumber(ary_value, 62)));
+
+                                //Thanh toan bang tien mat
+                                ary_indicator[218] = formatNumber(defaultNumber(ary_value, 5).divide(defaultNumber(ary_value, 62)));
                             }
 
-                            if (defaultNumber(ary_value[92], 92).compare(0) != 0) {
+                            if (defaultNumber(ary_value, 92).compare(0) != 0) {
                                 // tong no/von CSH
-                                ary_indicator[200] = formatNumber(defaultNumber(ary_value[61], 61).multiply(100).divide(defaultNumber(ary_value[92], 92)),2);
+                                ary_indicator[200] = formatNumber(defaultNumber(ary_value, 61).multiply(100).divide(defaultNumber(ary_value, 92)), 2);
                             }
 
-                            if (defaultNumber(ary_value[1], 1).compare(0) != 0) {
+                            if (defaultNumber(ary_value, 1).compare(0) != 0) {
                                 // tong no/ tong tai san
-                                ary_indicator[201] = formatNumber(defaultNumber(ary_value[61], 61).multiply(100).divide(defaultNumber(ary_value[1], 1)),2);
+                                ary_indicator[201] = formatNumber(defaultNumber(ary_value, 61).multiply(100).divide(defaultNumber(ary_value, 1)), 2);
                             }
 
+                            if (defaultNumber(ary_value, 1).compare(0) != 0) {
+                                //ROA
+                                ary_indicator[211] = formatNumber(defaultNumber(tmp_values, 134).multiply(100).divide(defaultNumber(ary_value, 1)), 2);
+                            }
+
+                            if (defaultNumber(ary_value, 92).compare(0) != 0) {
+                                //ROE
+                                ary_indicator[212] = formatNumber(defaultNumber(tmp_values, 134).multiply(100).divide(defaultNumber(ary_value, 92)), 2);
+                            }
                             break;
                         case 2:
-                            if (defaultNumber(ary_value[113], 113).compare(0) != 0) {
+                            if(tmp_values['share_holding'] && tmp_values['share_holding']!=0){
+                                //EPS
+                                ary_indicator[196]=formatNumber(defaultNumber(tmp_values,134).divide(new BigNumber(tmp_values['share_holding_avrg'])),2)
+                            }
+                            if (defaultNumber(ary_value, 120).compare(0) != 0) {
+                                //Kha nang thanh toan lai vay
+                                ary_indicator[219] = formatNumber((defaultNumber(ary_value, 128).add(defaultNumber(ary_value, 120))).divide(defaultNumber(ary_value, 120)), 2);
+                            }
+                            if (defaultNumber(ary_value, 113).compare(0) != 0) {
                                 //ty le lai gop
-                                ary_indicator[207] = formatNumber(defaultNumber(ary_value[117], 117).multiply(100).divide(defaultNumber(ary_value[113], 113)), 2);
+                                ary_indicator[207] = formatNumber(defaultNumber(ary_value, 117).multiply(100).divide(defaultNumber(ary_value, 113)), 2);
 
                                 //ty le EBIT
-                                ary_indicator[208] = formatNumber((defaultNumber(ary_value[128], 128).add(defaultNumber(ary_value[120], 120))).multiply(100).divide(defaultNumber(ary_value[113], 113)), 2);
+                                ary_indicator[208] = formatNumber((defaultNumber(ary_value, 128).add(defaultNumber(ary_value, 120))).multiply(100).divide(defaultNumber(ary_value, 113)), 2);
 
                                 //ty le lai rong
-                                ary_indicator[214] = formatNumber(defaultNumber(ary_value[134], 134).multiply(100).divide(defaultNumber(ary_value[113], 113)), 2);
+                                ary_indicator[214] = formatNumber(defaultNumber(ary_value, 134).multiply(100).divide(defaultNumber(ary_value, 113)), 2);
+                            }
+
+                            if (defaultNumber(tmp_values, 1).compare(0) != 0) {
+                                //ROA
+                                ary_indicator[211] = formatNumber(defaultNumber(ary_value, 134).multiply(100).divide(defaultNumber(tmp_values, 1)), 2);
+                            }
+
+                            if (defaultNumber(tmp_values, 92).compare(0) != 0) {
+                                //ROE
+                                ary_indicator[212] = formatNumber(defaultNumber(ary_value, 134).multiply(100).divide(defaultNumber(tmp_values, 92)), 2);
+                            }
+
+                            if (defaultNumber(ary_value, 115).compare(0) != 0) {
+                                //ROS
+                                ary_indicator[213] = formatNumber(defaultNumber(ary_value, 134).multiply(100).divide(defaultNumber(ary_value, 115)), 2);
                             }
                             break;
                         case 3:
                             break;
                     }
-                    if (defaultNumber(tmp_values[113], 113).compare(0) != 0) {
+                    if (defaultNumber(tmp_values, 113).compare(0) != 0) {
                         //ty le EBITDA
-                        ary_indicator[209] = formatNumber((defaultNumber(tmp_values[128], 128).add(defaultNumber(tmp_values[120], 120)).add(defaultNumber(tmp_values[138], 138))).multiply(100).divide(defaultNumber(tmp_values[113], 113)), 2);
+                        ary_indicator[209] = formatNumber((defaultNumber(tmp_values, 128).add(defaultNumber(tmp_values, 120)).add(defaultNumber(tmp_values, 138))).multiply(100).divide(defaultNumber(tmp_values, 113)), 2);
                     }
 
-                    if (defaultNumber(tmp_values[1], 1).compare(0) != 0) {
-                        //ROA
-                        ary_indicator[211] = formatNumber(defaultNumber(tmp_values[134], 134).multiply(100).divide(defaultNumber(tmp_values[1], 1)), 2);
+                    //vong quay tong tai san
+                    if (defaultNumber(tmp_values, 1).compare(0) != 0) {
+                        ary_indicator[203]=formatNumber(defaultNumber(tmp_values,115).divide(defaultNumber(tmp_values, 1)),2);
                     }
-
-                    if (defaultNumber(tmp_values[92], 92).compare(0) != 0) {
-                        //ROE
-                        ary_indicator[212] = formatNumber(defaultNumber(tmp_values[134], 134).multiply(100).divide(defaultNumber(tmp_values[92], 92)), 2);
+                    //vong quay hang ton kho
+                    if (defaultNumber(tmp_values, 8).compare(0) != 0) {
+                        ary_indicator[204]=formatNumber(defaultNumber(tmp_values,116).divide(defaultNumber(tmp_values, 8)),2);
                     }
-
+                    //vong quay cac khoan phai thu
+                    if (defaultNumber(tmp_values, 7).compare(0) != 0) {
+                        ary_indicator[205]=formatNumber(defaultNumber(tmp_values,115).divide(defaultNumber(tmp_values, 7).add(defaultNumber(tmp_values, 30))),2);
+                    }
 
                     for (var p_id in ary_indicator) {
                         insert_values.push('p' + p_id + '_' + ary_indicator[p_id]);
                     }
+
                     var data_json = {
                         'params': {
                             'company_id': id,
@@ -300,7 +346,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
     }
 
     function defaultNumber(n, id) {
-        var d = n ? n : ($scope.values[id] ? $scope.values[id].value : 0 );
+        var d = (id in n) ? n[id] : ((id in $scope.values) ? $scope.values[id].value : 0 );
         return new BigNumber(d);
     }
 
@@ -310,6 +356,12 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
         var d = str.indexOf('.');
         if (d) return str.substr(0, d + digit + 1);
         return n;
+    }
+
+    function averageNumber(n1, n2) {
+        n1 = new BigNumber(n1);
+        n2 = new BigNumber(n2);
+        return (n1.add(n2)).divide(2);
     }
 
     function init() {
