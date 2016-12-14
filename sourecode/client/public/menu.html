@@ -1,97 +1,144 @@
-<div class="page-sidebar-wrapper" ng-controller="MenuCtrl">
-    <div class="page-sidebar navbar-collapse collapse" id="sidebar">
-        <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-            <li class="sidebar-toggler-wrapper">
-                <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-                <div class="sidebar-toggler" id="sidebar-toggler">
-                </div>
-                <!-- END SIDEBAR TOGGLER BUTTON -->
-            </li>
-            <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
-            <li class="sidebar-search-wrapper">
-                <!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
-                <!-- DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box -->
-                <!-- DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box -->
-                <div class="sidebar-search">
-                    <a href="javascript:;" class="remove">
-                        <i class="icon-close"></i>
-                    </a>
-                    <table cellpadding="0" cellspacing="0" class="input-group" id="search-box">
-                        <tbody>
-                        <tr>
-                            <td class="col-xs-12 nopadding">
-                                <div angucomplete-alt="" id="Symbol" placeholder="Stock code" pause="300"
-                                     selected-object="symbolSelected" initial-value="" local-data="quotes"
-                                     search-fields="Symbol,Name" title-field="Symbol" description-field="Name"
-                                     minlength="1" input-class="form-control"
-                                     dropdown-class="angucomplete-dropdown-bottom" match-class="highlight"
-                                     input-changed="symbolChanged" enter-pressed="enterPressed"
-                                     class="ng-isolate-scope">
-                                    <div class="angucomplete-holder"
-                                         ng-class="{'angucomplete-dropdown-visible': showDropdown}"><input
-                                            id="Symbol_value" name="Symbol" required="" ng-model="searchStr"
-                                            ng-disabled="disableInput" type="" placeholder="Stock code"
-                                            maxlength="524288" ng-focus="onFocusHandler()"
-                                            class="form-control ng-invalid ng-invalid-required ng-valid-maxlength"
-                                            ng-blur="hideResults($event)" autocapitalize="off" autocorrect="off"
-                                            autocomplete="off" ng-change="inputChangeHandler(searchStr)"
-                                            ng-keyup="enterPressHandler($event, searchStr)">
-
-                                        <div id="Symbol_dropdown"
-                                             class="angucomplete-dropdown angucomplete-dropdown-bottom ng-hide"
-                                             ng-class="dropdownClass ? dropdownClass : ''" ng-show="showDropdown">
-                                            <div class="angucomplete-searching ng-binding ng-hide" ng-show="searching"
-                                                 ng-bind="textSearching">Searching...
-                                            </div>
-                                            <div class="angucomplete-searching ng-binding"
-                                                 ng-show="!searching &amp;&amp; (!results || results.length == 0)"
-                                                 ng-bind="textNoResults">No results found
-                                            </div>
-                                            <!-- ngRepeat: result in results -->  </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn" ng-click="searchSymbol()"><i
-                                            class="icon-magnifier"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- END RESPONSIVE QUICK SEARCH FORM -->
-            </li>
-            <li>
-                <a href="#/market-watch/watchlists">
-                    <i class="icon-magnifier"></i>
-                    <span class="title">Watchlist</span>
+<div ng-controller="MenuCtrl">
+    <div class="page-header -i navbar navbar-fixed-top">
+        <div class="page-header-inner">
+            <!--<div class="page-logo">
+                <a href="/#">
+                    <img src="" alt="logo" class="logo-default">
                 </a>
-            </li>
 
-            <li class="last">
-                <a href="javascript:;">
-                    <i class=" icon-folder-alt"></i>
-                    <span class="title">Stock</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a href="#/company-AZ">
-                            Stock A-Z
+                <div class="menu-toggler sidebar-toggler hide">
+                </div>
+            </div>-->
+            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
+               data-target=".navbar-collapse">
+            </a>
+            <div class="top-menu ng-scope">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown dropdown-user" id="user-menu">
+                        <a href="javascript:;" class="dropdown-toggle hover-initialized" data-toggle="dropdown"
+                           data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                            <!--<img alt="" class="img-circle" src="/assets/admin/layout/img/avatar.png">-->
+                <span class="username username-hide-on-mobile">{{accountName}}
+                </span>
+                            <i class="fa fa-angle-down"></i>
                         </a>
-                    </li>
-                    <li>
-                        <a href="#/stock-screener">
-                            Stock screener
-                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a href="#/market-watch/watchlists">
+                                    <i class="icon-calendar"></i> Watch List
+                                </a>
+                            </li>
+
+                            <li class="divider">
+                            </li>
+                            <li>
+                                <a ng-click="logout()">
+                                    <i class="icon-logout"></i>Logout
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
-            </li>
+            </div>
+        </div>
+    </div>
+    <div class="page-sidebar-wrapper" style="margin-top: 46px">
+        <div class="page-sidebar navbar-collapse collapse" id="sidebar">
+            <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+                <!-- <li class="sidebar-toggler-wrapper">
+                     &lt;!&ndash; BEGIN SIDEBAR TOGGLER BUTTON &ndash;&gt;
+                <div class="sidebar-toggler" id="sidebar-toggler">
+                </div>
+                &lt;!&ndash; END SIDEBAR TOGGLER BUTTON &ndash;&gt;
+            </li>-->
+                <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
+                <li class="sidebar-search-wrapper">
+                    <!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
+                    <!-- DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box -->
+                    <!-- DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box -->
+                    <div class="sidebar-search">
+                        <a href="javascript:;" class="remove">
+                            <i class="icon-close"></i>
+                        </a>
+                        <table cellpadding="0" cellspacing="0" class="input-group" id="search-box">
+                            <tbody>
+                            <tr>
+                                <td class="col-xs-12 nopadding">
+                                    <div angucomplete-alt="" id="Symbol" placeholder="Stock code" pause="300"
+                                         selected-object="symbolSelected" initial-value="" local-data="quotes"
+                                         search-fields="Symbol,Name" title-field="Symbol" description-field="Name"
+                                         minlength="1" input-class="form-control"
+                                         dropdown-class="angucomplete-dropdown-bottom" match-class="highlight"
+                                         input-changed="symbolChanged" enter-pressed="enterPressed"
+                                         class="ng-isolate-scope">
+                                        <div class="angucomplete-holder"
+                                             ng-class="{'angucomplete-dropdown-visible': showDropdown}"><input
+                                                id="Symbol_value" name="Symbol" required="" ng-model="searchStr"
+                                                ng-disabled="disableInput" type="" placeholder="Stock code"
+                                                maxlength="524288" ng-focus="onFocusHandler()"
+                                                class="form-control ng-invalid ng-invalid-required ng-valid-maxlength"
+                                                ng-blur="hideResults($event)" autocapitalize="off" autocorrect="off"
+                                                autocomplete="off" ng-change="inputChangeHandler(searchStr)"
+                                                ng-keyup="enterPressHandler($event, searchStr)">
+
+                                            <div id="Symbol_dropdown"
+                                                 class="angucomplete-dropdown angucomplete-dropdown-bottom ng-hide"
+                                                 ng-class="dropdownClass ? dropdownClass : ''" ng-show="showDropdown">
+                                                <div class="angucomplete-searching ng-binding ng-hide"
+                                                     ng-show="searching"
+                                                     ng-bind="textSearching">Searching...
+                                                </div>
+                                                <div class="angucomplete-searching ng-binding"
+                                                     ng-show="!searching &amp;&amp; (!results || results.length == 0)"
+                                                     ng-bind="textNoResults">No results found
+                                                </div>
+                                                <!-- ngRepeat: result in results -->  </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn" ng-click="searchSymbol()"><i
+                                                class="icon-magnifier"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END RESPONSIVE QUICK SEARCH FORM -->
+                </li>
+                <li ng-class="{active:hashPart.indexOf('/watchlists')!=-1}">
+                    <a href="#/market-watch/watchlists">
+                        <i class="icon-magnifier"></i>
+                        <span class="title">Watchlist</span>
+                    </a>
+                </li>
+
+                <li class="last"
+                    ng-class="{active:hashPart.indexOf('/stock/')!=-1, open:hashPart.indexOf('/stock/')!=-1}">
+                    <a href="javascript:;">
+                        <i class=" icon-folder-alt"></i>
+                        <span class="title">Stock</span>
+                        <span class="arrow" ng-class="{open:hashPart.indexOf('/stock/')!=-1}"></span>
+                    </a>
+                    <ul class="sub-menu" style="display: none">
+                        <li ng-class="{active:hashPart.indexOf('/company-AZ')!=-1}">
+                            <a href="#/stock/company-AZ">
+                                Stock A-Z
+                            </a>
+                        </li>
+                        <li ng-class="{active:hashPart.indexOf('/stock-screener')!=-1}">
+                            <a href="#/stock/stock-screener">
+                                Stock screener
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
 
-        </ul>
-        <!-- END SIDEBAR MENU -->
+            </ul>
+            <!-- END SIDEBAR MENU -->
+        </div>
     </div>
 </div>

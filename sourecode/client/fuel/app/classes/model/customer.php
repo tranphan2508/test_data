@@ -1,6 +1,6 @@
 <?php
 
-class Model_User extends \Orm\Model
+class Model_Customer extends \Orm\Model
 {
     protected static $_property = array(
         'id',
@@ -26,11 +26,11 @@ class Model_User extends \Orm\Model
         ),
     );
 
-    protected static $_table_name = 'user';
+    protected static $_table_name = 'customer';
 
     public static function login($username, $password)
     {
-        $user = Model_User::query()
+        $user = Model_Customer::query()
             ->select('id', 'username', 'name', 'password', 'login_hash')
             ->where('username', $username)
             ->where('del', 0)
@@ -52,7 +52,7 @@ class Model_User extends \Orm\Model
                 \Session::set('login_hash_manager', $login_hash);
 
                 //update to database
-                $user_update = Model_User::find($user['id']);
+                $user_update = Model_Customer::find($user['id']);
                 $user_update->login_hash = $login_hash;
                 if ($user_update->save()) {
                     return $user; //login successful

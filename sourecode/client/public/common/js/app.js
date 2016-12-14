@@ -1,14 +1,15 @@
 'use strict';
-var myApp = angular.module('myApp', ['ngRoute','ui.bootstrap']);
+var myApp = angular.module('myApp', ['ngRoute','ui.bootstrap','angular-md5', 'ngCookies']);
 
 myApp.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
             when('/', {templateUrl: 'company/a_z.html'}).
             when('/market-watch/watchlists', {templateUrl: 'company/a_z.html'}).
-            when('/company-AZ', {templateUrl: 'company/a_z.html'}).
-            when('/company-data/:id', {templateUrl: 'company/detail.html'}).
-            when('/stock-screener', {templateUrl: 'company/screener.html'}).
+            when('/stock/company-AZ', {templateUrl: 'company/a_z.html'}).
+            when('/stock/company-data/:id', {templateUrl: 'company/detail.html'}).
+            when('/stock/stock-screener', {templateUrl: 'company/screener.html'}).
+            when('/login', {templateUrl: 'login.html'}).
             otherwise({redirectTo: '/'});
     }]);
 myApp.config(function ($httpProvider) {
