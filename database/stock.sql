@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2016 at 08:52 AM
+-- Generation Time: Dec 14, 2016 at 07:54 AM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.19
 
@@ -2016,6 +2016,30 @@ INSERT INTO `company` (`id`, `name`, `code`, `sector_id`, `floor_id`, `descripti
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `customer`
+--
+
+CREATE TABLE `customer` (
+  `id` int(11) NOT NULL,
+  `username` varchar(265) CHARACTER SET utf8 NOT NULL,
+  `password` varchar(265) CHARACTER SET utf8 NOT NULL,
+  `login_hash` varchar(265) CHARACTER SET utf8 NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `customer`
+--
+
+INSERT INTO `customer` (`id`, `username`, `password`, `login_hash`, `name`, `del`, `created_date`, `updated_date`) VALUES
+(1, 'tranphan2508@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', 'd1e985f45624552625b0962f18659e17', 'Tran Phan', 0, '2016-11-23 00:00:00', '2016-12-14 07:27:23');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `floor`
 --
 
@@ -3319,7 +3343,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `login_hash`, `name`, `del`, `created_date`, `updated_date`) VALUES
-(1, 'tranphan2508@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', 'e66018d5a4408d4722bb8727eef42571', 'Tran Phan', 0, '2016-11-23 00:00:00', '2016-12-13 03:16:10');
+(1, 'tranphan2508@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', 'e8b5746641d2dd5112c1c45649c09e70', 'Tran Phan', 0, '2016-11-23 00:00:00', '2016-12-14 02:34:18');
 
 --
 -- Indexes for dumped tables
@@ -3440,7 +3464,7 @@ ALTER TABLE `sector`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
