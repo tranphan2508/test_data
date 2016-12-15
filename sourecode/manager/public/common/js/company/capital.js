@@ -103,7 +103,8 @@ myApp.controller('AddCompanyCapitalCtrl', function ($scope, $uibModalInstance, R
                     'reason': $scope.reason,
                     'quantity': $scope.quantity,
                     'price': $scope.price,
-                    'list_date': $filter('date')($scope.list_date, 'yyyy-MM-dd') + ' 00:00:00'
+                    'list_date': $filter('date')($scope.list_date, 'yyyy-MM-dd') + ' 00:00:00',
+                    'type': $scope.type
                 }
             };
             RestAPI.do('post', 'company/capital/capHistory', data_json,
@@ -138,6 +139,7 @@ myApp.controller('AddCompanyCapitalCtrl', function ($scope, $uibModalInstance, R
         };
         $scope.format = 'yyyy-MM-dd';
         $scope.date = {'opened': false};
+        $scope.type = 0;
     }
 
     init();
@@ -156,7 +158,8 @@ myApp.controller('EditCompanyCapitalCtrl', function ($scope, $uibModalInstance, 
                 'reason': $scope.capital.reason,
                 'quantity': $scope.capital.quantity,
                 'price': $scope.capital.price,
-                'list_date': $filter('date')($scope.capital.list_date, 'yyyy-MM-dd') + ' 00:00:00'
+                'list_date': $filter('date')($scope.capital.list_date, 'yyyy-MM-dd') + ' 00:00:00',
+                'type':$scope.capital.type
             };
             RestAPI.do('put', 'company/capital/capHistory', param,
                 function (data, status) {

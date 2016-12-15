@@ -5,9 +5,10 @@
     <div class="article row">
         <table class="table table-striped table-bordered table-hover stripped">
             <colgroup>
-                <col width="15%">
-                <col width="20%">
-                <col width="15%">
+                <col width="10%">
+                <col width="17%">
+                <col width="12%">
+                <col width="12%">
                 <col width="15%">
                 <col width="15%">
 
@@ -18,7 +19,8 @@
                 <th>Lý do niêm yết thêm</th>
                 <th>Số lượng</th>
                 <th>Mệnh giá</th>
-                <th>Cổ phiếu đang lưu hành</th>
+                <th>Cổ phiếu phổ thông đang lưu hành</th>
+                <th>Cổ phiếu quỹ và bị hạn chế quyền sỡ hữu đang lưu hành</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -30,7 +32,8 @@
                 <td>{{capital.reason}}</td>
                 <td>{{capital.quantity | number}}</td>
                 <td>{{capital.price | number}}</td>
-                <td>{{capital.share_outstanding | number}}</td>
+                <td>{{capital.share_outstanding |toShareOutstanding:capital.type : 0 | number}}</td>
+                <td>{{capital.other_share | toShareOutstanding:capital.type : 1 | number}}</td>
                 <td><label class="btn btn-sm btn-warning divRightAlign"
                            ng-click="edit(capital)">Edit</label></td>
                 <td><label class="btn btn-sm btn-danger divRightAlign"

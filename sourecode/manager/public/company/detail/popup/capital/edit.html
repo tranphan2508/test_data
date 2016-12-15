@@ -41,6 +41,12 @@
                     <td><input type="number" name="price" ng-model="capital.price"
                                class="form-control ng-touched"/></td>
                 </tr>
+                <tr>
+                    <td><label>Type</label></td>
+                    <td><label class="radio-inline"><input type="radio" ng-model="capital.type" value="0" class="ng-pristine ng-untouched ng-valid ng-empty">Phổ thông</label>
+                        <label class="radio-inline"><input type="radio" ng-model="capital.type" value="1" class="ng-pristine ng-untouched ng-valid ng-empty">Other</label>
+                    </td>
+                </tr>
                 </tbody>
             </table>
 

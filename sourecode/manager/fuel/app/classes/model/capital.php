@@ -5,10 +5,12 @@ class Model_Capital extends \Orm\Model
     protected static $_property = array(
         'id',
         'company_id',
+        'type',
         'reason',
         'quantity',
         'price',
         'share_outstanding',
+        'other_share',
         'del',
         'list_date',
         'updated_date'
@@ -39,14 +41,16 @@ class Model_Capital extends \Orm\Model
         return $res;
     }
 
-    public static function insertCapital($company_id, $reason, $quantity, $price, $share_outstanding, $list_date)
+    public static function insertCapital($company_id,$type, $reason, $quantity, $price, $share_outstanding,$other_share, $list_date)
     {
         $new = Model_Capital::forge(array(
             'company_id' => $company_id,
+            'type' => $type,
             'reason' => $reason,
             'quantity' => $quantity,
             'price' => $price ? $price : 0,
             'share_outstanding' => $share_outstanding,
+            'other_share' => $other_share,
             'list_date' => $list_date
         ));
         $new->save();
@@ -57,7 +61,8 @@ class Model_Capital extends \Orm\Model
     {
         $ary_where = array(
             array('del', 0),
-            array('list_date', '<', $list_date));
+            array('list_date', '<', $list_date),
+            array('type','=','0'));
         if (!empty($company_id)) $ary_where[] = array('company_id', '=', $company_id);
         if (!empty($id)) $ary_where[] = array('id', '!=', $id);
         $res = Model_Capital::find('first', array(
@@ -67,16 +72,36 @@ class Model_Capital extends \Orm\Model
             )
         ));
         if ($res) return $res['share_outstanding'];
-        return null;
+        return 0;
     }
 
-    public static function updateCapital($id, $reason, $quantity, $price, $share_outstanding, $list_date)
+    public static function getLastOtherShare($company_id, $list_date, $id = null)
+    {
+        $ary_where = array(
+            array('del', 0),
+            array('list_date', '<', $list_date),
+            array('type','=','1'));
+        if (!empty($company_id)) $ary_where[] = array('company_id', '=', $company_id);
+        if (!empty($id)) $ary_where[] = array('id', '!=', $id);
+        $res = Model_Capital::find('first', array(
+            'where' => $ary_where,
+            'order_by' => array(
+                'list_date' => 'desc'
+            )
+        ));
+        if ($res) return $res['other_share'];
+        return 0;
+    }
+
+    public static function updateCapital($id,$type, $reason, $quantity, $price, $share_outstanding,$other_share, $list_date)
     {
         $res = Model_Capital::find($id);
+        $res->type = $type;
         $res->reason = $reason;
         $res->quantity = $quantity;
         $res->price = $price ? $price : 0;
         $res->share_outstanding = $share_outstanding;
+        $res->other_share = $other_share;
         $res->list_date = $list_date;
         return ($res->save());
     }
@@ -95,6 +120,7 @@ class Model_Capital extends \Orm\Model
         //get list capital in year
         $ary_where = array(
             array('del', 0),
+            array('type', 0),
             array('list_date', '<=', $year . '-12-31 00:00:00'),
             array('list_date', '>=', $year . '-01-01 00:00:00'),
             array('company_id', '=', $id)

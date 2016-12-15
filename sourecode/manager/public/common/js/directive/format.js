@@ -59,3 +59,10 @@ myApp.filter('toDate', function($filter) {
     }
 });
 
+myApp.filter('toShareOutstanding', function() {
+    return function(input, type1, type2 ) {
+        if(type1==type2)
+        return input;
+        return null;
+    }
+});

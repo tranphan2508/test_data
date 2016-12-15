@@ -218,10 +218,10 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
             function (data, status) {
                 if (data.success) {
                     var tmp_values = data.result;
-                    tmp_values[1] = averageNumber(tmp_values[1][$scope.year], tmp_values[1][$scope.year - 1]);
-                    tmp_values[7] = averageNumber(tmp_values[7][$scope.year], tmp_values[7][$scope.year - 1]);
-                    tmp_values[8] = averageNumber(tmp_values[8][$scope.year], tmp_values[8][$scope.year - 1]);
-                    tmp_values[30] = averageNumber(tmp_values[30][$scope.year], tmp_values[30][$scope.year - 1]);
+                    tmp_values[1] = averageNumber(tmp_values, 1, $scope.year);
+                    tmp_values[7] = averageNumber(tmp_values, 7, $scope.year);
+                    tmp_values[8] = averageNumber(tmp_values, 8, $scope.year);
+                    tmp_values[30] = averageNumber(tmp_values, 30, $scope.year);
                     switch (type) {
                         case 1:
                             if(tmp_values['share_holding'] && tmp_values['share_holding']!=0){
@@ -358,9 +358,13 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
         return n;
     }
 
-    function averageNumber(n1, n2) {
-        n1 = new BigNumber(n1);
-        n2 = new BigNumber(n2);
+    function averageNumber(temp_value, index, year) {
+        n1 = new BigNumber(0);
+        n2 = new BigNumber(0);
+        if (index in temp_value) {
+            if (year in temp_value[index]) n1 = new BigNumber(temp_value[index][year]);
+            if ((year - 1) in temp_value[index]) n2 = new BigNumber(temp_value[index][year - 1]);
+        }
         return (n1.add(n2)).divide(2);
     }
 

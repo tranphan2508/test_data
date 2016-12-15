@@ -1,28 +1,28 @@
 myApp.service('UserInfoService', function ($cookies) {
     this.saveUserInfo = function (data) {
-        $cookies.put('id', data.id);
-        $cookies.put('username', data.username);
-        $cookies.put('name', data.name);
-        $cookies.put('login_hash', data.login_hash);
+        $cookies.put('c_id', data.id);
+        $cookies.put('c_username', data.username);
+        $cookies.put('c_name', data.name);
+        $cookies.put('c_login_hash', data.login_hash);
     };
 
     this.getName = function () {
-        return $cookies.get('name');
+        return $cookies.get('c_name');
     };
 
     this.getUserName = function () {
-        return $cookies.get('username');
+        return $cookies.get('c_username');
     };
 
     this.getLoginHash = function () {
-        return $cookies.get('login_hash');
+        return $cookies.get('c_login_hash');
     };
 
     this.clearUserInfo = function () {
-        $cookies.remove('id');
-        $cookies.remove('username');
-        $cookies.remove('name');
-        $cookies.remove('login_hash');
+        $cookies.remove('c_id');
+        $cookies.remove('c_username');
+        $cookies.remove('c_name');
+        $cookies.remove('c_login_hash');
     }
 });
 
