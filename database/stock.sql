@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2016 at 09:20 AM
+-- Generation Time: Dec 19, 2016 at 06:29 AM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.19
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `stock`
 --
+CREATE DATABASE IF NOT EXISTS `stock` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `stock`;
 
 -- --------------------------------------------------------
 
@@ -26,22 +28,30 @@ SET time_zone = "+00:00";
 -- Table structure for table `balance_sheet`
 --
 
-CREATE TABLE `balance_sheet` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `balance_sheet`;
+CREATE TABLE IF NOT EXISTS `balance_sheet` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `company_id` int(11) NOT NULL,
   `year` smallint(6) NOT NULL,
   `param_id` int(11) NOT NULL,
   `value` varchar(255) NOT NULL,
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `updated_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `company_id` (`company_id`,`year`,`param_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1203 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `balance_sheet`
+--
+
+TRUNCATE TABLE `balance_sheet`;
 --
 -- Dumping data for table `balance_sheet`
 --
 
-INSERT INTO `balance_sheet` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `balance_sheet` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
 (80, 1, 2015, 5, '163218530205', 0, '2016-10-19 01:40:31', '2016-12-13 03:58:40'),
 (95, 1, 2015, 190, '-2500000000', 0, '2016-10-19 02:10:35', '2016-10-19 02:16:27'),
 (94, 1, 2015, 189, '106081102933', 0, '2016-10-19 02:10:35', '2016-10-19 02:16:27'),
@@ -646,7 +656,7 @@ INSERT INTO `balance_sheet` (`id`, `company_id`, `year`, `param_id`, `value`, `d
 (678, 3, 2012, 23, '17794010357437', 0, '2016-10-28 02:01:53', '2016-10-28 02:01:53'),
 (679, 3, 2012, 24, '-9119830995', 0, '2016-10-28 02:01:53', '2016-10-28 02:01:53'),
 (680, 3, 2012, 25, '39627501766', 0, '2016-10-28 02:01:53', '2016-10-28 02:01:53');
-INSERT INTO `balance_sheet` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `balance_sheet` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
 (681, 3, 2012, 26, '234961212193', 0, '2016-10-28 02:01:53', '2016-10-28 02:01:53'),
 (682, 3, 2012, 27, '5241073421', 0, '2016-10-28 02:01:53', '2016-10-28 02:01:53'),
 (683, 3, 2012, 29, '1440630290454', 0, '2016-10-28 02:01:53', '2016-10-28 02:01:53'),
@@ -1176,17 +1186,31 @@ INSERT INTO `balance_sheet` (`id`, `company_id`, `year`, `param_id`, `value`, `d
 -- Table structure for table `capital`
 --
 
+DROP TABLE IF EXISTS `capital`;
 CREATE TABLE `capital` (
   `id` int(11) NOT NULL,
   `company_id` int(11) NOT NULL,
-  `type` tinyint(4) NOT NULL DEFAULT '0'COMMENT
-) ;
+  `type` tinyint(4) DEFAULT 0,
+  `reason` varchar(285) CHARACTER SET utf8 DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` int(11) DEFAULT NULL,
+  `share_outstanding` int(11) NOT NULL,
+  `other_share` int(11) NOT NULL,
+  `list_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL,
+  `del` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `capital`
+--
+
+TRUNCATE TABLE `capital`;
 --
 -- Dumping data for table `capital`
 --
 
-INSERT INTO `capital` (`id`, `company_id`, `type`, `reason`, `quantity`, `price`, `share_outstanding`, `other_share`, `list_date`, `updated_date`, `del`) VALUES
+INSERT DELAYED IGNORE INTO `capital` (`id`, `company_id`, `type`, `reason`, `quantity`, `price`, `share_outstanding`, `other_share`, `list_date`, `updated_date`, `del`) VALUES
 (1, 1, 0, 'Niêm yết cổ phiếu', 1800000, 10000, 1800000, NULL, '2009-12-09 00:00:00', '2016-11-23 02:21:48', 0),
 (2, 1, 0, 'Phát hành cổ phiểu riêng lẻ', 700000, 10000, 2500000, NULL, '2010-01-14 00:00:00', '2016-11-22 08:11:40', 0),
 (3, 1, 0, 'Phát hành cổ phiếu riêng lẻ và phát hành cho cổ đông hiện hữu', 7500000, 10000, 10000000, NULL, '2010-02-08 00:00:00', '2016-11-22 08:11:33', 0),
@@ -1220,22 +1244,29 @@ INSERT INTO `capital` (`id`, `company_id`, `type`, `reason`, `quantity`, `price`
 -- Table structure for table `cashflow`
 --
 
-CREATE TABLE `cashflow` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `cashflow`;
+CREATE TABLE IF NOT EXISTS `cashflow` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `company_id` int(11) NOT NULL,
   `year` smallint(6) NOT NULL,
   `param_id` int(11) NOT NULL,
   `value` varchar(255) NOT NULL,
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `updated_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=793 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `cashflow`
+--
+
+TRUNCATE TABLE `cashflow`;
 --
 -- Dumping data for table `cashflow`
 --
 
-INSERT INTO `cashflow` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `cashflow` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
 (1, 1, 2015, 136, '1157708960821', 0, '2016-10-19 06:57:28', '2016-10-19 06:57:28'),
 (2, 1, 2015, 138, '27960503622', 0, '2016-10-19 06:57:28', '2016-10-19 06:57:28'),
 (3, 1, 2015, 139, '102100000', 0, '2016-10-19 06:57:28', '2016-10-19 06:57:28'),
@@ -1833,7 +1864,7 @@ INSERT INTO `cashflow` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, 
 (595, 3, 2012, 156, '-898948679962', 0, '2016-10-28 07:26:57', '2016-10-28 07:26:57'),
 (596, 3, 2012, 157, '10512225001', 0, '2016-10-28 07:26:57', '2016-10-28 07:26:57'),
 (597, 3, 2012, 160, '-2921880550078', 0, '2016-10-28 07:26:57', '2016-10-28 07:26:57');
-INSERT INTO `cashflow` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `cashflow` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
 (598, 3, 2012, 162, '948248820753', 0, '2016-10-28 07:26:57', '2016-10-28 07:26:57'),
 (599, 3, 2012, 163, '-1550000000000', 0, '2016-10-28 07:26:57', '2016-10-28 07:26:57'),
 (600, 3, 2012, 164, '5285050808420', 0, '2016-10-28 07:26:57', '2016-10-28 07:26:57'),
@@ -2036,8 +2067,9 @@ INSERT INTO `cashflow` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, 
 -- Table structure for table `company`
 --
 
-CREATE TABLE `company` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `company`;
+CREATE TABLE IF NOT EXISTS `company` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) CHARACTER SET utf8 NOT NULL COMMENT 'Name of company',
   `code` varchar(10) CHARACTER SET utf8 NOT NULL COMMENT 'Stock code ',
   `sector_id` int(11) NOT NULL,
@@ -2047,14 +2079,20 @@ CREATE TABLE `company` (
   `public` int(1) DEFAULT '0',
   `del` tinyint(2) NOT NULL DEFAULT '0',
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `company`
+--
+
+TRUNCATE TABLE `company`;
 --
 -- Dumping data for table `company`
 --
 
-INSERT INTO `company` (`id`, `name`, `code`, `sector_id`, `floor_id`, `description`, `link`, `public`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `company` (`id`, `name`, `code`, `sector_id`, `floor_id`, `description`, `link`, `public`, `del`, `created_date`, `updated_date`) VALUES
 (1, 'Công ty Cổ phần Tập đoàn FLC', 'FLC', 9, 1, 'Công ty Cổ phầnTập đoàn FLC là một công ty hoạt động trong lĩnh vực bất động sản mới gia nhập thị trường. Tuy nhiên, nhờ có đội ngũ quản lý có nhiều kinh nghiệm trong ngành, Công ty đang từng bước tạo lập uy tín và thương hiệu “FLC” trên thị trường. Số lượng khách hàng của Công ty ngày càng tăng không chỉ dựa vào mối quan hệ tốt sẵn có của các cán bộ quản lý mà còn dựa vào chính chất lượng sản phẩm dịch vụ mà FLC mang đến cho khách hàng. FLC định hướng trở thành một trong những tập đoàn kinh doanh tư vấn bất động sản hàng đầu tại Việt Nam.', 'http://flc.vn', 1, 0, '2016-10-06 06:19:31', '2016-11-24 07:54:39'),
 (2, 'CTCP Hùng Vương', 'HVG', 4, 1, 'HVG là một trong những công ty chế biến cá tra được thành lập sớm tại Việt Nam với đội ngũ nhân sự nhiều kinh nghiệm và đã tạo dựng được thương hiệu được nhiều người tiêu dùng và đối tác biết đến, nhờ vào tính ổn định trong sản lượng và chất lượng của các sản phẩm, quy trình sản xuất khép kín, thương hiệu luôn được Công ty chú trọng quảng bá và trách nhiệm cao đối với xã hội và môi trường của Công ty. Đây là những yếu tố làm nên một HVG luôn duy trì mức tăng trưởng tốt trong suốt 11 năm hoat động của mình.', 'http://www.hungvuongpanga.com/', 1, 0, '2016-10-06 07:53:46', '2016-10-06 07:53:46'),
 (3, 'Tập đoàn Vingroup - CTCP', 'VIC', 9, 1, 'Công ty Cổ phần Vincom (Vincom), tiền thân là Công ty Cổ phần (CP) Thương mại Tổng hợp Việt Nam, được chính thức thành lập vào ngày 3/5/2002. Trải qua hơn 8 năm xây dựng và phát triển,tới nay, Vincom đã trở thành một trong những doanh nghiệp hàng đầu Việt Nam trong lĩnh vực bất động sản. Hàng loạt những dự án bất động sản cao cấp mang thương hiệu Vincom đang được triển khai tiếp nối nhau tại nhiều thành phố lớn của cả nước. Những dự án này đều là tâm điểm của sự chú ý và được đánh giá cao bởi các nhà đầu tư. Trong tương lai, hàng loạt công trình tầm cỡ mang tên Vincom sẽ xuất hiện trên khắp đất nước Việt Nam, góp phần xây dựng hình ảnh Việt Nam hiện đại,năng động và phát triển.', 'http://www.vingroup.net', 1, 0, '2016-10-28 01:42:23', '2016-10-28 01:42:23'),
@@ -2067,7 +2105,8 @@ INSERT INTO `company` (`id`, `name`, `code`, `sector_id`, `floor_id`, `descripti
 -- Table structure for table `customer`
 --
 
-CREATE TABLE `customer` (
+DROP TABLE IF EXISTS `customer`;
+CREATE TABLE IF NOT EXISTS `customer` (
   `id` int(11) NOT NULL,
   `username` varchar(265) CHARACTER SET utf8 NOT NULL,
   `password` varchar(265) CHARACTER SET utf8 NOT NULL,
@@ -2079,11 +2118,16 @@ CREATE TABLE `customer` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
+-- Truncate table before insert `customer`
+--
+
+TRUNCATE TABLE `customer`;
+--
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`id`, `username`, `password`, `login_hash`, `name`, `del`, `created_date`, `updated_date`) VALUES
-(1, 'tranphan2508@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '177dd00a37a3c3d7475591caebd40d8c', 'Tran Phan', 0, '2016-11-23 00:00:00', '2016-12-15 02:32:50');
+INSERT DELAYED IGNORE INTO `customer` (`id`, `username`, `password`, `login_hash`, `name`, `del`, `created_date`, `updated_date`) VALUES
+(1, 'tranphan2508@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '077052355f4181fdc6ae376eb77e377f', 'Tran Phan', 0, '2016-11-23 00:00:00', '2016-12-15 09:24:48');
 
 -- --------------------------------------------------------
 
@@ -2091,21 +2135,28 @@ INSERT INTO `customer` (`id`, `username`, `password`, `login_hash`, `name`, `del
 -- Table structure for table `floor`
 --
 
-CREATE TABLE `floor` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `floor`;
+CREATE TABLE IF NOT EXISTS `floor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text CHARACTER SET utf8 NOT NULL,
   `code` varchar(10) CHARACTER SET utf8 NOT NULL,
   `link` varchar(256) CHARACTER SET utf8 NOT NULL,
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `floor`
+--
+
+TRUNCATE TABLE `floor`;
 --
 -- Dumping data for table `floor`
 --
 
-INSERT INTO `floor` (`id`, `name`, `code`, `link`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `floor` (`id`, `name`, `code`, `link`, `del`, `created_date`, `updated_date`) VALUES
 (1, 'Sở giao dịch chứng khoán Hồ Chí Minh', 'HSX', 'https://www.hsx.vn/', 0, '2016-09-29 09:29:40', '2016-11-23 04:03:45'),
 (2, 'Sở Giao dịch Chứng khoán Hà Nội', 'HNX', 'http://www.hnx.vn/', 0, '2016-10-05 07:27:31', '2016-10-05 07:27:31'),
 (3, 'UPCOM', 'UPCOM', 'http://www.hnx.vn/', 0, '2016-10-05 08:36:54', '2016-10-05 08:37:16');
@@ -2116,22 +2167,29 @@ INSERT INTO `floor` (`id`, `name`, `code`, `link`, `del`, `created_date`, `updat
 -- Table structure for table `income_statement`
 --
 
-CREATE TABLE `income_statement` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `income_statement`;
+CREATE TABLE IF NOT EXISTS `income_statement` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `company_id` int(11) NOT NULL,
   `year` smallint(6) NOT NULL,
   `param_id` int(11) NOT NULL,
   `value` varchar(255) NOT NULL,
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `updated_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=870 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `income_statement`
+--
+
+TRUNCATE TABLE `income_statement`;
 --
 -- Dumping data for table `income_statement`
 --
 
-INSERT INTO `income_statement` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `income_statement` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
 (36, 1, 2015, 115, '5326248342689', 0, '2016-10-19 04:15:24', '2016-10-19 04:15:24'),
 (35, 1, 2015, 118, '682580149411', 0, '2016-10-19 04:15:24', '2016-10-19 04:15:24'),
 (34, 1, 2015, 116, '4662387980687', 0, '2016-10-19 04:15:24', '2016-10-19 04:15:24'),
@@ -2732,7 +2790,7 @@ INSERT INTO `income_statement` (`id`, `company_id`, `year`, `param_id`, `value`,
 (619, 3, 2005, 113, '136954915012', 0, '2016-10-28 04:20:28', '2016-10-28 04:20:28'),
 (620, 3, 2005, 116, '42293126252', 0, '2016-10-28 04:20:28', '2016-10-28 04:20:28'),
 (621, 3, 2005, 118, '817814635', 0, '2016-10-28 04:20:28', '2016-10-28 04:20:28');
-INSERT INTO `income_statement` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `income_statement` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
 (622, 3, 2005, 119, '4662128725', 0, '2016-10-28 04:20:28', '2016-10-28 04:20:28'),
 (623, 3, 2005, 120, '4325836010', 0, '2016-10-28 04:20:28', '2016-10-28 04:20:28'),
 (624, 3, 2005, 122, '5992723424', 0, '2016-10-28 04:20:28', '2016-10-28 04:20:28'),
@@ -2988,22 +3046,30 @@ INSERT INTO `income_statement` (`id`, `company_id`, `year`, `param_id`, `value`,
 -- Table structure for table `indicators`
 --
 
-CREATE TABLE `indicators` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `indicators`;
+CREATE TABLE IF NOT EXISTS `indicators` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `company_id` int(11) NOT NULL,
   `year` smallint(6) NOT NULL,
   `param_id` int(11) NOT NULL,
   `value` varchar(255) NOT NULL,
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `updated_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `company_id` (`company_id`,`year`,`param_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1301 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `indicators`
+--
+
+TRUNCATE TABLE `indicators`;
 --
 -- Dumping data for table `indicators`
 --
 
-INSERT INTO `indicators` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `indicators` (`id`, `company_id`, `year`, `param_id`, `value`, `del`, `created_date`, `updated_date`) VALUES
 (1167, 1, 2015, 209, '23.05', 0, '2016-11-16 08:44:37', '2016-12-13 03:58:53'),
 (1168, 1, 2015, 211, '11.85', 0, '2016-11-16 08:44:37', '2016-12-13 03:58:53'),
 (1169, 1, 2015, 212, '14.47', 0, '2016-11-16 08:46:55', '2016-12-13 03:58:53'),
@@ -3145,8 +3211,9 @@ INSERT INTO `indicators` (`id`, `company_id`, `year`, `param_id`, `value`, `del`
 -- Table structure for table `params`
 --
 
-CREATE TABLE `params` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `params`;
+CREATE TABLE IF NOT EXISTS `params` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(256) CHARACTER SET utf8 NOT NULL,
   `description` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `type` int(3) NOT NULL COMMENT '1-balance sheet; 2-income statement;3-statement of cash flow',
@@ -3154,14 +3221,20 @@ CREATE TABLE `params` (
   `level` int(11) NOT NULL,
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `del` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='name of all data type';
+  `del` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=220 DEFAULT CHARSET=latin1 COMMENT='name of all data type';
 
+--
+-- Truncate table before insert `params`
+--
+
+TRUNCATE TABLE `params`;
 --
 -- Dumping data for table `params`
 --
 
-INSERT INTO `params` (`id`, `title`, `description`, `type`, `parent_id`, `level`, `created_date`, `updated_date`, `del`) VALUES
+INSERT DELAYED IGNORE INTO `params` (`id`, `title`, `description`, `type`, `parent_id`, `level`, `created_date`, `updated_date`, `del`) VALUES
 (1, 'TÀI SẢN', '', 1, 0, 1, '2016-09-28 13:33:56', '2016-11-02 08:02:32', 0),
 (2, 'NGUỒN VỐN', NULL, 1, 0, 1, '2016-09-28 13:35:02', '2016-09-28 13:35:02', 0),
 (3, 'A. Tài sản lưu động và đầu tư ngắn hạn', NULL, 1, 1, 2, '2016-09-28 13:35:21', '2016-09-28 13:35:21', 0),
@@ -3388,19 +3461,26 @@ INSERT INTO `params` (`id`, `title`, `description`, `type`, `parent_id`, `level`
 -- Table structure for table `sector`
 --
 
-CREATE TABLE `sector` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `sector`;
+CREATE TABLE IF NOT EXISTS `sector` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(265) CHARACTER SET utf8 NOT NULL,
   `del` tinyint(1) DEFAULT '0',
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `sector`
+--
+
+TRUNCATE TABLE `sector`;
 --
 -- Dumping data for table `sector`
 --
 
-INSERT INTO `sector` (`id`, `name`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `sector` (`id`, `name`, `del`, `created_date`, `updated_date`) VALUES
 (1, 'Dầu khí', 0, '2016-10-05 08:29:26', '2016-11-23 03:58:45'),
 (2, 'Vật liệu cơ bản', 0, '2016-10-05 08:33:04', '2016-10-05 08:33:04'),
 (3, 'Công nghiệp', 0, '2016-10-05 08:33:12', '2016-10-05 08:33:12'),
@@ -3418,138 +3498,31 @@ INSERT INTO `sector` (`id`, `name`, `del`, `created_date`, `updated_date`) VALUE
 -- Table structure for table `user`
 --
 
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(265) CHARACTER SET utf8 NOT NULL,
   `password` varchar(265) CHARACTER SET utf8 NOT NULL,
   `login_hash` varchar(265) CHARACTER SET utf8 NOT NULL,
   `name` varchar(100) CHARACTER SET utf8 NOT NULL,
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `updated_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
+--
+-- Truncate table before insert `user`
+--
+
+TRUNCATE TABLE `user`;
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `login_hash`, `name`, `del`, `created_date`, `updated_date`) VALUES
+INSERT DELAYED IGNORE INTO `user` (`id`, `username`, `password`, `login_hash`, `name`, `del`, `created_date`, `updated_date`) VALUES
 (1, 'tranphan2508@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', 'a0c108dc4f6a35087526e7b4f60f1bc0', 'Tran Phan', 0, '2016-11-23 00:00:00', '2016-12-15 08:22:08');
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `balance_sheet`
---
-ALTER TABLE `balance_sheet`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `company_id` (`company_id`,`year`,`param_id`);
-
---
--- Indexes for table `cashflow`
---
-ALTER TABLE `cashflow`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `company`
---
-ALTER TABLE `company`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `floor`
---
-ALTER TABLE `floor`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `income_statement`
---
-ALTER TABLE `income_statement`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `indicators`
---
-ALTER TABLE `indicators`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `company_id` (`company_id`,`year`,`param_id`);
-
---
--- Indexes for table `params`
---
-ALTER TABLE `params`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sector`
---
-ALTER TABLE `sector`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `balance_sheet`
---
-ALTER TABLE `balance_sheet`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1203;
---
--- AUTO_INCREMENT for table `capital`
---
-ALTER TABLE `capital`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `cashflow`
---
-ALTER TABLE `cashflow`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=793;
---
--- AUTO_INCREMENT for table `company`
---
-ALTER TABLE `company`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `floor`
---
-ALTER TABLE `floor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `income_statement`
---
-ALTER TABLE `income_statement`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=870;
---
--- AUTO_INCREMENT for table `indicators`
---
-ALTER TABLE `indicators`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1301;
---
--- AUTO_INCREMENT for table `params`
---
-ALTER TABLE `params`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
---
--- AUTO_INCREMENT for table `sector`
---
-ALTER TABLE `sector`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
