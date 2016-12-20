@@ -1,6 +1,18 @@
 myApp.controller('DetailCapitalCtrl', function ($scope, RestAPI, $routeParams, $uibModal) {
     var id = $routeParams.id;
+//
+   /* $scope.totalItems = 64;*/
+    $scope.current_page = 1;
 
+    $scope.selectPage = function (page, $event) {
+        console.log(page);
+        $scope.current_page=page;
+        getCapitalHistory();
+    };
+
+    $scope.maxSize = 5;
+    $scope.bigTotalItems = 175;
+//
     $scope.add = function () {
         var modalInstance = $uibModal.open({
             animation: this.animationsEnabled,
@@ -75,11 +87,12 @@ myApp.controller('DetailCapitalCtrl', function ($scope, RestAPI, $routeParams, $
 
     function getCapitalHistory() {
         var today = new Date().getFullYear();
-        var param = {'id': id}
+        var param = {'id': id, 'page':$scope.current_page};
         RestAPI.do('get', 'company/capital/capHistory', param,
             function (data, status) {
                 if (data.success) {
-                    $scope.capitals = data.result;
+                    $scope.capitals = data.result['value'];
+                    $scope.totalItems =data.result['total'];
                 } else {
                     alert(data.error);
                 }

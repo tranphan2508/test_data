@@ -26,17 +26,25 @@ class Model_Capital extends \Orm\Model
 
     protected static $_table_name = 'capital';
 
-    public static function getListCapital($id)
+    public static function getListCapital($id, $number_per_page, $page)
     {
         $res = array();
-        $values = Model_Capital::query()
+        $total = Model_Capital::query()
             ->where('company_id', $id)
             ->where('del', 0)
             ->order_by('list_date')
             ->get();
+        $res['total'] = count($total);
+        $limit_from = ($page - 1) * $number_per_page;
+        $limit_to = $page * $number_per_page;
+        $sql = 'SELECT * FROM `capital` WHERE `company_id`=' . $id;
+        $sql .= ' AND `del`=0';
+        $sql .= ' ORDER BY list_date desc';
+        $sql .= ' LIMIT ' .$limit_from.','.$limit_to;
+        $values = DB::query($sql)->as_object('Model_Capital')->execute();
         foreach ($values as $value) {
-            $row = $value->to_array();
-            $res[] = $row;
+            $row = $value;
+            $res['value'][] = $row;
         }
         return $res;
     }

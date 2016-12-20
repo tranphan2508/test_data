@@ -2,6 +2,9 @@
     <div class="row">
         <button class="btn btn-sm btn-success divRightAlign btn-form" ng-click="add()">Add</button>
     </div>
+    <div class="row">
+        <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true" rotate="false"></ul>
+    </div>
     <div class="article row">
         <table class="table table-striped table-bordered table-hover stripped">
             <colgroup>
