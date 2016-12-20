@@ -61,8 +61,7 @@ class Model_Capital extends \Orm\Model
     {
         $ary_where = array(
             array('del', 0),
-            array('list_date', '<', $list_date),
-            array('type','=','0'));
+            array('list_date', '<', $list_date));
         if (!empty($company_id)) $ary_where[] = array('company_id', '=', $company_id);
         if (!empty($id)) $ary_where[] = array('id', '!=', $id);
         $res = Model_Capital::find('first', array(

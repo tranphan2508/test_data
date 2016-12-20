@@ -100,7 +100,9 @@ class Controller_Company_Finance extends Controller_Base
                 $res2 = \Model_IncomeStatement::getDataForCalcIndicator($id, $year, $p_id);
                 $res3 = \Model_Cashflow::getDataForCalcIndicator($id, $year, $p_id);
                 $result = $res1 +$res2+$res3;
-                $result['share_holding']=\Model_Capital::getLastShareOutstanding($id, $year.'-12-31 00:00:00');
+                $share_outstanding = \Model_Capital::getLastShareOutstanding($id, $year.'-12-31 00:00:00');
+                $other_share = \Model_Capital::getLastOtherShare($id, $year.'-12-31 00:00:00');
+                $result['total_share']=intval($share_outstanding) +intval($other_share);
                 $result['share_holding_avrg']=\Model_Capital::averageCapital($id, $year);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();

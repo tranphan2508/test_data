@@ -20,7 +20,7 @@
                 <th>Số lượng</th>
                 <th>Mệnh giá</th>
                 <th>Cổ phiếu phổ thông đang lưu hành</th>
-                <th>Cổ phiếu quỹ và bị hạn chế quyền sỡ hữu đang lưu hành</th>
+                <th>Cổ phiếu quỹ</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -32,7 +32,7 @@
                 <td>{{capital.reason}}</td>
                 <td>{{capital.quantity | number}}</td>
                 <td>{{capital.price | number}}</td>
-                <td>{{capital.share_outstanding |toShareOutstanding:capital.type : 0 | number}}</td>
+                <td>{{capital.share_outstanding | number}}</td>
                 <td>{{capital.other_share | toShareOutstanding:capital.type : 1 | number}}</td>
                 <td><label class="btn btn-sm btn-warning divRightAlign"
                            ng-click="edit(capital)">Edit</label></td>

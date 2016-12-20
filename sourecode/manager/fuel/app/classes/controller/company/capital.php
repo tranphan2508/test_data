@@ -48,6 +48,7 @@ class Controller_Company_Capital extends Controller_Base
                 $other_share = \Model_Capital::getLastOtherShare($company_id, $list_date);
                 if (1 == $type) {
                     $other_share = intval($other_share) + intval($quantity);
+                    $share_outstanding = intval($share_outstanding) - intval($quantity);
                 } else {
                     $share_outstanding = intval($share_outstanding) + intval($quantity);
                 }
@@ -67,6 +68,7 @@ class Controller_Company_Capital extends Controller_Base
     public function put_capHistory()
     {
         $id = Input::put('id', null);
+        $company_id = Input::put('company_id', null);
         $reason = Input::put('reason', null);
         $quantity = Input::put('quantity', null);
         $price = Input::put('price', null);
@@ -80,19 +82,16 @@ class Controller_Company_Capital extends Controller_Base
             $error = \Lang::get('error.MISS_PARAM');
         } else {
             try {
-                $share_outstanding = \Model_Capital::getLastShareOutstanding(null, $list_date, $id);
+                $share_outstanding = \Model_Capital::getLastShareOutstanding($company_id, $list_date, $id);
                 $other_share = \Model_Capital::getLastOtherShare(null, $list_date, $id);
                 if (1 == $type) {
                     $other_share = intval($other_share) + intval($quantity);
+                    $share_outstanding = intval($share_outstanding) - intval($quantity);
                 } else {
                     $share_outstanding = intval($share_outstanding) + intval($quantity);
                 }
                 $result = \Model_Capital::updateCapital($id,$type, $reason, $quantity, $price, $share_outstanding,$other_share, $list_date);
 
-                $share_outstanding = \Model_Capital::getLastShareOutstanding(null, $list_date, $id);
-                if (empty($share_outstanding)) $share_outstanding = $quantity;
-                else $share_outstanding = intval($share_outstanding) + intval($quantity);
-                $result = \Model_Capital::updateCapital($id, $type, $reason, $quantity, $price, $share_outstanding, $other_share, $list_date);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;

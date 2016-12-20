@@ -146,7 +146,7 @@ myApp.controller('AddCompanyCapitalCtrl', function ($scope, $uibModalInstance, R
 
 });
 
-myApp.controller('EditCompanyCapitalCtrl', function ($scope, $uibModalInstance, RestAPI, capital, $filter) {
+myApp.controller('EditCompanyCapitalCtrl', function ($scope, $uibModalInstance, RestAPI, capital, $filter, $routeParams) {
     capital.quantity = parseInt(capital.quantity);
     capital.price = parseInt(capital.price);
     capital.list_date = new Date(capital.list_date);
@@ -159,7 +159,8 @@ myApp.controller('EditCompanyCapitalCtrl', function ($scope, $uibModalInstance, 
                 'quantity': $scope.capital.quantity,
                 'price': $scope.capital.price,
                 'list_date': $filter('date')($scope.capital.list_date, 'yyyy-MM-dd') + ' 00:00:00',
-                'type':$scope.capital.type
+                'type':$scope.capital.type,
+                'company_id':$routeParams.id
             };
             RestAPI.do('put', 'company/capital/capHistory', param,
                 function (data, status) {
