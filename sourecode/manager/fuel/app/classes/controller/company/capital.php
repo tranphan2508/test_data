@@ -8,13 +8,15 @@ class Controller_Company_Capital extends Controller_Base
         $success = true;
         $error = '';
         $result = array();
+        $number_per_page = 20;
         $id = Input::get('id', null);
-        if (empty($id)) {
+        $page=Input::get('page',null);
+        if (empty($id) || empty($page)) {
             $success = false;
             $error = \Lang::get('error.MISS_PARAM');
         } else {
             try {
-                $result = \Model_Capital::getListCapital($id);
+                $result = \Model_Capital::getListCapital($id,$number_per_page,$page);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
@@ -90,7 +92,7 @@ class Controller_Company_Capital extends Controller_Base
                 } else {
                     $share_outstanding = intval($share_outstanding) + intval($quantity);
                 }
-                $result = \Model_Capital::updateCapital($id,$type, $reason, $quantity, $price, $share_outstanding,$other_share, $list_date);
+                $result = \Model_Capital::updateCapital($id, $type, $reason, $quantity, $price, $share_outstanding, $other_share, $list_date);
 
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
