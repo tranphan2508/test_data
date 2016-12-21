@@ -145,16 +145,14 @@ class Model_Capital extends \Orm\Model
         }
         $list_date[] = $year . '-12-31 00:00:00';
         $avrg_cap = 0;
-        $avrg_date = 0;
         for ($i = 0; $i < count($list_date) - 1; $i++) {
             $date1 = new DateTime($list_date[$i]);
             $date2 = new DateTime($list_date[$i + 1]);
             $date_diff = intval($date2->diff($date1)->format("%a"));
             if($i==count($list_date) - 2) $date_diff+=1;
-            $avrg_cap += intval($data[$list_date[$i]]) * ($date_diff);$res[]=array($data[$list_date[$i]], $date_diff);
-            $avrg_date += $date_diff;
+            $avrg_cap += floatval($data[$list_date[$i]] * $date_diff / 365);
         }
-       return intval($avrg_cap/$avrg_date);
+       return ceil($avrg_cap);
     }
 }
 

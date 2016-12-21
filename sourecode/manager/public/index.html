@@ -22,6 +22,7 @@
     <script src="common/lib/bootstrap/bootstrap.min.js"></script>
     <script src="common/lib/big_bumber/bignumber.js"></script>
 
+    <script src="common/js/layout.js"></script>
     <script src="common/js/app.js"></script>
 
     <!--directive-->
@@ -47,5 +48,13 @@
 
 <body>
 <div id="wrapper" ng-view></div>
+<div class="scroll-to-top" >
+    <i class="glyphicon glyphicon-upload"></i>
+</div>
+<script type="application/javascript">
+    jQuery(document).ready(function () {
+        Layout.init(); // init layout
+    });
+</script>
 </body>
 </html>

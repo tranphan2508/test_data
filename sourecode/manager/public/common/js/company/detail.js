@@ -260,9 +260,9 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
                             }
                             break;
                         case 2:
-                            if (tmp_values['total_share'] && tmp_values['total_share'] != 0) {
+                            if (tmp_values['share_holding_avrg'] && tmp_values['share_holding_avrg'] != 0) {
                                 //EPS
-                                ary_indicator[196] = formatNumber(defaultNumber(tmp_values, 134).divide(new BigNumber(tmp_values['total_share_avrg'])), 2)
+                                ary_indicator[196] = formatNumber(defaultNumber(tmp_values, 134).divide(new BigNumber(tmp_values['share_holding_avrg'])), 2)
                             }
                             if (defaultNumber(ary_value, 120).compare(0) != 0) {
                                 //Kha nang thanh toan lai vay
