@@ -49,10 +49,10 @@ class Controller_Company_Capital extends Controller_Base
                 $share_outstanding = \Model_Capital::getLastShareOutstanding($company_id, $list_date);
                 $other_share = \Model_Capital::getLastOtherShare($company_id, $list_date);
                 if (1 == $type) {
-                    $other_share = intval($other_share) + intval($quantity);
-                    $share_outstanding = intval($share_outstanding) - intval($quantity);
+                    $other_share = bcadd($other_share,$quantity);
+                    $share_outstanding = bcsub($share_outstanding,$quantity);
                 } else {
-                    $share_outstanding = intval($share_outstanding) + intval($quantity);
+                    $share_outstanding = bcadd($share_outstanding,$quantity);
                 }
                 $result = \Model_Capital::insertCapital($company_id, $type, $reason, $quantity, $price, $share_outstanding, $other_share, $list_date);
             } catch (Database_exception $e) {
@@ -87,10 +87,10 @@ class Controller_Company_Capital extends Controller_Base
                 $share_outstanding = \Model_Capital::getLastShareOutstanding($company_id, $list_date, $id);
                 $other_share = \Model_Capital::getLastOtherShare(null, $list_date, $id);
                 if (1 == $type) {
-                    $other_share = intval($other_share) + intval($quantity);
-                    $share_outstanding = intval($share_outstanding) - intval($quantity);
+                    $other_share = bcadd($other_share,$quantity);
+                    $share_outstanding = bcsub($share_outstanding,$quantity);
                 } else {
-                    $share_outstanding = intval($share_outstanding) + intval($quantity);
+                    $share_outstanding = bcadd($share_outstanding,$quantity);
                 }
                 $result = \Model_Capital::updateCapital($id, $type, $reason, $quantity, $price, $share_outstanding, $other_share, $list_date);
 

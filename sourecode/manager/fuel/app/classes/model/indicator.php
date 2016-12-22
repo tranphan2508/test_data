@@ -48,9 +48,8 @@ class Model_Indicator extends \Orm\Model
     public static function insertData($company_id, $year, $val_arr){
         $arr_val = array();
         foreach ($val_arr as $key => $val) {
-            $str = explode('_', $val);
-            $param_id = str_replace('p', '', $str[0]);
-            $value = $str[1];
+            $param_id = $key;
+            $value = $val;
             $arr_val[] = '('. $company_id . ',' . $year . ',' . $param_id . ',' . $value . ',"' . date("Y-m-d H:i:s") . '","' . date("Y-m-d H:i:s") . '")';
         }
         // UPDATE by using INSERT with DUPLICATE KEY
