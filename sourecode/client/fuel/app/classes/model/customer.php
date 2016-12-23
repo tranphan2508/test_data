@@ -87,6 +87,7 @@ class Model_Customer extends \Orm\Model
             if ($user_update) {
                 \Session::delete('c_username');
                 \Session::delete('c_login_hash_manager');
+                \Session::delete('c_id_user');
                 return true;
             }
             return false;

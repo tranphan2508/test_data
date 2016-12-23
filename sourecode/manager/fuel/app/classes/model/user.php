@@ -45,12 +45,11 @@ class Model_User extends \Orm\Model
                 $timestamp_now = strtotime($current_datetime);
 
                 // create session
-                \Session::set('username', $username);
-                \Session::set('id_user', $user['id']);
+                \Session::set('m_username', $username);
+                \Session::set('m_id_user', $user['id']);
 
                 $login_hash = hash('md5', $password . $user_browser . $timestamp_now);
-                \Session::set('login_hash_manager', $login_hash);
-
+                \Session::set('m_login_hash_manager', $login_hash);
                 //update to database
                 $user_update = Model_User::find($user['id']);
                 $user_update->login_hash = $login_hash;
@@ -85,8 +84,9 @@ class Model_User extends \Orm\Model
                 'login_hash' => ''
             ))->save();
             if ($user_update) {
-                \Session::delete('username');
-                \Session::delete('login_hash_manager');
+                \Session::delete('m_username');
+                \Session::delete('m_id_user');
+                \Session::delete('m_login_hash_manager');
                 return true;
             }
             return false;

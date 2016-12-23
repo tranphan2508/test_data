@@ -1536,7 +1536,7 @@ INSERT INTO `balance_sheet` (`id`, `company_id`, `year`, `param_id`, `value`, `d
 
 DROP TABLE IF EXISTS `capital`;
 CREATE TABLE `capital` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `company_id` int(11) NOT NULL,
   `type` tinyint(4) DEFAULT '0',
   `reason` varchar(285) CHARACTER SET utf8 DEFAULT NULL,
@@ -1546,8 +1546,9 @@ CREATE TABLE `capital` (
   `other_share` int(11) NOT NULL,
   `list_date` datetime NOT NULL,
   `updated_date` datetime NOT NULL,
-  `del` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=77 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `capital`
@@ -4552,11 +4553,7 @@ ALTER TABLE `balance_sheet`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `company_id` (`company_id`,`year`,`param_id`);
 
---
--- Indexes for table `capital`
---
-ALTER TABLE `capital`
-  ADD PRIMARY KEY (`id`);
+
 
 --
 -- Indexes for table `cashflow`
@@ -4619,8 +4616,6 @@ ALTER TABLE `balance_sheet`
 --
 -- AUTO_INCREMENT for table `capital`
 --
-ALTER TABLE `capital`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 --
 -- AUTO_INCREMENT for table `cashflow`
 --
