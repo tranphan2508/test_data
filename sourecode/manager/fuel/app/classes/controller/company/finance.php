@@ -83,14 +83,13 @@ class Controller_Company_Finance extends Controller_Base
         $this->do_response($success, $error, '');
     }
 
-
     public function post_indicator()
     {
         $year = Input::post('params.year');
         $company_id = Input::post('params.company_id', null);
         $success = true;
         $error = '';
-        if ( empty($year) || empty($company_id)) {
+        if (empty($year) || empty($company_id)) {
             $success = false;
             $error = \Lang::get('error.MISS_PARAM');
         } else {
@@ -104,6 +103,7 @@ class Controller_Company_Finance extends Controller_Base
                 $tmp[7] = bcdiv(bcadd($values[7][$year], $values[7][$year - 1]), 2);
                 $tmp[8] = bcdiv(bcadd($values[8][$year], $values[8][$year - 1]), 2);
                 $tmp[30] = bcdiv(bcadd($values[30][$year], $values[30][$year - 1]), 2);
+
                 $ind = array();
                 //calculate indicator
                 //book value
@@ -142,6 +142,7 @@ class Controller_Company_Finance extends Controller_Base
                 $ind[212] = bcdiv(bcmul($values[134], 100), $values[92]);
                 //ROS
                 $ind[213] = bcdiv(bcmul($values[134], 100), $values[115]);
+
                 foreach ($ind as $key => $val) {
                     if (empty($val)) $ind[$key] = '';
                     else $ind[$key] = Common::bcround($ind[$key], 2);

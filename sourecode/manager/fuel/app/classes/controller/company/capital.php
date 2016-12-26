@@ -92,7 +92,7 @@ class Controller_Company_Capital extends Controller_Base
                 } else {
                     $share_outstanding = bcadd($share_outstanding,$quantity);
                 }
-                $result = \Model_Capital::updateCapital($id, $type, $reason, $quantity, $price, $share_outstanding, $other_share, $list_date);
+                $result = \Model_Capital::updateCapital($id,$type, $reason, $quantity, $price, $share_outstanding,$other_share, $list_date);
 
             } catch (Database_exception $e) {
                 $error = $e->getMessage();

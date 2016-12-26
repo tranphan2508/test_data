@@ -161,11 +161,13 @@ ul.nav-tabs li:focus, ul.nav-tabs li:hover
     margin-top: 150px;
     width: 500px;
 }
+
 .center-block{
     margin-left: auto;
     margin-right: auto;
     display: block;
 }
+
 .scroll-to-top {
     display: inline-block;
     padding: 1px;
@@ -176,6 +178,7 @@ ul.nav-tabs li:focus, ul.nav-tabs li:hover
     display: none;
     right: 10px;
 }
+
 .scroll-to-top > i {
     font-size: 40px;
     opacity: 0.6;
@@ -187,3 +190,5 @@ ul.nav-tabs li:focus, ul.nav-tabs li:hover
 .scroll-to-top:hover > i{
     opacity: 0.8;
 }
+
+

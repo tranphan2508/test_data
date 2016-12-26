@@ -1,4 +1,5 @@
-myApp.controller('AZCtrl', function ($scope, $location,RestAPI) {
+myApp.controller('AZCtrl', function ($scope, $location, RestAPI) {
+
     // init background slide images
     $('.backstretch img').attr("src", "");
     function getAllCompanies() {

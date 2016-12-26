@@ -47,8 +47,11 @@ class Controller_Base extends Controller_Rest
         }
         $username = \Session::get('c_username');
         $login_hash = \Session::get('c_login_hash_manager');
+
         if (\Model_Customer::check_authorization($username, $login_hash)) return;
+
         $error = \Lang::get('error.AUTHORIZATION_FAIL');
+
         echo $this->do_response(false, $error, '');
         exit(1);
     }

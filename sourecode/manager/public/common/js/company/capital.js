@@ -60,7 +60,7 @@ myApp.controller('DetailCapitalCtrl', function ($scope, RestAPI, $routeParams, $
             //size: '200x200',
             resolve: {
                 'message': function () {
-                    var message='Are you sure to delete this record?';
+                    var message = 'Are you sure to delete this record?';
                     return message;
                 }
             }

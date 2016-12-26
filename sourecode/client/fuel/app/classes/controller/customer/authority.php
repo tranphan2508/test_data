@@ -38,8 +38,8 @@ class Controller_Customer_Authority extends Controller_Base
 
     public function get_logout()
     {
-        $username = \Session::get('c_username');
-        $login_hash = \Session::get('c_login_hash_manager');
+        $username = \Session::get('username');
+        $login_hash = \Session::get('login_hash_manager');
         $success = false;
         $error = '';
         try {

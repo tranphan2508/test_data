@@ -38,8 +38,8 @@ class Controller_User_Authority extends Controller_Base
 
     public function get_logout()
     {
-        $username = \Session::get('m_username');
-        $login_hash = \Session::get('m_login_hash_manager');
+        $username = \Session::get('username');
+        $login_hash = \Session::get('login_hash_manager');
         $success = false;
         $error = '';
         try {
