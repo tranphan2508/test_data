@@ -61,12 +61,12 @@
                                 <span uib-tooltip="{{data.description}}">{{data.title}}</span>
 
                                 <div class="col-md-3 divRightAlign">
-                                    <span class="divRightAlign" ng-hide="edit">{{values[data.id].value | nozero | number }}</span>
+                                    <span class="divRightAlign" ng-hide="edit">{{values['col_id'+data.col_id] | nozero | number }}</span>
                                     <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187"
-                                           type="text" name="p{{data.id}}"
-                                           ng-model="values[data.id].value"
+                                           type="text" name="{{data.col_id}}_{{data.id}}"
+                                           ng-model="values['col_id'+data.col_id]"
                                            class="form-control ng-pristine"
-                                           update-status="values[data.id].value" number-input
+                                           update-status="values['col_id'+data.col_id]" number-input
                                             onkeydown="if(event.keyCode==13)return false;"
                                             ></div>
 

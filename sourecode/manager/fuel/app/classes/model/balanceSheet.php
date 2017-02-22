@@ -2,106 +2,93 @@
 
 class Model_BalanceSheet extends \Orm\Model
 {
-    protected static $_property = array(
-        'id',
-        'company_id',
-        'year',
-        'param_id',
-        'value',
-        'del',
-        'created_date',
-        'updated_date'
-    );
-
-    protected static $_observers = array(
-        'Orm\\Observer_CreatedAt' => array(
-            'events' => array('before_insert'),
-            'mysql_timestamp' => true,
-            'property' => 'created_date'
-        ),
-        'Orm\Observer_UpdatedAt' => array(
-            'events' => array('before_save'),
-            'mysql_timestamp' => true,
-            'property' => 'updated_date'
-        ),
-    );
-
-    protected static $_table_name = 'balance_sheet';
-
     public static function getDataByCompany($company_id, $year)
     {
         $res = array();
-        $values = Model_BalanceSheet::query()
-            ->select('id', 'company_id', 'year', 'param_id', 'value')
-            ->where('company_id', $company_id)
-            ->where('year', $year)
-            ->where('del', 0)
-            ->get();
-        foreach ($values as $value) {
-            $row = $value->to_array();
-            $row['value'] = $row['value'];
-            $res[$row['param_id']] = $row;
+        $sql = 'SELECT * FROM `balance_sheet`
+                WHERE `company_id`=' . $company_id . '
+                AND `year`=' . $year . '
+                AND `del`=0';
+        $data = DB::query($sql)->execute();
+        foreach ($data as $dt) {
+            foreach (array_keys($dt) as $key) {
+                if (strpos($key, 'col_id') === 0) {
+                    if (!empty($dt[$key])) $res[$key] = $dt[$key];
+                }
+            }
         }
         return $res;
     }
 
     public static function insertData($company_id, $year, $val_arr)
     {
-        $arr_val = array();
+        $param_id = array();
+        $value = array();
+        $dup_key = array();
         foreach ($val_arr as $key => $val) {
             $str = explode('_', $val);
-            $param_id = str_replace('p', '', $str[0]);
-            $value = $str[1];
-            $arr_val[] = '(' . $company_id . ',' . $year . ',' . $param_id . ',' . $value . ',"' . date("Y-m-d H:i:s") . '","' . date("Y-m-d H:i:s") . '")';
+            $id = '`col_id' . $str[0] . '`';
+            $param_id[] = $id;
+            $value[] = $str[1];
+            $dup_key[] = $id . '=VALUES(' . $id . ')';
         }
         // UPDATE by using INSERT with DUPLICATE KEY
-        if ($arr_val) {
-            $sql = 'INSERT INTO `balance_sheet` (`company_id`,`year`,`param_id`,`value`,`created_date`,`updated_date`) VALUES ' . implode(',', $arr_val) . ' ON DUPLICATE KEY UPDATE `value`= VALUES(`value`),`updated_date`= VALUES(`updated_date`)';
-            $res = DB::query($sql)->as_object('Model_BalanceSheet')->execute();
+        if ($val_arr) {
+            $sql = 'INSERT INTO `balance_sheet` (`company_id`,`year`,' .
+                implode(',', $param_id) . ',' .
+                '`created_date`,`updated_date`) VALUES (' . $company_id . ',' . $year . ',' . implode(',', $value) . ',"' . date("Y-m-d H:i:s") . '","' . date("Y-m-d H:i:s") . '")
+                 ON DUPLICATE KEY UPDATE `updated_date`= VALUES(`updated_date`),' . implode(',', $dup_key);
+            $res = DB::query($sql)->execute();
         } else $res = true;
         return $res;
     }
 
-    public static function getDataByCompanyInYears($id, $year_from, $year_to)
+    public static function getDataForCalcIndicator($id, $year, $col_id)
     {
         $res = array();
-        $values = Model_BalanceSheet::query()
-            ->select('year', 'param_id', 'value')
-            ->where('company_id', $id)
-            ->where('year', '<=', $year_to)
-            ->where('year', '>=', $year_from)
-            ->where('del', 0)
-            ->order_by('param_id', 'year')
-            ->get();
-        foreach ($values as $value) {
-            $row = $value->to_array();
-            $res[$row['param_id']][$row['year']] = $row['value'];
+        $sql = 'SELECT * FROM `balance_sheet`
+            WHERE `company_id`=' . $id . '
+            AND `del`=0
+            AND `year` IN (' . $year . ',' . (intval($year) - 1) . ')';
+        $data = DB::query($sql)->execute();
+        foreach($data as $key => $val){
+            if($val['year']==$year){
+                foreach(explode(',',$col_id) as $k => $v){
+                    if (in_array($v, array(1, 7, 8, 29))) {
+                        $res[$v][$val['year']] = $val['col_id'.$v];
+                    } else $res[$v] = $val['col_id'.$v];
+                }
+            }else{
+                foreach(explode(',',$col_id) as $k => $v){
+                    if (in_array($v, array(1, 7, 8, 29))) {
+                        $res[$v][$val['year']] = $val['col_id'.$v];
+                    }
+                }
+            }
         }
         return $res;
     }
 
-    public static function getDataForCalcIndicator($id, $year, $p_id)
+    public static function createTable()
     {
-        $res=array();
-        $data=DB::select('param_id','value','year')
-            ->from('balance_sheet')
-            ->where('company_id', $id)
-            ->and_where_open()
-            ->where('year', '=', $year)
-            ->where('param_id',' IN ', explode(',',$p_id))
-            ->or_where_open()
-            ->where('year', '=', intval($year)-1)
-            ->where('param_id',' IN ', array(1,7,8,30))
-            ->or_where_close()
-            ->and_where_close()
-            ->where('del', 0)
-            ->execute();
-        foreach ($data as $key => $val) {
-            if(in_array($val['param_id'],array(1,7,8,30))){
-                $res[$val['param_id']][$val['year']]=$val['value'];
-            }
-            else $res[$val['param_id']] = $val['value'];
+        $sql = 'DROP TABLE IF EXISTS `balance_sheet`;
+          CREATE TABLE `balance_sheet` (
+              `id` int(11) NOT NULL,
+              `company_id` int(11) NOT NULL,
+              `year` smallint(6) NOT NULL,';
+        for ($i = 1; $i <= 115; $i++) {
+            $sql .= '`col_id' . $i . '` varchar(255) DEFAULT NULL,';
         }
+        $sql .= '`del` tinyint(4) NOT NULL DEFAULT "0",
+              `created_date` datetime NOT NULL,
+              `updated_date` datetime NOT NULL
+            ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+            ALTER TABLE `balance_sheet`
+            ADD PRIMARY KEY (`id`),
+            ADD UNIQUE KEY `company_id` (`company_id`,`year`);
+            ALTER TABLE `balance_sheet`
+            MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;';
+        $res = DB::query($sql)->execute();
         return $res;
     }
 }

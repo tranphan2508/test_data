@@ -2,95 +2,83 @@
 
 class Model_IncomeStatement extends \Orm\Model
 {
-    protected static $_property = array(
-        'id',
-        'company_id',
-        'year',
-        'param_id',
-        'value',
-        'del',
-        'created_date',
-        'updated_date'
-    );
-
-    protected static $_observers = array(
-        'Orm\\Observer_CreatedAt' => array(
-            'events' => array('before_insert'),
-            'mysql_timestamp' => true,
-            'property' => 'created_date'
-        ),
-        'Orm\Observer_UpdatedAt' => array(
-            'events' => array('before_save'),
-            'mysql_timestamp' => true,
-            'property' => 'updated_date'
-        ),
-    );
-
-    protected static $_table_name = 'income_statement';
-
     public static function getDataByCompany($company_id, $year)
     {
         $res = array();
-        $values = Model_IncomeStatement::query()
-            ->select('id', 'company_id', 'year', 'param_id', 'value')
-            ->where('company_id', $company_id)
-            ->where('year', $year)
-            ->where('del', 0)
-            ->get();
-        foreach ($values as $value) {
-            $row = $value->to_array();
-            $row['value']=$row['value'];
-            $res[$row['param_id']] = $row;
+        $sql = 'SELECT * FROM `income_statement`
+                WHERE `company_id`=' . $company_id . '
+                AND `year`=' . $year . '
+                AND `del`=0';
+        $data = DB::query($sql)->execute();
+        foreach ($data as $dt) {
+            foreach (array_keys($dt) as $key) {
+                if (strpos($key, 'col_id') === 0) {
+                    if (!empty($dt[$key])) $res[$key] = $dt[$key];
+                }
+            }
         }
         return $res;
     }
 
-    public static function insertData($company_id, $year, $val_arr){
-        $arr_val = array();
+    public static function insertData($company_id, $year, $val_arr)
+    {
+        $param_id = array();
+        $value = array();
+        $dup_key = array();
         foreach ($val_arr as $key => $val) {
             $str = explode('_', $val);
-            $param_id = str_replace('p', '', $str[0]);
-            $value = $str[1];
-            $arr_val[] = '('. $company_id . ',' . $year . ',' . $param_id . ',' . $value . ',"' . date("Y-m-d H:i:s") . '","' . date("Y-m-d H:i:s") . '")';
+            $id = '`col_id' . $str[0] . '`';
+            $param_id[] = $id;
+            $value[] = $str[1];
+            $dup_key[] = $id . '=VALUES(' . $id . ')';
         }
         // UPDATE by using INSERT with DUPLICATE KEY
-        if($arr_val){
-            $sql = 'INSERT INTO `income_statement` (`company_id`,`year`,`param_id`,`value`,`created_date`,`updated_date`) VALUES ' . implode(',', $arr_val) . ' ON DUPLICATE KEY UPDATE `value`= VALUES(`value`),`updated_date`= VALUES(`updated_date`)';
-            $res = DB::query($sql)->as_object('Model_IncomeStatement')->execute();
-        }else $res=true;
+        if ($val_arr) {
+            $sql = 'INSERT INTO `income_statement` (`company_id`,`year`,' .
+                implode(',', $param_id) . ',' .
+                '`created_date`,`updated_date`) VALUES (' . $company_id . ',' . $year . ',' . implode(',', $value) . ',"' . date("Y-m-d H:i:s") . '","' . date("Y-m-d H:i:s") . '")
+                 ON DUPLICATE KEY UPDATE `updated_date`= VALUES(`updated_date`),' . implode(',', $dup_key);
+            $res = DB::query($sql)->execute();
+        } else $res = true;
         return $res;
     }
 
-    public static function getDataByCompanyInYears($id, $year_from, $year_to){
-        $res = array();
-        $values = Model_IncomeStatement::query()
-            ->select('year', 'param_id', 'value')
-            ->where('company_id', $id)
-            ->where('year', '<=', $year_to)
-            ->where('year', '>=', $year_from)
-            ->where('del', 0)
-            ->order_by('param_id','year')
-            ->get();
-        foreach ($values as $value) {
-            $row = $value->to_array();
-            $res[$row['param_id']][$row['year']] = $row['value'];
-        }
-        return $res;
-    }
-
-    public static function getDataForCalcIndicator($id,$year,$p_id)
+    public static function getDataForCalcIndicator($id, $year, $col_id)
     {
-        $res=array();
-        $data=DB::select('param_id','value')
-            ->from('income_statement')
-            ->where('company_id', $id)
-            ->where('year', '=', $year)
-            ->where('param_id',' IN ', explode(',',$p_id))
-            ->where('del', 0)
-            ->execute();
+        $res = array();
+        $sql = 'SELECT * FROM `income_statement`
+            WHERE `company_id`=' . $id . '
+            AND `del`=0
+            AND `year` IN (' . $year . ',' . (intval($year) - 1) . ')';
+        $data = DB::query($sql)->execute();
         foreach ($data as $key => $val) {
-            $res[$val['param_id']] = $val['value'];
+            foreach (explode(',', $col_id) as $k => $v) {
+                $res[$v] = $val['col_id'.$v];
+            }
         }
+        return $res;
+    }
+
+    public static function createTable()
+    {
+        $sql = 'DROP TABLE IF EXISTS `income_statement`;
+          CREATE TABLE `income_statement` (
+              `id` int(11) NOT NULL,
+              `company_id` int(11) NOT NULL,
+              `year` smallint(6) NOT NULL,';
+        for ($i = 1; $i <= 22; $i++) {
+            $sql .= '`col_id' . $i . '` varchar(255) DEFAULT NULL,';
+        }
+        $sql .= '`del` tinyint(4) NOT NULL DEFAULT "0",
+              `created_date` datetime NOT NULL,
+              `updated_date` datetime NOT NULL
+            ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+            ALTER TABLE `income_statement`
+            ADD PRIMARY KEY (`id`),
+            ADD UNIQUE KEY `company_id` (`company_id`,`year`);
+            ALTER TABLE `income_statement`
+            MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;';
+        $res = DB::query($sql)->execute();
         return $res;
     }
 }

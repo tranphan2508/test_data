@@ -4,6 +4,7 @@ class Model_Params extends \Orm\Model
 {
     protected static $_property = array(
         'id',
+        'col_id',
         'title',
         'type',
         'parent_id',
@@ -31,7 +32,7 @@ class Model_Params extends \Orm\Model
     {
         $res=array();
         $params = Model_Params::query()
-            ->select('id','title','parent_id','level','description')
+            ->select('id','title','parent_id','level','description','col_id')
             ->where('type',$type)
             ->where('del', 0)
             ->get();
@@ -71,13 +72,41 @@ class Model_Params extends \Orm\Model
     {
         $res=array();
         $params = Model_Params::query()
-            ->select('id','parent_id')
+            ->select('id','parent_id','col_id')
             ->where('type',$type)
             ->where('del', 0)
             ->get();
         foreach($params as $p){
             $row=$p->to_array();
-            $res[$row['id']]=$row['parent_id'];
+            $res[$row['id']]['p_id']=$row['parent_id'];
+            $res[$row['id']]['col_id']=$row['col_id'];
+        }
+        return $res;
+    }
+
+    public static function getListColID(){
+        $res=array();
+        $params = Model_Params::query()
+            ->select('id','col_id')
+            ->where('del', 0)
+            ->get();
+        foreach($params as $p){
+            $row=$p->to_array();
+            $res[$row['id']]=$row['col_id'];
+        }
+        return $res;
+    }
+
+    public static function getListParamID($type){
+        $res=array();
+        $params = Model_Params::query()
+            ->select('id','col_id')
+            ->where('del', 0)
+            ->where('type', $type)
+            ->get();
+        foreach($params as $p){
+            $row=$p->to_array();
+            $res[$row['col_id']]=$row['id'];
         }
         return $res;
     }

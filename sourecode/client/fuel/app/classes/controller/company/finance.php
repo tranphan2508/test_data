@@ -20,17 +20,26 @@ class Controller_Company_Finance extends Controller_Base
             try {
                 switch ($type) {
                     case \Model_Company::$BALANCE_SHEET_TYPE:
-                        $result = \Model_BalanceSheet::getDataByCompanyInYears($id, $year_from, $year_to);
+                        $data = \Model_BalanceSheet::getDataByCompanyInYears($id, $year_from, $year_to);
                         break;
                     case \Model_Company::$INCOME_STATEMENT_TYPE:
-                        $result = \Model_IncomeStatement::getDataByCompanyInYears($id, $year_from, $year_to);
+                        $data = \Model_IncomeStatement::getDataByCompanyInYears($id, $year_from, $year_to);
                         break;
                     case \Model_Company::$CASHFLOW_TYPE:
-                        $result = \Model_Cashflow::getDataByCompanyInYears($id, $year_from, $year_to);
+                        $data = \Model_Cashflow::getDataByCompanyInYears($id, $year_from, $year_to);
                         break;
                     case \Model_Company::$FINANCIAL_INDICATOR_TYPE:
-                        $result = \Model_Indicator::getDataByCompanyInYears($id, $year_from, $year_to);
+                        $data = \Model_Indicator::getDataByCompanyInYears($id, $year_from, $year_to);
                         break;
+                }
+                $ary_param = \Model_Params::getColID($type);
+                foreach ($ary_param as $key => $value) {
+                    foreach ($data as $k => $v) {
+                        if (!empty($v['col_id' . $key])) {
+                            $result[$value][$v['year']] = $v['col_id' . $key];
+                        }
+                    }
+
                 }
             } catch (Database_exception $e) {
                 $error = $e->getMessage();

@@ -85,7 +85,7 @@ class Controller_Company_Capital extends Controller_Base
         } else {
             try {
                 $share_outstanding = \Model_Capital::getLastShareOutstanding($company_id, $list_date, $id);
-                $other_share = \Model_Capital::getLastOtherShare(null, $list_date, $id);
+                $other_share = \Model_Capital::getLastOtherShare($company_id, $list_date);
                 if (1 == $type) {
                     $other_share = bcadd($other_share,$quantity);
                     $share_outstanding = bcsub($share_outstanding,$quantity);

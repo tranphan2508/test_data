@@ -147,7 +147,7 @@ class Controller_Company_Finance extends Controller_Base
                     if (empty($val)) $ind[$key] = '';
                     else $ind[$key] = Common::bcround($ind[$key], 2);
                 }
-                \Model_Indicator::insertData($company_id, $year, $ind);
+                \Model_Indicator::insertData($company_id, $year, $this->convertToColID($ind));
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
@@ -162,21 +162,42 @@ class Controller_Company_Finance extends Controller_Base
 
     private function getValueForCalcIndicator($id, $year)
     {
+        $col_id_1='1,3,5,7,8,29,60,61,91,112';
+        $col_id_2='1,2,3,4,5,8,16,22';
+        $col_id_3='4';
         $p_id = '1,3,5,7,8,30,61,62,92,113,114,115,116,117,120,128,134,138,188';
         $result = array();
         $tmp = array();
         foreach (explode(",", $p_id) as $key => $val) {
             if (!in_array($val, array(1, 7, 8, 30))) $tmp[$val] = 0;
         }
-        $res1 = \Model_BalanceSheet::getDataForCalcIndicator($id, $year, $p_id);
-        $res2 = \Model_IncomeStatement::getDataForCalcIndicator($id, $year, $p_id);
-        $res3 = \Model_Cashflow::getDataForCalcIndicator($id, $year, $p_id);
-        $result = $res1 + $res2 + $res3 + $tmp;
+        $res1 = \Model_BalanceSheet::getDataForCalcIndicator($id, $year, $col_id_1);
+        $res2 = \Model_IncomeStatement::getDataForCalcIndicator($id, $year, $col_id_2);
+        $res3 = \Model_Cashflow::getDataForCalcIndicator($id, $year, $col_id_3);
+        $result = $this->convertToParamID($res1,1) + $this->convertToParamID($res2,2) + $this->convertToParamID($res3,3) + $tmp;
         $share_outstanding = \Model_Capital::getLastShareOutstanding($id, $year . '-12-31 00:00:00');
         $other_share = \Model_Capital::getLastOtherShare($id, $year . '-12-31 00:00:00');
         $result['total_share'] = bcadd($share_outstanding, $other_share);
         $result['share_holding_avrg'] = \Model_Capital::averageCapital($id, $year);
         return $result;
+    }
+
+    private function convertToColID($ary_p_id){
+        $ary_pid=\Model_Params::getListColID();
+        $res=array();
+        foreach($ary_p_id as $key => $val){
+            $res[$ary_pid[$key]]=$val;
+        }
+        return $res;
+    }
+
+    private function convertToParamID($ary_col_id, $type){
+        $ary_pid=\Model_Params::getListParamID($type);
+        $res=array();
+        foreach($ary_col_id as $key => $val){
+            $res[$ary_pid[$key]]=$val;
+        }
+        return $res;
     }
 }
 

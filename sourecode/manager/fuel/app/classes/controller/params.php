@@ -29,6 +29,7 @@ class Controller_Params extends Controller_Base
                     $ary_p_id = array();
                     $this->fetchDataTreeByParentIndex($ary_p_id, $index, $value['parent_id']);
                     $param = array();
+                    $param['col_id'] = $value['col_id'];
                     $param['level'] = $value['level'];
                     $param['title'] = $value['title'];
                     $param['parent_id'] = $value['parent_id'];

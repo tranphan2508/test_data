@@ -4,6 +4,7 @@ class Model_Params extends \Orm\Model
 {
     protected static $_property = array(
         'id',
+        'col_id',
         'title',
         'type',
         'parent_id',
@@ -31,7 +32,7 @@ class Model_Params extends \Orm\Model
     {
         $res=array();
         $params = Model_Params::query()
-            ->select('id','title','parent_id','level','description')
+            ->select('id','title','parent_id','level','description','col_id')
             ->where('type',$type)
             ->where('del', 0)
             ->get();
@@ -41,6 +42,19 @@ class Model_Params extends \Orm\Model
         return $res;
     }
 
+    public static function getColID($type){
+        $res=array();
+        $params = Model_Params::query()
+            ->select('id', 'col_id')
+            ->where('type',$type)
+            ->where('del', 0)
+            ->get();
+        foreach($params as $p){
+            $data=$p->to_array();
+            $res[$data['col_id']]=$data['id'];
+        }
+        return $res;
+    }
 }
 
 ?>
