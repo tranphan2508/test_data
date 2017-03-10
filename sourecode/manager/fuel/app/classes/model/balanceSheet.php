@@ -43,7 +43,7 @@ class Model_BalanceSheet extends \Orm\Model
         return $res;
     }
 
-    public static function getDataForCalcIndicator($id, $year, $col_id)
+    public static function getDataForCalcIndicator($id, $year, $col_id, $avr_ary)
     {
         $res = array();
         $sql = 'SELECT * FROM `balance_sheet`
@@ -54,13 +54,13 @@ class Model_BalanceSheet extends \Orm\Model
         foreach($data as $key => $val){
             if($val['year']==$year){
                 foreach(explode(',',$col_id) as $k => $v){
-                    if (in_array($v, array(1, 7, 8, 29))) {
+                    if (in_array($v, $avr_ary)) {
                         $res[$v][$val['year']] = $val['col_id'.$v];
                     } else $res[$v] = $val['col_id'.$v];
                 }
             }else{
                 foreach(explode(',',$col_id) as $k => $v){
-                    if (in_array($v, array(1, 7, 8, 29))) {
+                    if (in_array($v, $avr_ary)) {
                         $res[$v][$val['year']] = $val['col_id'.$v];
                     }
                 }

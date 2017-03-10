@@ -42,14 +42,15 @@ class Model_Params extends \Orm\Model
         return $res;
     }
 
-    public static function addParam($title, $type, $parent_id, $level, $description)
+    public static function addParam($title, $type, $parent_id, $level, $description, $col_id)
     {
         $new = Model_Params::forge(array(
             'title' => $title,
             'type' => $type,
             'parent_id' => $parent_id,
             'level' => $level,
-            'description' => $description
+            'description' => $description,
+            'col_id' => $col_id
         ));
         $new->save();
         return $new['id'];
@@ -111,6 +112,15 @@ class Model_Params extends \Orm\Model
         return $res;
     }
 
+    public static function getMaxColID($type){
+        $col_id=1;
+        $sql="SELECT MAX(col_id) AS col_id FROM params WHERE type=".$type.' AND del=0';
+        $params = DB::query($sql)->execute();
+        if($params){
+            $col_id=intval($params[0]['col_id']) + 1;
+        }
+        return $col_id;
+    }
 }
 
 ?>

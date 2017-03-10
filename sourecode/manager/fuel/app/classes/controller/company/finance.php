@@ -89,59 +89,84 @@ class Controller_Company_Finance extends Controller_Base
         $company_id = Input::post('params.company_id', null);
         $success = true;
         $error = '';
+        $avr_ary = array(1, 7, 8, 23, 30, 37, 91, 65, 79);
         if (empty($year) || empty($company_id)) {
             $success = false;
             $error = \Lang::get('error.MISS_PARAM');
         } else {
             try {
-                $values = $this->getValueForCalcIndicator($company_id, $year);
-                foreach (array(1, 7, 8, 30) as $key => $val) {
+                $values = $this->getValueForCalcIndicator($company_id, $year, $avr_ary);
+                foreach ($avr_ary as $key => $val) {
                     if (!isset($values[$val][$year])) $values[$val][$year] = 0;
                     if (!isset($values[$val][$year - 1])) $values[$val][$year - 1] = 0;
+                    $tmp[$val] = bcdiv(bcadd($values[$val][$year], $values[$val][$year - 1]), 2);
+                    //else $tmp[$val] = $values[$val][$year];
                 }
-                $tmp[1] = bcdiv(bcadd($values[1][$year], $values[1][$year - 1]), 2);
-                $tmp[7] = bcdiv(bcadd($values[7][$year], $values[7][$year - 1]), 2);
-                $tmp[8] = bcdiv(bcadd($values[8][$year], $values[8][$year - 1]), 2);
-                $tmp[30] = bcdiv(bcadd($values[30][$year], $values[30][$year - 1]), 2);
 
                 $ind = array();
                 //calculate indicator
-                //book value
-                $ind[216] = bcdiv(bcsub($values[92], $values[188]), $values['total_share']);
+                //*********Nhom chi so dinh gia**********
                 //EPS
-                $ind[196] = bcdiv($values[134], $values['share_holding_avrg']);
+                $ind[196] = $this->bcdiv_ex($values[134], $values['share_holding_avrg']);
+                //book value
+                $ind[216] = $this->bcdiv_ex(bcsub($values[91][$year], $values[188]), $values['total_share']);
+
+                var_dump($values[91][$year]);var_dump($values[188]);var_dump($values['total_share']);
+                //**********Nhom chi so thanh khoan va don bay tai chinh *****************
                 //thanh toan nhanh
-                $ind[198] = bcdiv(bcsub($values[3], $values[8][$year]), $values[62]);
+                $ind[198] = $this->bcdiv_ex(bcadd($values[5], $values[6]), $values[62]);
                 //thanh toan hien hanh
-                $ind[199] = bcdiv($values[3], $values[62]);
+                $ind[199] = $this->bcdiv_ex($values[3], $values[62]);
                 //thanh toan bang tien mat
-                $ind[218] = bcdiv($values[5], $values[62]);
+                $ind[218] = $this->bcdiv_ex($values[5], $values[62]);
                 //kha nang thanh toan lai vay
-                $ind[219] = bcdiv(bcadd($values[128], $values[120]), $values[120]);
+                $ind[219] = $this->bcdiv_ex(bcadd($values[128], $values[120]), $values[120]);
                 //tong no/VCSH
-                $ind[200] = bcdiv(bcmul($values[61], 100), $values[92]);
+                $ind[200] = $this->bcdiv_ex(bcmul($values[61], 100), $values[91][$year]);
                 //tong no/tong tai san
-                $ind[201] = bcdiv(bcmul($values[61], 100), $values[1][$year]);
+                $ind[201] = $this->bcdiv_ex(bcmul($values[61], 100), $values[1][$year]);
+                //don bay tai chinh
+                $ind[226] = $this->bcdiv_ex($tmp[1], $tmp[91]);
+
+
+                //**********Nhom chi so hieu qua hoat dong ***************
                 //vong quay tong tai san
-                $ind[203] = bcdiv($values[115], $tmp[1]);
+                $ind[203] = $this->bcdiv_ex($values[115], $tmp[1]);
                 //vong quay hang ton kho
-                $ind[204] = bcdiv($values[116], $tmp[8]);
+                $ind[204] = $this->bcdiv_ex($values[116], $tmp[8]);
                 //vong quay cac khoan phai thu
-                $ind[205] = bcdiv($values[115], bcadd($tmp[7], $tmp[30]));
+                $ind[205] = $this->bcdiv_ex($values[115], bcadd($tmp[7], $tmp[30]));
+                //vong quay cac khoan phai tra
+                $ind[221] = $this->bcdiv_ex(bcadd(bcsub($values[23][$year], $values[23][intval($year) - 1]), $values[116]),bcadd($tmp[65],$tmp[79]));
+                //thoi gian hang ton kho
+                $ind[222] = $this->bcdiv_ex(365, $this->bcdiv_ex($values[116], $tmp[8]));
+                //thoi gian cac khoan phai thu
+                $ind[223] = $this->bcdiv_ex(365, $this->bcdiv_ex($values[115], bcadd($tmp[7], $tmp[30])));
+                //thoi gian phai tra cho nha cung cap
+                $ind[224] = $this->bcdiv_ex(365, $ind[221]);
+                //Net trade cycle
+                $ind[225] = bcsub(bcadd($ind[222], $ind[223]), $ind[224]);
+                //Vong quay tong tai san co dinh huu hinh
+                $ind[229] = $this->bcdiv_ex($values[115], $tmp[37]);
+
+
+                //********* Kha nang sinh loi ***************
                 //Ty le lai gop GOS
-                $ind[207] = bcdiv(bcmul($values[117], 100), $values[113]);
+                $ind[207] = $this->bcdiv_ex(bcmul($values[117], 100), $values[113]);
                 //Ty le EBIT
-                $ind[208] = bcdiv(bcmul(bcadd($values[128], $values[120]), 100), $values[113]);
+                $ind[208] = $this->bcdiv_ex(bcmul(bcadd($values[128], $values[120]), 100), $values[113]);
                 //Ty le EBITDA
-                $ind[209] = bcdiv(bcmul(bcadd(bcadd($values[128], $values[120]), $values[138]), 100), $values[113]);
+                $ind[209] = $this->bcdiv_ex(bcmul(bcadd(bcadd($values[128], $values[120]), $values[138]), 100), $values[113]);
                 //Ty le lai rong
-                $ind[214] = bcdiv(bcmul($values[134], 100), $values[113]);
+                $ind[214] = $this->bcdiv_ex(bcmul($values[134], 100), $values[113]);
+
+                //******** Hieu qua quan ly************
                 //ROA
-                $ind[211] = bcdiv(bcmul($values[134], 100), $values[1][$year]);
+                $ind[211] = $this->bcdiv_ex(bcmul($values[134], 100), $tmp[1]);
                 //ROE
-                $ind[212] = bcdiv(bcmul($values[134], 100), $values[92]);
+                $ind[212] = $this->bcdiv_ex(bcmul($values[134], 100), $tmp[91]);
                 //ROS
-                $ind[213] = bcdiv(bcmul($values[134], 100), $values[115]);
+                $ind[213] = $this->bcdiv_ex(bcmul($values[134], 100), $values[115]);
 
                 foreach ($ind as $key => $val) {
                     if (empty($val)) $ind[$key] = '';
@@ -162,19 +187,23 @@ class Controller_Company_Finance extends Controller_Base
 
     private function getValueForCalcIndicator($id, $year)
     {
-        $col_id_1='1,3,5,7,8,29,60,61,91,112';
-        $col_id_2='1,2,3,4,5,8,16,22';
-        $col_id_3='4';
-        $p_id = '1,3,5,7,8,30,61,62,92,113,114,115,116,117,120,128,134,138,188';
+        $col_id_1 = '1,3,5,6,7,8,22,29,36,60,61,64,78,90,112';
+        $col_id_2 = '1,2,3,4,5,8,16,22';
+        $col_id_3 = '4';
+        $p_id = '1,3,5,6,7,8,23,30,37,61,62,65,79,91,113,114,115,116,117,120,128,134,138,188';
         $result = array();
         $tmp = array();
-        foreach (explode(",", $p_id) as $key => $val) {
-            if (!in_array($val, array(1, 7, 8, 30))) $tmp[$val] = 0;
-        }
-        $res1 = \Model_BalanceSheet::getDataForCalcIndicator($id, $year, $col_id_1);
+        $avr_ary = array(1, 7, 8, 22, 29, 36, 64, 78, 90);
+        $res1 = \Model_BalanceSheet::getDataForCalcIndicator($id, $year, $col_id_1, $avr_ary);
         $res2 = \Model_IncomeStatement::getDataForCalcIndicator($id, $year, $col_id_2);
         $res3 = \Model_Cashflow::getDataForCalcIndicator($id, $year, $col_id_3);
-        $result = $this->convertToParamID($res1,1) + $this->convertToParamID($res2,2) + $this->convertToParamID($res3,3) + $tmp;
+        $result = $this->convertToParamID($res1, 1) + $this->convertToParamID($res2, 2) + $this->convertToParamID($res3, 3);
+        foreach (explode(",", $p_id) as $key => $val) {
+            if (!in_array($val, $avr_ary)) {
+                if (empty($result[$val])) $result[$val] = 0;
+            }
+        }
+
         $share_outstanding = \Model_Capital::getLastShareOutstanding($id, $year . '-12-31 00:00:00');
         $other_share = \Model_Capital::getLastOtherShare($id, $year . '-12-31 00:00:00');
         $result['total_share'] = bcadd($share_outstanding, $other_share);
@@ -182,22 +211,28 @@ class Controller_Company_Finance extends Controller_Base
         return $result;
     }
 
-    private function convertToColID($ary_p_id){
-        $ary_pid=\Model_Params::getListColID();
-        $res=array();
-        foreach($ary_p_id as $key => $val){
-            $res[$ary_pid[$key]]=$val;
+    private function convertToColID($ary_p_id)
+    {
+        $ary_pid = \Model_Params::getListColID();
+        $res = array();
+        foreach ($ary_p_id as $key => $val) {
+            $res[$ary_pid[$key]] = $val;
         }
         return $res;
     }
 
-    private function convertToParamID($ary_col_id, $type){
-        $ary_pid=\Model_Params::getListParamID($type);
-        $res=array();
-        foreach($ary_col_id as $key => $val){
-            $res[$ary_pid[$key]]=$val;
+    private function convertToParamID($ary_col_id, $type)
+    {
+        $ary_pid = \Model_Params::getListParamID($type);
+        $res = array();
+        foreach ($ary_col_id as $key => $val) {
+            $res[$ary_pid[$key]] = $val;
         }
         return $res;
+    }
+    private function bcdiv_ex($lef_opr, $right_opr){
+        if(empty($right_opr) || $right_opr==0) return 0;
+        return bcdiv($lef_opr, $right_opr);
     }
 }
 

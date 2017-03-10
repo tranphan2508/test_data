@@ -107,7 +107,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
                                 if (data.success) {
                                     $scope.params = data.result;
                                     $scope.getValues();
-                                    if($scope.type_report.value!='3')$scope.updateIndicators();
+                                    $scope.updateIndicators();
                                 } else {
                                     alert(data.error);
                                 }

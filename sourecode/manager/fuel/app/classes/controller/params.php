@@ -70,7 +70,8 @@ class Controller_Params extends Controller_Base
             $error = \Lang::get('error.MISS_PARAM');
         } else {
             try {
-                $result = \Model_Params::addParam($title, $type, $parent_id, $level,$description);
+                $col_id= \Model_Params::getMaxColID( $type);
+                $result = \Model_Params::addParam($title, $type, $parent_id, $level,$description, $col_id);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
