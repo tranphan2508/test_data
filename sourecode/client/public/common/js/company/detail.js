@@ -34,7 +34,7 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams)
         $scope.type = type;
         $scope.params = null;
         $scope.values = null;
-        if (type == '1' || type == '2' || type == '3' || type == '4') {
+        if (type == '1' || type == '2' || type == '3' || type == '4' || type == '5') {
             $scope.display_filter = true;
             getAllParams(type);
         }

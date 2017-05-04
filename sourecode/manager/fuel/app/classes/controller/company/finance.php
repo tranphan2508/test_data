@@ -30,6 +30,9 @@ class Controller_Company_Finance extends Controller_Base
                     case \Model_Company::$FINANCIAL_INDICATOR_TYPE:
                         $result = \Model_Indicator::getDataByCompany($company_id, $year);
                         break;
+                    case \Model_Company::$CASHFLOW_DIRECT_TYPE:
+                        $result = \Model_CashflowDirect::getDataByCompany($company_id, $year);
+                        break;
                 }
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
@@ -69,7 +72,9 @@ class Controller_Company_Finance extends Controller_Base
                     case \Model_Company::$FINANCIAL_INDICATOR_TYPE:
                         $success &= \Model_Indicator::insertData($company_id, $year, json_decode($insert_str));
                         break;
-
+                    case \Model_Company::$CASHFLOW_DIRECT_TYPE:
+                        $success &= \Model_CashflowDirect::insertData($company_id, $year, json_decode($insert_str));
+                        break;
                 }
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
@@ -111,7 +116,6 @@ class Controller_Company_Finance extends Controller_Base
                 //book value
                 $ind[216] = $this->bcdiv_ex(bcsub($values[91][$year], $values[188]), $values['total_share']);
 
-                var_dump($values[91][$year]);var_dump($values[188]);var_dump($values['total_share']);
                 //**********Nhom chi so thanh khoan va don bay tai chinh *****************
                 //thanh toan nhanh
                 $ind[198] = $this->bcdiv_ex(bcadd($values[5], $values[6]), $values[62]);
@@ -167,7 +171,6 @@ class Controller_Company_Finance extends Controller_Base
                 $ind[212] = $this->bcdiv_ex(bcmul($values[134], 100), $tmp[91]);
                 //ROS
                 $ind[213] = $this->bcdiv_ex(bcmul($values[134], 100), $values[115]);
-
                 foreach ($ind as $key => $val) {
                     if (empty($val)) $ind[$key] = '';
                     else $ind[$key] = Common::bcround($ind[$key], 2);
@@ -232,7 +235,7 @@ class Controller_Company_Finance extends Controller_Base
     }
     private function bcdiv_ex($lef_opr, $right_opr){
         if(empty($right_opr) || $right_opr==0) return 0;
-        return bcdiv($lef_opr, $right_opr);
+        return bcdiv($lef_opr, $right_opr, 2);
     }
 }
 

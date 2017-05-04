@@ -50,6 +50,7 @@ class Model_Company extends \Orm\Model
     public static $BALANCE_SHEET_TYPE = '1';
     public static $INCOME_STATEMENT_TYPE = '2';
     public static $CASHFLOW_TYPE = '3';
+    public static $CASHFLOW_DIRECTOR_TYPE = '5';
     public static $FINANCIAL_INDICATOR_TYPE = '4';
 
     public static function getAllCompanies()

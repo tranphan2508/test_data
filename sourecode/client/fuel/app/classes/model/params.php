@@ -35,6 +35,7 @@ class Model_Params extends \Orm\Model
             ->select('id','title','parent_id','level','description','col_id')
             ->where('type',$type)
             ->where('del', 0)
+            ->order_by('id', 'ASC')
             ->get();
         foreach($params as $p){
             $res[]=$p->to_array();

@@ -25,6 +25,9 @@ class Controller_Company_Structure extends Controller_Base
                 case 4:
                     $result = \Model_Indicator::createTable();
                     break;
+                case 5:
+                    $result = \Model_CashflowDirect::createTable();
+                    break;
             }
         }
         $this->do_response($success, $error, $result);

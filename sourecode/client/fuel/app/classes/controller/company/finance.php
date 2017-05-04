@@ -28,6 +28,9 @@ class Controller_Company_Finance extends Controller_Base
                     case \Model_Company::$CASHFLOW_TYPE:
                         $data = \Model_Cashflow::getDataByCompanyInYears($id, $year_from, $year_to);
                         break;
+                    case \Model_Company::$CASHFLOW_DIRECTOR_TYPE:
+                        $data = \Model_CashflowDirect::getDataByCompanyInYears($id, $year_from, $year_to);
+                        break;
                     case \Model_Company::$FINANCIAL_INDICATOR_TYPE:
                         $data = \Model_Indicator::getDataByCompanyInYears($id, $year_from, $year_to);
                         break;

@@ -3,7 +3,8 @@ myApp.controller('ParamsCtrl', function ($scope, $uibModal, RestAPI) {
     $scope.type_reports = [
         {'value': 1, 'name': 'Balance Sheet'},
         {'value': 2, 'name': 'Income Statement'},
-        {'value': 3, 'name': 'Statement of Cashflow'},
+        {'value': 3, 'name': 'Statement of Cashflow (indirect)'},
+        {'value': 5, 'name': 'Statement of Cashflow (direct)'},
         {'value': 4, 'name': 'Financial Indicators'}
     ];
     $scope.type_report = $scope.type_reports[0];

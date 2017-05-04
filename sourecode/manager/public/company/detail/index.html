@@ -22,7 +22,7 @@
                         <div class="row">
                             <span class="col-md-1">Type</span>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <select class="form-control" ng-model="type_report"
                                         ng-options="type_report as type_report.name for type_report in type_reports track by type_report.value"
                                         ng-change="getAllParams()">
@@ -62,7 +62,7 @@
 
                                 <div class="col-md-3 divRightAlign">
                                     <span class="divRightAlign" ng-hide="edit">{{values['col_id'+data.col_id] | nozero | number }}</span>
-                                    <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187"
+                                    <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187 && data.id!=274"
                                            type="text" name="{{data.col_id}}_{{data.id}}"
                                            ng-model="values['col_id'+data.col_id]"
                                            class="form-control ng-pristine"

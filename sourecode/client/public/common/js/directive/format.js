@@ -79,15 +79,16 @@ myApp.filter('nozero', function () {
                             b_total = new BigNumber(total1);
                         }
                         var b_input = new BigNumber(input);
+                        b_input=b_input.mul(100);
                         var percent = (b_input.comparedTo(0) == 0) ? '0' : b_input.dividedBy(b_total);
-                        input = (percent != '0') ? percent.toFormat(4) : '0';
+                        input = (percent != '0') ? percent.toFormat(2) : '0';
                     } else input = '0';
                 }else{
                     if(prev_input){
                         var b_input=new BigNumber(input);
                         var b_prev_input=new BigNumber(prev_input);
                         var percent=(b_input.minus(b_prev_input)).dividedBy(b_prev_input);
-                        input = (percent != '0') ? percent.toFormat(4) : '0';
+                        input = (percent != '0') ? percent.toFormat(2) : 'aaa';
                     }else input='0';
 
                 }

@@ -3,7 +3,7 @@
     <div class="row">
         <span class="col-md-1">Type</span>
 
-        <div class="col-md-3">
+        <div class="col-md-5">
             <select class="form-control" ng-model="type_report"
                     ng-options="type_report as type_report.name for type_report in type_reports track by type_report.value"
                     ng-change="getAllParams(type_report.value)">

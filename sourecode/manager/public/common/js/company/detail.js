@@ -8,7 +8,8 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
     $scope.type_reports = [
         {'value': 1, 'name': 'Balance Sheet'},
         {'value': 2, 'name': 'Income Statement'},
-        {'value': 3, 'name': 'Statement of Cashflow'},
+        {'value': 3, 'name': 'Statement of Cashflow (indirect)'},
+        {'value': 5, 'name': 'Statement of Cashflow (direct)'},
         {'value': 4, 'name': 'Financial Indicators'}
     ];
     $scope.type_report = $scope.type_reports[0];
@@ -82,8 +83,11 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
             }
             if ($scope.type_report.value == '2') updateIncomeValue(p_insert_value);
             if ($scope.type_report.value == '3') {
-                updateCashflowValue(p_insert_value);
+                updateCashflowValue(p_insert_value,false);
                 if(p_insert_value[getColID(149)])p_insert_value[getColID(149)] = p_insert_value[getColID(135)].subtract(p_insert_value[getColID(149)]);
+            }
+            if ($scope.type_report.value == '5') {
+                updateCashflowValue(p_insert_value,true);
             }
 
             for (var p_id in p_insert_value) {
@@ -203,19 +207,35 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
     }
 
     //compute cashflow value
-    function updateCashflowValue(arr) {
-        var val1 = defaultNumber(arr, getColID(135));
-        var val2 = defaultNumber(arr, getColID(159));
-        var val3 = defaultNumber(arr, getColID(172));
+    function updateCashflowValue(arr,flag) {
+        if(!flag){
+            var val1 = defaultNumber(arr, getColID(135));
+            var val2 = defaultNumber(arr, getColID(159));
+            var val3 = defaultNumber(arr, getColID(172));
 
-        //Luu chuyen tien thuan trong ky
-        arr[getColID(184)] = val1.add(val2).add(val3);
+            //Luu chuyen tien thuan trong ky
+            arr[getColID(184)] = val1.add(val2).add(val3);
 
-        //tien va tuong duong tien cuoi ky
-        val1.set(arr[getColID(184)]);
-        val2.set(defaultNumber(arr, getColID(185)));
-        val3.set(defaultNumber(arr, getColID(186)))
-        arr[getColID(187)] = val1.add(val2).add(val3);
+            //tien va tuong duong tien cuoi ky
+            val1.set(arr[getColID(184)]);
+            val2.set(defaultNumber(arr, getColID(185)));
+            val3.set(defaultNumber(arr, getColID(186)))
+            arr[getColID(187)] = val1.add(val2).add(val3);
+        }else{
+            var val1 = defaultNumber(arr, getColID(230));
+            var val2 = defaultNumber(arr, getColID(234));
+            var val3 = defaultNumber(arr, getColID(260));
+
+            //Luu chuyen tien thuan trong ky
+            arr[getColID(274)] = val1.add(val2).add(val3);
+
+            //tien va tuong duong tien cuoi ky
+            val1.set(defaultNumber(arr, getColID(275)));
+            val2.set(defaultNumber(arr, getColID(276)));
+            val3.set(defaultNumber(arr, getColID(277)))
+            arr[getColID(278)] = arr[getColID(274)].add(val1).add(val2).add(val3);
+        }
+
     }
 
     //compute indicators
