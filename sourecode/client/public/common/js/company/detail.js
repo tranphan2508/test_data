@@ -23,7 +23,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, RestAPI, $routeParams) {
     init();
 });
 
-myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams) {
+myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams, $sce) {
     var id = $routeParams.id;
     var today = new Date().getFullYear();
     var year_to = today - 1;
@@ -63,7 +63,12 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams)
         RestAPI.do('get', 'company/finance/valuesInYears', params,
             function (data, status) {
                 if (data.success) {
-                    $scope.values = data.result;
+                    var result= data.result;
+                    var aa=[];
+                    for(var i in result){
+                        result[i]['chart'] = $sce.trustAsHtml(makeTableChart($scope.year_arrange, result[i]));
+                    }
+                    $scope.values= result;
                 } else {
                     alert(data.error);
                 }

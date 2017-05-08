@@ -1,3 +1,20 @@
 <div class="main-module" ng-controller="DetailOtherCtrl">
+    <div class="row">
+        <span class="col-md-1">Type</span>
 
+        <div class="col-md-4">
+            <select class="form-control" ng-model="type_report"
+                    ng-options="type_report as type_report.name for type_report in type_reports track by type_report.value"
+                    ng-change="getAllParams()">
+            </select>
+        </div>
+        <span class="col-md-1">Year</span>
+
+        <div class="col-md-2">
+            <select class="form-control" ng-model="year"
+                    ng-options="y for y in years"
+                    ng-change="getValues()">
+            </select>
+        </div>
+    </div>
 </div>

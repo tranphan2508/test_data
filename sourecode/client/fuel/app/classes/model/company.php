@@ -63,6 +63,7 @@ class Model_Company extends \Orm\Model
                     'sector'
                 )
             )
+            ->where('public', 1)
             ->where('del', 0)
             ->get();
         foreach ($companies as $f) {
@@ -84,6 +85,26 @@ class Model_Company extends \Orm\Model
             ->where('id', $id)
             ->get_one()
             ->to_array();
+        return $res;
+    }
+
+    public static function getCompanyDetail($id)
+    {
+        $res = array();
+        $data = Model_Company::query()
+            ->related(
+                array('floor', 'sector')
+            )
+            ->where('id', $id)
+            ->where('public', 1)
+            ->where('del', 0)
+            ->get_one()
+            ->to_array();
+        $data['sector_name'] = $data['sector']['name'];
+        $data['floor_code'] = $data['floor']['code'];
+        unset($data['sector']);
+        unset($data['floor']);
+        $res[] = $data;
         return $res;
     }
 }

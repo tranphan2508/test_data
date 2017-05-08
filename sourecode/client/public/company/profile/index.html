@@ -1,1 +1,12 @@
-Profile
+<div ng-controller="CompanyProfileCtrl">
+    <uib-accordion>
+        <uib-accordion-group class="panel-default" is-open="status.open">
+            <uib-accordion-heading>
+                <div>I can have markup, too! <i class="pull-right glyphicon"
+                                                                    ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i></div>
+
+            </uib-accordion-heading>
+            This is just some content to illustrate fancy headings.
+        </uib-accordion-group>
+    </uib-accordion>
+</div>

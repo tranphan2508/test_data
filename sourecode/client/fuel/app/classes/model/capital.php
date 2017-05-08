@@ -5,10 +5,12 @@ class Model_Capital extends \Orm\Model
     protected static $_property = array(
         'id',
         'company_id',
+        'type',
         'reason',
         'quantity',
         'price',
         'share_outstanding',
+        'other_share',
         'del',
         'list_date',
         'updated_date'
@@ -85,6 +87,21 @@ class Model_Capital extends \Orm\Model
         $data = Model_Capital::find($id);
         $data->del = 1;
         return($data->save());
+    }
+
+    public static function getListCapitalByChanging($id){
+        $res = array();
+        $values = Model_Capital::query()
+            ->where('company_id', $id)
+            ->where('del', 0)
+            ->where('type', 0)
+            ->order_by('list_date', 'ASC')
+            ->get();
+        foreach ($values as $value) {
+            $row = $value->to_array();
+            $res[substr($row['list_date'],0,10)]=bcadd($row['share_outstanding'], $row['other_share'],0);
+        }
+        return $res;
     }
 }
 
