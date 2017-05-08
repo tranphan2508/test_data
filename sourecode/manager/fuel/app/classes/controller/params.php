@@ -31,6 +31,7 @@ class Controller_Params extends Controller_Base
                     $param = array();
                     $param['col_id'] = $value['col_id'];
                     $param['level'] = $value['level'];
+                    $param['template'] = $value['template'];
                     $param['title'] = $value['title'];
                     $param['parent_id'] = $value['parent_id'];
                     $param['id'] = $value['id'];
@@ -61,6 +62,7 @@ class Controller_Params extends Controller_Base
         $type = Input::post('params.type', null);
         $parent_id = Input::post('params.parent_id', null);
         $level = Input::post('params.level', null);
+        $template = Input::post('params.template', null);
         $description = Input::post('params.description', null);
         $success = true;
         $error = '';
@@ -71,7 +73,7 @@ class Controller_Params extends Controller_Base
         } else {
             try {
                 $col_id= \Model_Params::getMaxColID( $type);
-                $result = \Model_Params::addParam($title, $type, $parent_id, $level,$description, $col_id);
+                $result = \Model_Params::addParam($title, $type, $parent_id, $level,$description, $col_id, $template);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
@@ -110,6 +112,7 @@ class Controller_Params extends Controller_Base
         $id = Input::put('id', null);
         $title = Input::put('title', null);
         $description = Input::put('description', null);
+        $template = Input::put('template', null);
         $success = true;
         $error = '';
         if (empty($id)) {
@@ -117,7 +120,7 @@ class Controller_Params extends Controller_Base
             $error = \Lang::get('error.MISS_PARAM');
         } else {
             try {
-                $success = \Model_Params::updateTitle($id, $title,$description);
+                $success = \Model_Params::updateTitle($id, $title,$description,$template);
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
@@ -180,6 +183,7 @@ class Controller_Params extends Controller_Base
                     $this->fetchDataTreeByParentIndex($ary_p_id, $index, $value['parent_id']);
                     $param = array();
                     $param['level'] = $value['level'];
+                    $param['template'] = $value['template'];
                     $param['title'] = $value['title'];
                     $param['parent_id'] = $value['parent_id'];
                     $param['description'] = $value['description'];

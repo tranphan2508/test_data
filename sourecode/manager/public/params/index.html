@@ -12,7 +12,7 @@
 
     </div>
     <div class="row row-param1">
-        <label class="btn btn-sm btn-success divRightAlign" ng-click="add($event,0,0,'')">Add</label>
+        <label class="btn btn-sm btn-success divRightAlign" ng-click="add($event,0,0,'',1)">Add</label>
     </div>
     <script type="text/ng-template" id="paramsTree">
         <div class="row row-param pl{{data.level}}" ng-click="data.open=!data.open">
@@ -20,9 +20,9 @@
                ng-class="{'glyphicon-plus-sign': !data.open && data.has_child, 'glyphicon-minus-sign': data.open && data.has_child}"></i>
             <span>{{data.title}}</span>
             <label class="btn btn-sm btn-success divRightAlign"
-                   ng-click="add($event,data.id, data.level, data.title)">Add</label>
+                   ng-click="add($event,data.id, data.level, data.title, data.template)">Add</label>
             <label class="btn btn-sm btn-warning divRightAlign"
-                   ng-click="edit($event,data.id,data.level, data.title, data.description)">Edit</label>
+                   ng-click="edit($event,data.id,data.level, data.title, data.description, data.template)">Edit</label>
             <label class="btn btn-sm btn-danger divRightAlign" ng-click="del($event,data.id,data.level, data.title)"
                    ng-show="!data.has_child">Del</label>
         </div>
@@ -48,6 +48,14 @@
                     <td><label>Title</label></td>
                     <td><input type="text" name="title" ng-model="info.title" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
                                required  />
+                    </td>
+                </tr>
+                <tr ng-show="{{info.flag!=3}}">
+                    <td><label>Template</label></td>
+                    <td><select ng-model="info.template" class="form-control ng-pristine ng-valid ng-touched ng-not-empty ng-valid-required">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
                     </td>
                 </tr>
                 <tr ng-show="{{info.type==4 && info.flag!=3}}">

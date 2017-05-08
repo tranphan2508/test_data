@@ -13,6 +13,14 @@
                 <a data-toggle="tab" data-target="#capital" tab-heading-transclude=""
                    class="ng-binding">Capital</a>
             </li>
+            <li class="ng-isolate-scope" class="ng-isolate-scope">
+                <a data-toggle="tab" data-target="#target" tab-heading-transclude=""
+                   class="ng-binding">Target</a>
+            </li>
+            <li class="ng-isolate-scope" class="ng-isolate-scope">
+                <a data-toggle="tab" data-target="#other" tab-heading-transclude=""
+                   class="ng-binding">Other</a>
+            </li>
 
         </ul>
         <div class="tab-content">
@@ -84,6 +92,9 @@
             </div>
 
             <div class="tab-pane " id="capital" ng-include="'company/detail/capital.html'"></div>
+            <div class="tab-pane " id="target" ng-include="'company/detail/target.html'"></div>
+            <div class="tab-pane " id="other" ng-include="'company/detail/other.html'"></div>
+
         </div>
     </div>
 
