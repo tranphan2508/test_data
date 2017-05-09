@@ -67,3 +67,21 @@ myApp.filter('toShareOutstanding', function() {
     }
 });
 
+myApp.filter('hString', function(){
+    return function(input){
+        if(input.indexOf('.')) return input.substr(input.indexOf('.')+1, input.length);
+        return input;
+    }
+});
+
+myApp.filter('range', function(){
+    return function(input){
+        var res = [];
+        for (var i = 0; i < input; i++) {
+            res.push(i + 1);
+        }
+        return res;
+    }
+});
+
+

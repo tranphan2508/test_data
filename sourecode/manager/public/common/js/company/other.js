@@ -2,27 +2,35 @@ myApp.controller('DetailOtherCtrl', function ($scope, RestAPI, $routeParams, $ui
     var id = $routeParams.id;
 
     $scope.getAllParams = function () {
-        RestAPI.do('get','param/paramByTemplate', {'id': id, 'type': $scope.type_report},
+        RestAPI.do('get', 'params/params', {'type': $scope.type_report.value},
             function (data, status) {
                 if (data.success) {
                     $scope.params = data.result;
-                    $scope.getValues();
                 } else {
                     alert(data.error);
                 }
+            }, function (data, status) {
+                alert('Error 2');
             });
+
     };
 
     $scope.getValues = function () {
-        RestAPI.do('get','other/', {'id': id, 'type': $scope.type_report},
+        RestAPI.do('get', 'other/', {'id': id, 'type': $scope.type_report.value},
             function (data, status) {
                 if (data.success) {
                     $scope.values = data.result;
                 } else {
                     alert(data.error);
                 }
+            }, function (data, status) {
+                alert('Error 2');
             });
-    }
+    };
+
+    $scope.addTemplateValue = function (data) {
+    // add value to table "f_master_detail
+    };
 
     function init() {
         $scope.type_reports = [
@@ -31,7 +39,7 @@ myApp.controller('DetailOtherCtrl', function ($scope, RestAPI, $routeParams, $ui
             {'value': 3, 'name': 'Statement of Cashflow (indirect)'},
             {'value': 5, 'name': 'Statement of Cashflow (direct)'}
         ];
-
+        $scope.type_report = $scope.type_reports[0];
         $scope.years = [];
         var today = new Date().getFullYear();
         for (var i = today - 1; i >= 2000; i--) $scope.years.push(i);
@@ -39,6 +47,8 @@ myApp.controller('DetailOtherCtrl', function ($scope, RestAPI, $routeParams, $ui
 
         $scope.params = null;
         $scope.values = null;
+
+        $scope.getAllParams();
     }
 
     init();

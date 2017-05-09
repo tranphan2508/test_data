@@ -10,19 +10,22 @@ myApp.controller('ParamsCtrl', function ($scope, $uibModal, RestAPI) {
     $scope.type_report = $scope.type_reports[0];
     $scope.datas = [];
 
-    $scope.add = function ($e, parent_id, level, title, template) {
-        showPopup($e, parent_id, level, '', 1, '', template);
+    $scope.add = function ($e, data=null) {
+        if (data == null) {
+            data = {'id': 0, 'level': 0, 'title': '', 'template': 0, 'p_template': null};
+        }
+        showPopup($e, data, 1);
     }
 
-    $scope.edit = function ($e, parent_id, level, title, des,template) {
-        showPopup($e, parent_id, level, title, 2, des,template);
+    $scope.edit = function ($e, data) {
+        showPopup($e, data, 2);
     }
 
-    $scope.del = function ($e, parent_id, level, title) {
-        showPopup($e, parent_id, level, title, 3, '','');
+    $scope.del = function ($e, data) {
+        showPopup($e, data, 3);
     };
 
-    function showPopup($e, param_id, level, title, flag, description, template) {
+    function showPopup($e, data, flag) {
         $e.stopPropagation();
         var modalInstance = $uibModal.open({
             animation: this.animationsEnabled,
@@ -35,7 +38,9 @@ myApp.controller('ParamsCtrl', function ($scope, $uibModal, RestAPI) {
             size: '200x200',
             resolve: {
                 info: function () {
-                    var info = {'id': param_id, 'title': title, 'type': $scope.type_report.value, 'flag': flag, 'level': level, 'description': description, 'template':template};
+                    var info = {'id': data.id, 'title': data.title, 'type': $scope.type_report.value,
+                        'flag': flag, 'level': data.level, 'description': data.description,
+                        'template': data.template, 'p_template': data.p_template};
                     return info;
                 }
             }
@@ -79,7 +84,9 @@ myApp.controller('ParamsAdjustCtrl', function ($scope, info, $uibModalInstance, 
             case 1:
                 if (valid) {
                     var data_json = {
-                        'params': {'title': $scope.info.title, 'parent_id': $scope.info.id, 'type': $scope.info.type, 'level': parseInt($scope.info.level) + 1, 'description': $scope.info.description,'template':$scope.info.template}
+                        'params': {'title': $scope.info.title, 'parent_id': $scope.info.id, 'type': $scope.info.type, 'level': parseInt($scope.info.level) + 1,
+                            'description': $scope.info.description, 'template': $scope.info.template,
+                            'p_template': JSON.stringify($scope.info.p_template)}
                     };
                     RestAPI.do('post', 'params/param', data_json,
                         function (data, status) {
@@ -95,7 +102,9 @@ myApp.controller('ParamsAdjustCtrl', function ($scope, info, $uibModalInstance, 
                 break;
             case 2:
                 if (valid) {
-                    RestAPI.do('put', 'params/updateTitle', {'id': $scope.info.id, 'title': $scope.info.title, 'description': $scope.info.description,'template':$scope.info.template},
+                    var data={'id': $scope.info.id, 'title': $scope.info.title, 'description': $scope.info.description, 'template': $scope.info.template,
+                                'p_template': JSON.stringify($scope.info.p_template)};
+                    RestAPI.do('put', 'params/updateTitle',data ,
                         function (data, status) {
                             if (data.success) {
                             }

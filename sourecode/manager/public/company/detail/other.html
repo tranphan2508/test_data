@@ -17,4 +17,40 @@
             </select>
         </div>
     </div>
+    <div class="article">
+        <script type="text/ng-template" id="paramsTreeByTemplate">
+            <uib-accordion ng-show="data.template !=0">
+                <div uib-accordion-group class="panel-info" is-open="status.open">
+                    <uib-accordion-heading>
+                        <div>{{data.title | hString}}  <i class="pull-right glyphicon"
+                                                        ng-class="{'glyphicon-chevron-up': status.open, 'glyphicon-chevron-down': !status.open}"></i></div>
+
+                    </uib-accordion-heading>
+                    <div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <theader>
+                                <th>Title</th>
+                                <th ng-repeat="title in data.p_template track by $index">{{title}}</th>
+                            </theader>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <div class="actions">
+                            <div class="btn-group">
+                                <a class="btn green-haze btn-circle btn-sm" href="javascript:;" ng-click="addTemplateValue(data)">
+                                    Add <i class="glyphicon glyphicon-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </uib-accordion>
+            <div ng-repeat="data in data.datas" ng-include="'paramsTreeByTemplate'"></div>
+        </script>
+        <div ng-repeat="data in params" ng-include="'paramsTreeByTemplate'"></div>
+    </div>
+   <!--in the case of Income statement insert "cost of production and business by factor" and "business by area, part"-->
+    <!--in other case insert "nghiep vu cac ben lien quan"-->
 </div>
