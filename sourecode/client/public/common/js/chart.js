@@ -22,8 +22,8 @@ var makeTableChart = function (ary_x, obj_y) {
     for (var i in ary_x) {
         var y = ( ary_x[i] in obj_y) ? new BigNumber(obj_y[ary_x[i]]) : new BigNumber(0);
         var y_height= y.dividedBy(height).times(25);
-        tr1 += "<td style='padding-left:1px; vertical-align:bottom'>";
-        tr2 += "<td style='padding-left:1px; vertical-align:top'>";
+        tr1 += "<td style='padding-left:2px; vertical-align:bottom'>";
+        tr2 += "<td style='padding-left:2px; vertical-align:top'>";
         if(y.lessThan(0)){
             tr2 += "<div style='background-color:#CC0000; border-bottom:solid 1px #CCC; width:5px; height:"+y_height.abs()+"px;'></div>";
         }else{

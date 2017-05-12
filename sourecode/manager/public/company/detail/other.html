@@ -17,40 +17,156 @@
             </select>
         </div>
     </div>
+
     <div class="article">
         <script type="text/ng-template" id="paramsTreeByTemplate">
-            <uib-accordion ng-show="data.template !=0">
-                <div uib-accordion-group class="panel-info" is-open="status.open">
+            <uib-accordion ng-show="data.template !=0 || displayParams.indexOf(data.id)!=-1">
+                <div uib-accordion-group class="panel-info" is-open="status.open"
+                     is-disabled="displayParams.indexOf(data.id)==-1 && displayParams.indexOf(1 * data.parent_id)!=-1">
                     <uib-accordion-heading>
-                        <div>{{data.title | hString}}  <i class="pull-right glyphicon"
-                                                        ng-class="{'glyphicon-chevron-up': status.open, 'glyphicon-chevron-down': !status.open}"></i></div>
-
+                        <div>{{data.title | hString}} <i class="pull-right glyphicon"
+                                                         ng-class="{'glyphicon-chevron-up': status.open && displayParams.indexOf(1 * data.parent_id)==-1, 'glyphicon-chevron-down': !status.open &&displayParams.indexOf(1 * data.parent_id)==-1}"></i>
+                        </div>
                     </uib-accordion-heading>
-                    <div>
-                        <table class="table table-striped table-bordered table-hover">
-                            <theader>
-                                <th>Title</th>
-                                <th ng-repeat="title in data.p_template track by $index">{{title}}</th>
-                            </theader>
-                            <tbody>
+                    <div ng-hide="displayParams.indexOf(data.id)!=-1">
+                        <div ng-repeat="(key, value) in values track by $index">
+                            <div ng-if="key==data.id">
+                                <table class="table ">
+                                    <theader>
+                                        <th>Title</th>
+                                        <th ng-repeat="title in data.p_template track by $index">{{title}}</th>
+                                        <th>Edit</th>
+                                        <th ng-hide="noneEditParams.indexOf(data.id)!=-1">Del</th>
+                                    </theader>
+                                    <tbody>
+                                    <tr ng-repeat="val in value track by $index">
+                                        <td>{{val['title']}}</td>
+                                        <td ng-repeat="title in data.p_template track by $index">{{val['val'+($index+1)]
+                                            |
+                                            nozero | number}}
+                                        </td>
+                                        <td ng-hide="$last"><i class="glyphicon glyphicon-edit"
+                                                               ng-click="editTemplateValue(data, data.p_template,val)"></i>
+                                        </td>
+                                        <td ng-hide="$last || noneEditParams.indexOf(data.id)!=-1"><i
+                                                class="glyphicon glyphicon-remove"
+                                                ng-click="delTemplateValue(val.id)"></i>
+                                        </td>
+                                        <td ng-show="$last"></td>
+                                        <td ng-show="$last && noneEditParams.indexOf(data.id)==-1"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
 
-                            </tbody>
-                        </table>
-                        <div class="actions">
-                            <div class="btn-group">
-                                <a class="btn green-haze btn-circle btn-sm" href="javascript:;" ng-click="addTemplateValue(data)">
-                                    Add <i class="glyphicon glyphicon-plus"></i>
-                                </a>
                             </div>
                         </div>
-
+                        <div class="actions" ng-hide="noneEditParams.indexOf(data.id)!=-1">
+                            <div class="btn-group">
+                                <label class="btn green-haze btn-circle btn-sm" href="javascript:;"
+                                       ng-click="addTemplateValue(data, data.p_template)">
+                                    Add <i class="glyphicon glyphicon-plus"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="displayParams.indexOf(data.id)!=-1 ">
+                        <div ng-repeat="data in data.datas" ng-include="'paramsTreeByTemplate'"></div>
                     </div>
                 </div>
             </uib-accordion>
-            <div ng-repeat="data in data.datas" ng-include="'paramsTreeByTemplate'"></div>
+            <div ng-if="displayParams.indexOf(data.id)==-1">
+                <div ng-repeat="data in data.datas" ng-include="'paramsTreeByTemplate'"></div>
+            </div>
         </script>
         <div ng-repeat="data in params" ng-include="'paramsTreeByTemplate'"></div>
+        <div ng-if="type_report.value==2">
+            <uib-accordion>
+                <div uib-accordion-group class="panel-info" is-open="status.open">
+                    <uib-accordion-heading>
+                        <div>Thông tin theo bộ phận bán hàng <i class="pull-right glyphicon"
+                                                                ng-class="{'glyphicon-chevron-up': status.open, 'glyphicon-chevron-down': !status.open}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <div>
+                        <table class="table ">
+                            <theader>
+                                <th>Title</th>
+                                <th>Doanh thu bán hàng ra bên ngoài</th>
+                                <th>Doanh thu bán hàng cho các bộ phận</th>
+                                <th>Lợi nhuận/(lỗ) gộp trước thuế</th>
+                                <th>Tài sản</th>
+                                <th>Nợ</th>
+                                <th>Edit</th>
+                                <th>Del</th>
+                            </theader>
+                            <tbody>
+                            <tr ng-repeat="val in b_part_values track by $index">
+                                <td>{{val['title']}}</td>
+                                <td ng-repeat="i in 5 | range track by $index">{{val['val' + i]
+                                    |
+                                    nozero | number}}
+                                </td>
+                                <td ng-hide="$last"><i class="glyphicon glyphicon-edit"
+                                                       ng-click="editBusinessValue(val)"></i>
+                                </td>
+                                <td ng-hide="$last"><i
+                                        class="glyphicon glyphicon-remove"
+                                        ng-click="delBusinessValue(val.id)"></i>
+                                </td>
+                                <td ng-show="$last"></td>
+                                <td ng-show="$last"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="actions" ng-hide="noneEditParams.indexOf(data.id)!=-1">
+                            <div class="btn-group">
+                                <label class="btn green-haze btn-circle btn-sm" href="javascript:;"
+                                       ng-click="addBusinessValue()">
+                                    Add <i class="glyphicon glyphicon-plus"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="displayParams.indexOf(data.id)!=-1 ">
+                        <div ng-repeat="data in data.datas" ng-include="'paramsTreeByTemplate'"></div>
+                    </div>
+                </div>
+            </uib-accordion>
+        </div>
     </div>
-   <!--in the case of Income statement insert "cost of production and business by factor" and "business by area, part"-->
+    <!--in the case of Income statement insert "cost of production and business by factor" and "business by area, part"-->
     <!--in other case insert "nghiep vu cac ben lien quan"-->
 </div>
+<script type="text/ng-template" id="EditDetailOtherContent.html">
+    <div class="modal-header">
+        <h4 class="modal-title"><b>{{header | hString}}</b></h4>
+    </div>
+    <div class="modal-body" id="modal-body">
+        <form name="adjustDetailOtherForm" id="adjustDetailOtherForm">
+            <table class="table borderless">
+                <colgroup>
+                    <col width="40%">
+                </colgroup>
+                <tr>
+                    <td><label>Title</label></td>
+                    <td><input type="text" name="title" ng-model="values['title']"
+                               ng-disabled="noneEditParams && noneEditParams.indexOf(p_id)!=-1"
+                               class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
+                               required/></td>
+                </tr>
+                <tr ng-repeat="title in titles track by $index">
+                    <td><label>{{title}}</label></td>
+                    <td><input type="text" name="val{{$index +1}}" ng-model="values['val'+($index+1)]" number-input
+                               class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"/>
+                    </td>
+                </tr>
+            </table>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" ng-click="ok(adjustDetailOtherForm.$valid)">
+                    {{btnSubmit}}
+                </button>
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</script>

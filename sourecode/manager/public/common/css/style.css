@@ -194,9 +194,11 @@ ul.nav-tabs li:focus, ul.nav-tabs li:hover
 a:focus {
     outline:0;
 }
-a:hover, a:focus {
-     text-decoration: none;
+a:hover{
     opacity: 0.7;
+}
+a:hover, a:focus {
+    text-decoration: none;
 }
 .green-haze.btn {
     color: #FFFFFF;

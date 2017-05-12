@@ -6,6 +6,7 @@ return array(
         'PASSWORD_WRONG' => 'Password is wrong',
         'QUERY_FAIL' => 'Query is failed',
         'AUTHORIZATION_FAIL' => 'Authorization is failed',
+        'TITLE_EXIST' => 'Title has existed',
     )
 )
 ?>
