@@ -40,7 +40,7 @@ myApp.controller('ParamsCtrl', function ($scope, $uibModal, RestAPI) {
                 info: function () {
                     var info = {'id': data.id, 'title': data.title, 'type': $scope.type_report.value,
                         'flag': flag, 'level': data.level, 'description': data.description,
-                        'template': data.template, 'p_template': data.p_template};
+                        'template': data.template, 'p_template': Object.create(data.p_template)};
                     return info;
                 }
             }

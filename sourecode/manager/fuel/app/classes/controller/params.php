@@ -18,6 +18,7 @@ class Controller_Params extends Controller_Base
         $success = true;
         $error = '';
         $type = Input::get('type', '');
+        $flag = Input::get('flag','');
         try {
             if (empty($type)) {
                 $success = false;
@@ -32,7 +33,8 @@ class Controller_Params extends Controller_Base
                     $param['col_id'] = $value['col_id'];
                     $param['level'] = $value['level'];
                     $param['template'] = $value['template'];
-                    $param['p_template']=\Model_Param_Template::getTitles($value['id'], $value['template']);
+                    if(!empty($flag)) $param['p_template']=\Model_Param_Template::getOrderTitle($value['id'], $value['template']);
+                    else $param['p_template']=\Model_Param_Template::getTitles($value['id'], $value['template']);
                     $param['title'] = $value['title'];
                     $param['parent_id'] = $value['parent_id'];
                     $param['id'] = $value['id'];

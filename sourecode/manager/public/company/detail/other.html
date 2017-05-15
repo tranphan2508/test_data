@@ -34,14 +34,14 @@
                                 <table class="table ">
                                     <theader>
                                         <th>Title</th>
-                                        <th ng-repeat="title in data.p_template track by $index">{{title}}</th>
+                                        <th ng-repeat="title in data.p_template track by $index">{{title['title']}}</th>
                                         <th>Edit</th>
                                         <th ng-hide="noneEditParams.indexOf(data.id)!=-1">Del</th>
                                     </theader>
                                     <tbody>
                                     <tr ng-repeat="val in value track by $index">
                                         <td>{{val['title']}}</td>
-                                        <td ng-repeat="title in data.p_template track by $index">{{val['val'+($index+1)]
+                                        <td ng-repeat="title in data.p_template">{{val['val'+(title.id)]
                                             |
                                             nozero | number}}
                                         </td>
@@ -155,8 +155,8 @@
                                required/></td>
                 </tr>
                 <tr ng-repeat="title in titles track by $index">
-                    <td><label>{{title}}</label></td>
-                    <td><input type="text" name="val{{$index +1}}" ng-model="values['val'+($index+1)]" number-input
+                    <td><label>{{title['title']}}</label></td>
+                    <td><input type="text" name="val{{$index +1}}" ng-model="values['val'+(title.id)]" number-input
                                class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"/>
                     </td>
                 </tr>

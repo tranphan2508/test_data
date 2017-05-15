@@ -3,7 +3,7 @@ myApp.controller('DetailOtherCtrl', function ($scope, RestAPI, $routeParams, $ui
     $scope.displayParams = [38, 41, 44, 188];
     $scope.noneEditParams = [40, 43, 46, 190];
     $scope.getAllParams = function () {
-        RestAPI.do('get', 'params/params', {'type': $scope.type_report.value},
+        RestAPI.do('get', 'params/params', {'type': $scope.type_report.value, 'flag': 1},
             function (data, status) {
                 if (data.success) {
                     $scope.params = data.result;

@@ -41,23 +41,24 @@
             <table class="table borderless">
                 <colgroup>
                     <col class="col-md-3">
-                    <col class="col-md-9">
+                    <col class="col-md-6">
+                    <col class="col-md-1">
                 </colgroup>
                 <tbody>
                 <tr ng-show="info.flag!=3">
-                    <td><label>Title</label></td>
-                    <td><input type="text" name="title" ng-model="info.title" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
+                    <td ><label>Name</label></td>
+                    <td colspan="3"><input type="text" name="title" ng-model="info.title" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
                                required  />
                     </td>
                 </tr>
                 <tr ng-show="info.type==4 && info.flag!=3">
-                    <td><label>Description</label></td>
-                    <td><textarea rows="3" ng-model="info.description" class="form-control"></textarea>
+                    <td ><label>Description</label></td>
+                    <td colspan="3"><textarea rows="3" ng-model="info.description" class="form-control"></textarea>
                     </td>
                 </tr>
                 <tr ng-show="info.flag!=3">
                     <td><label>Template</label></td>
-                    <td><select ng-model="info.template" class="form-control ng-pristine ng-valid ng-touched ng-not-empty ng-valid-required">
+                    <td colspan="3"><select ng-model="info.template" class="form-control ng-pristine ng-valid ng-touched ng-not-empty ng-valid-required">
                         <option value="0">None</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -74,8 +75,12 @@
                     </td>
                 </tr>
                 <tr ng-show="info.template > 0" ng-repeat="i in info.template | range track by $index">
-                    <td><label>Title{{$index + 1}}</label></td>
-                    <td><input type="text" name="title{{$index}}" ng-model="info.p_template[$index]" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
+                    <td><label>Title</label></td>
+                    <td><input type="text" name="title{{$index}}" ng-model="info.p_template['title'+($index+1)]" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
+                               required  />
+                    </td>
+                    <td><label>Priority</label></td>
+                    <td><input type="number" name="priority{{$index}}" ng-model="info.p_template['priority' + ($index+1)]" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
                                required  />
                     </td>
                 </tr>
