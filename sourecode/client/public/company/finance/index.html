@@ -17,26 +17,32 @@
             <div class="portlet-body">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a data-toggle="tab" data-target="#report" ng-click="changeType('1')">Balance Sheet</a>
+                        <a data-toggle="tab" data-target="#report" ng-click="changeType(1)">Balance Sheet</a>
                     </li>
                     <li class="ng-isolate-scope">
-                        <a data-toggle="tab" data-target="#report" ng-click="changeType('2')">Income
-                            Statement</a>
+                        <a data-toggle="tab" data-target="#report" ng-click="changeType(2)">Income Statement</a>
                     </li>
                     <li class="ng-isolate-scope">
-                        <a data-toggle="tab" data-target="#report" ng-click="changeType('3')">Cashflow (Indirect)</a>
+                        <a data-toggle="tab" data-target="#report" ng-click="changeType(3)">Cashflow (Indirect)</a>
                     </li>
                     <li class="ng-isolate-scope">
-                        <a data-toggle="tab" data-target="#report" ng-click="changeType('5')">Cashflow (Direct)</a>
+                        <a data-toggle="tab" data-target="#report" ng-click="changeType(5)">Cashflow (Direct)</a>
                     </li>
                     <li class="ng-isolate-scope">
-                        <a data-toggle="tab" data-target="#report" ng-click="changeType('4')">Financial Index</a>
+                        <a data-toggle="tab" data-target="#report" ng-click="changeType(4)">Financial Index</a>
                     </li>
                     <li class="ng-isolate-scope">
-                        <a data-toggle="tab" data-target="#f_target" ng-click="changeType('6')">Target</a>
+                        <a data-toggle="tab" data-target="#f_detail" ng-click="changeType(6)" ng-mouseenter="f_detail_show=true" ng-mouseleave="f_detail_show=false">Financial Detail</a>
+                        <ul ng-show="f_detail_show" ng-mouseenter="f_detail_show=true" ng-mouseleave="f_detail_show=false">
+                            <li>Balance Sheet</li>
+                            <li>Income Statement</li>
+                        </ul>
                     </li>
                     <li class="ng-isolate-scope">
-                        <a data-toggle="tab" data-target="#f_download" ng-click="changeType('7')">Download</a>
+                        <a data-toggle="tab" data-target="#f_target" ng-click="changeType(7)">Target</a>
+                    </li>
+                    <li class="ng-isolate-scope">
+                        <a data-toggle="tab" data-target="#f_download" ng-click="changeType(8)">Download</a>
                     </li>
                 </ul>
 
@@ -90,6 +96,9 @@
                         <div class="row" ng-include="'report_template'"></div>
                     </div>
 
+                    <div id="f_detail">
+                        <div class="row" ng-include="'detail_template'"></div>
+                    </div>
                     <div class="tab-pane" id="f_target">Target</div>
 
                     <div class="tab-pane" id="f_download">Download</div>
@@ -119,6 +128,10 @@
             </tr>
             </tbody>
         </table>
+    </script>
+
+    <script type="text/ng-template" id="detail_template">
+
     </script>
 </div>
 

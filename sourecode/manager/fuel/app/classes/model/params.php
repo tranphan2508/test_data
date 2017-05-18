@@ -51,7 +51,7 @@ class Model_Params extends \Orm\Model
             'type' => $type,
             'parent_id' => $parent_id,
             'level' => $level,
-            'tempalte' => $template,
+            'template' => $template,
             'description' => $description,
             'col_id' => $col_id
         ));

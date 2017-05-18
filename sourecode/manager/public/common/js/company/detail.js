@@ -5,13 +5,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
     var original_values = null;
     var parent_params = null;
     //type of report options
-    $scope.type_reports = [
-        {'value': 1, 'name': 'Balance Sheet'},
-        {'value': 2, 'name': 'Income Statement'},
-        {'value': 3, 'name': 'Statement of Cashflow (indirect)'},
-        {'value': 5, 'name': 'Statement of Cashflow (direct)'},
-        {'value': 4, 'name': 'Financial Indicators'}
-    ];
+    $scope.type_reports = TYPE_REPORT;
     $scope.type_report = $scope.type_reports[0];
 
     //year options

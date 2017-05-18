@@ -41,9 +41,10 @@
                                     <tbody>
                                     <tr ng-repeat="val in value track by $index">
                                         <td>{{val['title']}}</td>
-                                        <td ng-repeat="title in data.p_template">{{val['val'+(title.id)]
+                                        <td ng-repeat="title in data.p_template"><span ng-if="val['val'+(title.id)] | isNumber">{{val['val'+(title.id)]
                                             |
-                                            nozero | number}}
+                                            nozero | number}}</span>
+                                            <span ng-if="!(val['val'+(title.id)] | isNumber)">{{val['val'+(title.id)]}}</span>
                                         </td>
                                         <td ng-hide="$last"><i class="glyphicon glyphicon-edit"
                                                                ng-click="editTemplateValue(data, data.p_template,val)"></i>
@@ -79,63 +80,7 @@
             </div>
         </script>
         <div ng-repeat="data in params" ng-include="'paramsTreeByTemplate'"></div>
-        <div ng-if="type_report.value==2">
-            <uib-accordion>
-                <div uib-accordion-group class="panel-info" is-open="status.open">
-                    <uib-accordion-heading>
-                        <div>Thông tin theo bộ phận bán hàng <i class="pull-right glyphicon"
-                                                                ng-class="{'glyphicon-chevron-up': status.open, 'glyphicon-chevron-down': !status.open}"></i>
-                        </div>
-                    </uib-accordion-heading>
-                    <div>
-                        <table class="table ">
-                            <theader>
-                                <th>Title</th>
-                                <th>Doanh thu bán hàng ra bên ngoài</th>
-                                <th>Doanh thu bán hàng cho các bộ phận</th>
-                                <th>Lợi nhuận/(lỗ) gộp trước thuế</th>
-                                <th>Tài sản</th>
-                                <th>Nợ</th>
-                                <th>Edit</th>
-                                <th>Del</th>
-                            </theader>
-                            <tbody>
-                            <tr ng-repeat="val in b_part_values track by $index">
-                                <td>{{val['title']}}</td>
-                                <td ng-repeat="i in 5 | range track by $index">{{val['val' + i]
-                                    |
-                                    nozero | number}}
-                                </td>
-                                <td ng-hide="$last"><i class="glyphicon glyphicon-edit"
-                                                       ng-click="editBusinessValue(val)"></i>
-                                </td>
-                                <td ng-hide="$last"><i
-                                        class="glyphicon glyphicon-remove"
-                                        ng-click="delBusinessValue(val.id)"></i>
-                                </td>
-                                <td ng-show="$last"></td>
-                                <td ng-show="$last"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="actions" ng-hide="noneEditParams.indexOf(data.id)!=-1">
-                            <div class="btn-group">
-                                <label class="btn green-haze btn-circle btn-sm" href="javascript:;"
-                                       ng-click="addBusinessValue()">
-                                    Add <i class="glyphicon glyphicon-plus"></i>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div ng-if="displayParams.indexOf(data.id)!=-1 ">
-                        <div ng-repeat="data in data.datas" ng-include="'paramsTreeByTemplate'"></div>
-                    </div>
-                </div>
-            </uib-accordion>
-        </div>
     </div>
-    <!--in the case of Income statement insert "cost of production and business by factor" and "business by area, part"-->
-    <!--in other case insert "nghiep vu cac ben lien quan"-->
 </div>
 <script type="text/ng-template" id="EditDetailOtherContent.html">
     <div class="modal-header">
@@ -154,9 +99,15 @@
                                class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"
                                required/></td>
                 </tr>
-                <tr ng-repeat="title in titles track by $index">
+                <tr ng-repeat="title in titles track by $index" ng-show="p_id!=282">
                     <td><label>{{title['title']}}</label></td>
                     <td><input type="text" name="val{{$index +1}}" ng-model="values['val'+(title.id)]" number-input
+                               class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"/>
+                    </td>
+                </tr>
+                <tr ng-repeat="title in titles track by $index" ng-show="p_id==282">
+                    <td><label>{{title['title']}}</label></td>
+                    <td><input type="text" name="val{{$index +1}}" ng-model="values['val'+(title.id)]"
                                class="form-control ng-pristine ng-valid ng-not-empty ng-valid-required ng-touched"/>
                     </td>
                 </tr>

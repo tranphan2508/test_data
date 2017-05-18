@@ -39,10 +39,10 @@ myApp.directive('numberInput', function ($filter, $browser) {
 });
 
 // display string to number format
-myApp.filter('toNumber', function() {
+myApp.filter('isNumber', function() {
     return function(input) {
-        var i=new BigNumber(input);
-        return i.intPart;
+        if(isNaN(input))return false;
+        return true;
     }
 });
 

@@ -172,12 +172,7 @@ myApp.controller('DetailOtherCtrl', function ($scope, RestAPI, $routeParams, $ui
     }
 
     function init() {
-        $scope.type_reports = [
-            {'value': 1, 'name': 'Balance Sheet'},
-            {'value': 2, 'name': 'Income Statement'},
-            {'value': 3, 'name': 'Statement of Cashflow (indirect)'},
-            {'value': 5, 'name': 'Statement of Cashflow (direct)'}
-        ];
+        $scope.type_reports = TYPE_REPORT;
         $scope.type_report = $scope.type_reports[0];
         $scope.years = [];
         var today = new Date().getFullYear();
@@ -235,66 +230,6 @@ myApp.controller('DetailOtherAdjustCtrl', function ($scope, info, $uibModalInsta
                     }
                 };
                 RestAPI.do('post', 'company/other/addDetail', data_json,
-                    function (data, status) {
-                        if (data.error)alert(data.error);
-                        $uibModalInstance.close();
-                    }, function (data, status) {
-                        $uibModalInstance.close();
-                    });
-            }
-        }
-    }
-    $scope.cancel = function () {
-        $uibModalInstance.dismiss('Cancel');
-    }
-    function closeModal() {
-        $uibModalInstance.close();
-    }
-});
-
-myApp.controller('BusinessResultAdjustCtrl', function ($scope, info, $uibModalInstance, RestAPI) {
-    $scope.header = 'Thông tin theo bộ phận bán hàng';
-    $scope.titles = [
-        'Doanh thu bán hàng ra bên ngoài',
-        'Doanh thu bán hàng cho các bộ phận',
-        'Lợi nhuận/(lỗ) gộp trước thuế',
-        'Tài sản',
-        'Nợ'];
-    $scope.values = {};
-    if ('data' in info) {
-        $scope.values = Object.create(info.data);
-        $scope.btnSubmit = 'Save';
-    } else {
-        $scope.btnSubmit = 'Add';
-    }
-    var company_id = info.c_id;
-    var year = info.year;
-
-    $scope.ok = function (valid) {
-        if (valid) {
-            if ('data' in info) {
-                var data_json = {
-                    'id': info.data.id,
-                    'title': $scope.values['title'],
-                    'value': JSON.stringify($scope.values)
-                };
-                RestAPI.do('put', 'company/other/updateBusinessPart', data_json,
-                    function (data, status) {
-                        if (data.error)alert(data.error);
-                        $uibModalInstance.close();
-                    }, function (data, status) {
-                        $uibModalInstance.close();
-                    });
-            } else {
-                var data_json = {
-                    'params': {
-                        'c_id': info.c_id,
-                        'year': info.year,
-                        'title': $scope.values['title'],
-                        'value': JSON.stringify($scope.values)
-                    }
-                };
-                RestAPI.do('post', 'company/other/addBusinessPart', data_json,
                     function (data, status) {
                         if (data.error)alert(data.error);
                         $uibModalInstance.close();

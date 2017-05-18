@@ -119,8 +119,9 @@ class Model_Financial_Detail extends \Orm\Model
     public static function updateDetail($id, $title, $vals)
     {
         $data = Model_Financial_Detail::find($id);
+        $not_checked_ary=array(282);
         $check_title = Model_Financial_Detail::checkTitle($data->p_id, $data->c_id, $data->year, $title, $id);
-        if ($check_title) return false;
+        if ($check_title && !in_array($data->p_id, $not_checked_ary) ) return false;
 
         $title_old = $data->title;
         $data->title = $title;
@@ -136,7 +137,7 @@ class Model_Financial_Detail extends \Orm\Model
 
             if (array_key_exists($data->p_id, $original_price_id)) {
                 $row_id = Model_Financial_Detail::checkTitle($original_price_id[$data->p_id], $data->c_id, $data->year, $title_old);
-                if ($row_id) {
+                if ($row_id && !in_array($original_price_id[$data->p_id], $not_checked_ary)) {
                     $data1 = Model_Financial_Detail::find($row_id);
                     $data1->title = $title;
                     $data1->save();
