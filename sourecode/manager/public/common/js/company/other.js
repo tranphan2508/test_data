@@ -18,10 +18,6 @@ myApp.controller('DetailOtherCtrl', function ($scope, RestAPI, $routeParams, $ui
     };
     $scope.getValues = function () {
         getTemplateValues();
-        if ($scope.type_report.value == 2) {
-            getBusinessPartValues();
-            getBussinessAreaValues();
-        }
     };
 
     $scope.addTemplateValue = function (data, p_template) {
@@ -82,65 +78,6 @@ myApp.controller('DetailOtherCtrl', function ($scope, RestAPI, $routeParams, $ui
         }
     };
 
-    $scope.addBusinessValue = function () {
-        // add value to table "f_business_part"
-        var modalInstance = $uibModal.open({
-            animation: this.animationsEnabled,
-            backdrop: 'static',
-            keyboard: false,
-            ariaLabelledBy: 'modal-title',
-            ariaDescribedBy: 'modal-body',
-            templateUrl: 'EditDetailOtherContent.html',
-            controller: 'BusinessResultAdjustCtrl',
-            size: '200x200',
-            resolve: {
-                info: function () {
-                    var info = {'c_id': id, 'year': $scope.year};
-                    return info;
-                }
-            }
-        });
-        modalInstance.result.then(function () {
-            getBusinessPartValues();
-        });
-    };
-
-    $scope.editBusinessValue = function (data) {
-        // add value to table "f_business_part"
-        var modalInstance = $uibModal.open({
-            animation: this.animationsEnabled,
-            backdrop: 'static',
-            keyboard: false,
-            ariaLabelledBy: 'modal-title',
-            ariaDescribedBy: 'modal-body',
-            templateUrl: 'EditDetailOtherContent.html',
-            controller: 'BusinessResultAdjustCtrl',
-            size: '200x200',
-            resolve: {
-                info: function () {
-                    var info = {'c_id': id, 'year': $scope.year, 'data': data};
-                    return info;
-                }
-            }
-        });
-        modalInstance.result.then(function () {
-            getBusinessPartValues();
-        });
-    };
-
-    $scope.delBusinessValue = function (id) {
-        if (confirm('Are you sure you want to delete this?')) {
-            RestAPI.do('put', 'company/other/delBusinessPart', {id: id},
-                function (data, status) {
-                    if (data.success)getBusinessPartValues();
-                    else alert(data.error);
-                }, function (data, status) {
-                    alert('Error: Del template value');
-                })
-        }
-    };
-
-
     function getTemplateValues() {
         RestAPI.do('get', 'company/other/', {'id': id, 'year': $scope.year},
             function (data, status) {
@@ -152,23 +89,6 @@ myApp.controller('DetailOtherCtrl', function ($scope, RestAPI, $routeParams, $ui
             }, function (data, status) {
                 alert('Error: Get template values');
             });
-    }
-
-    function getBusinessPartValues() {
-        RestAPI.do('get', 'company/other/businessPart', {'c_id': id, 'year': $scope.year},
-            function (data, status) {
-                if (data.success) {
-                    $scope.b_part_values = data.result;
-                } else {
-                    alert(data.error);
-                }
-            }, function (data, status) {
-                alert('Error: Get business of each part values');
-            });
-    }
-
-    function getBussinessAreaValues() {
-
     }
 
     function init() {

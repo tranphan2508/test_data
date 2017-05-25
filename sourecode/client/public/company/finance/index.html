@@ -31,11 +31,12 @@
                     <li class="ng-isolate-scope">
                         <a data-toggle="tab" data-target="#report" ng-click="changeType(4)">Financial Index</a>
                     </li>
-                    <li class="ng-isolate-scope">
-                        <a data-toggle="tab" data-target="#f_detail" ng-click="changeType(6)" ng-mouseenter="f_detail_show=true" ng-mouseleave="f_detail_show=false">Financial Detail</a>
-                        <ul ng-show="f_detail_show" ng-mouseenter="f_detail_show=true" ng-mouseleave="f_detail_show=false">
-                            <li>Balance Sheet</li>
-                            <li>Income Statement</li>
+                    <li class="ng-isolate-scope dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" >Financial Detail
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class="ng-isolate-scope"><a data-toggle="tab"  data-target="#report" ng-click="changeType(6)">Balance Sheet</a></li>
+                            <li class="ng-isolate-scope"><a data-toggle="tab"  data-target="#report" ng-click="changeType(6)">Income Statement</a></li>
                         </ul>
                     </li>
                     <li class="ng-isolate-scope">
