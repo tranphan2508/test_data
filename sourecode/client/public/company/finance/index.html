@@ -32,11 +32,13 @@
                         <a data-toggle="tab" data-target="#report" ng-click="changeType(4)">Financial Index</a>
                     </li>
                     <li class="ng-isolate-scope dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" >Financial Detail
+                        <a data-toggle="dropdown" class="dropdown-toggle">Financial Detail
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li class="ng-isolate-scope"><a data-toggle="tab"  data-target="#report" ng-click="changeType(6)">Balance Sheet</a></li>
-                            <li class="ng-isolate-scope"><a data-toggle="tab"  data-target="#report" ng-click="changeType(6)">Income Statement</a></li>
+                            <li class="ng-isolate-scope"><a data-toggle="tab" data-target="#f_detail"
+                                                            ng-click="changeType(1,1)">Balance Sheet</a></li>
+                            <li class="ng-isolate-scope"><a data-toggle="tab" data-target="#f_detail"
+                                                            ng-click="changeType(2,1)">Income Statement</a></li>
                         </ul>
                     </li>
                     <li class="ng-isolate-scope">
@@ -53,10 +55,11 @@
                             <div class="form-group">
                                 <table>
                                     <tr>
-                                        <td class="col-md-1" ng-hide="type=='4'"><label class="control-label">Unit</label></td>
+                                        <td class="col-md-1" ng-hide="type=='4'"><label
+                                                class="control-label">Unit</label></td>
                                         <td class="col-md-5" ng-hide="type=='4'"><select ng-model="display.unit"
-                                                                     class="form-control ng-pristine ng-valid ng-touched"
-                                                                     ng-change="changeUnit()">
+                                                                                         class="form-control ng-pristine ng-valid ng-touched"
+                                                                                         ng-change="changeUnit()">
                                             <option value="1" class="ng-binding">1</option>
                                             <option value="1000" class="ng-binding">1,000</option>
                                             <option value="1000000" class="ng-binding">1,000,000</option>
@@ -118,21 +121,71 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="data in params track by $index" ng-click="expandRows(data)" class="{{data.class}}" ng-init="dataIndex=$index"
+            <tr ng-repeat="data in params track by $index" ng-click="expandRows(data)" class="{{data.class}}"
+                ng-init="dataIndex=$index"
                 name="{{dataIndex}}" id="{{data.id}}" ng-show="data.level < 4">
                 <td ng-style="{'padding-left':(data.level-1)*30+'px'}"><i class="pull-left glyphicon"
                                                                           ng-class="{'glyphicon-plus-sign': (!data.open && data.has_child && type !='2') || data.id==119  , 'glyphicon-minus-sign': (data.open && data.has_child && type !='2') || data.id==119}"></i>
                     <span uib-tooltip="{{data.description}}">{{data.title}}</span></td>
                 <td ng-bind-html="values[data.id]['chart']"></td>
                 <td ng-repeat="year in year_arrange track by $index" ng-init="yearIndex=$index">
-                    <span>{{values[data.id][year] | nozero: values[data.id][year_arrange[yearIndex-1]] :  type: display.unit : display.format : year: values[params[0].id][year] :  values[params[params.length-1].id][year]  | number}}</span></td>
+                    <span>{{values[data.id][year] | nozero: values[data.id][year_arrange[yearIndex-1]] :  type: display.unit : display.format : year: values[params[0].id][year] :  values[params[params.length-1].id][year]  | number}}</span>
+                </td>
             </tr>
             </tbody>
         </table>
     </script>
 
     <script type="text/ng-template" id="detail_template">
+        <div ng-repeat="data in params track by $index">
+            <uib-accordion ng-show="data.template !=0 || displayParams.indexOf(data.id)!=-1">
+                <div uib-accordion-group class="panel-info" is-open="status.open"
+                     is-disabled="displayParams.indexOf(data.id)==-1 && displayParams.indexOf(1 * data.parent_id)!=-1">
+                    <uib-accordion-heading>
+                        <div>{{data.title | hString}} <i class="pull-right glyphicon"
+                                                         ng-class="{'glyphicon-chevron-up': status.open && displayParams.indexOf(1 * data.parent_id)==-1, 'glyphicon-chevron-down': !status.open &&displayParams.indexOf(1 * data.parent_id)==-1}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <div ng-hide="displayParams.indexOf(data.id)!=-1">
+                        <table class="table table-light table-hover">
+                            <thead>
+                            <tr class="uppercase">
+                                <th></th>
+                                <th></th>
+                                <th ng-repeat="year in year_arrange">{{year}}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-if="data.template==1" ng-repeat="(key, value) in values[data.id] track by $index">
+                                <td>{{key}}</td>
+                                <td ng-bind-html="value[0]['chart']"></td>
+                                <td ng-repeat="year in year_arrange track by $index">{{value[0][year] | number}}</td>
+                            </tr>
+                            <div>
+                                <tr ng-if="data.template > 1"
+                                    ng-repeat="(key, value) in values[data.id] track by $index">
+                                    <td>{{key}}</td>
+                                    <td>
+                                        <div>
+                                            <tr ng-repeat="v in value track by $index">
+                                                <td></td>
+                                                <td ng-bind-html="v['chart']"></td>
+                                                <td ng-repeat="year in year_arrange track by $index">{{v[year] |
+                                                    number}}
+                                                </td>
+                                            </tr>
+                                        </div>
+                                    </td>
 
+                                </tr>
+
+                            </div>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </uib-accordion>
+        </div>
     </script>
 </div>
 

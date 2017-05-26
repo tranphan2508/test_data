@@ -28,27 +28,28 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams,
     var today = new Date().getFullYear();
     var year_to = today - 1;
     var year_from = 0;
+    $scope.displayParams = [38, 41, 44, 188];
 
     //get financial report
-    $scope.changeType = function (type) {
+    $scope.changeType = function (type, flag) {
         $scope.type = type;
         $scope.params = null;
         $scope.values = null;
-        if (type>=1 && type<=5) {
+        if (type >= 1 && type <= 5) {
             $scope.display_filter = true;
-            getAllParams(type);
+            getAllParams(type, flag);
         }
         else $scope.display_filter = false;
     }
 
     //get all params of report
-    function getAllParams(type) {
+    function getAllParams(type, flag) {
 
-        RestAPI.do('get', 'params/arrayParams', {'type': type},
+        RestAPI.do('get', 'params/arrayParams', {'type': type, 'flag': flag},
             function (data, status) {
                 if (data.success) {
                     $scope.params = data.result;
-                    $scope.getValues(type);
+                    $scope.getValues(type, flag);
                 } else {
                     alert(data.error);
                 }
@@ -56,23 +57,40 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams,
     }
 
     //get all values
-    $scope.getValues = function (type) {
+    $scope.getValues = function (type, flag) {
         var params = {'id': id,
             'n_year': $scope.display.n_year,
             'type': type};
-        RestAPI.do('get', 'company/finance/valuesInYears', params,
-            function (data, status) {
-                if (data.success) {
-                    var result= data.result;
-                    var aa=[];
-                    for(var i in result){
-                        result[i]['chart'] = $sce.trustAsHtml(makeTableChart($scope.year_arrange, result[i]));
+        if (flag == undefined) {
+            RestAPI.do('get', 'company/finance/valuesInYears', params,
+                function (data, status) {
+                    if (data.success) {
+                        var result = data.result;
+                        for (var i in result) {
+                            result[i]['chart'] = $sce.trustAsHtml(makeTableChart($scope.year_arrange, result[i]));
+                        }
+                        $scope.values = result;
+                    } else {
+                        alert(data.error);
                     }
-                    $scope.values= result;
-                } else {
-                    alert(data.error);
-                }
-            })
+                });
+        } else {
+            RestAPI.do('get', 'company/other/', params,
+                function (data, status) {
+                    if (data.success) {
+                        var result = data.result;
+                        for (var i1 in result) {
+                            for (var i2 in result[i1]) {
+                                result[i1][i2][0]['chart'] = $sce.trustAsHtml(makeTableChart($scope.year_arrange, result[i1][i2][0]));
+                            }
+                        }
+                        $scope.values = result;console.log(result);
+                    } else {
+                        alert(data.error);
+                    }
+                });
+        }
+
     };
 
     $scope.expandRows = function (data) {
@@ -81,18 +99,18 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams,
         for (var i = 0; i < rows.length; i++) {
             var classname = rows[i].className.replace('ng-hide', '');
             if (data.open) {
-                var index=rows[i].getAttribute("name");
-                var p_id=$scope.params[index].parent_id;
-                var p_ele=document.getElementById(p_id);
-                var p_index=p_ele.getAttribute('name');
-              if($scope.params[p_index].open) rows[i].className = classname ;
+                var index = rows[i].getAttribute("name");
+                var p_id = $scope.params[index].parent_id;
+                var p_ele = document.getElementById(p_id);
+                var p_index = p_ele.getAttribute('name');
+                if ($scope.params[p_index].open) rows[i].className = classname;
             } else rows[i].className = classname + ' ng-hide';
         }
     };
 
-    $scope.changeNumberOfYear=function(){
-        $scope.year_arrange=[];
-        year_from = year_to - parseInt($scope.display.n_year) +1;
+    $scope.changeNumberOfYear = function () {
+        $scope.year_arrange = [];
+        year_from = year_to - parseInt($scope.display.n_year) + 1;
         for (var i = year_from; i <= year_to; i++)$scope.year_arrange.push(i);
         $scope.getValues($scope.type);
     }
@@ -100,7 +118,7 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams,
     function init() {
         $scope.display_filter = true;
         $scope.type = 1;
-        $scope.display = {'unit': '1', 'n_year': '10', 'format':1};
+        $scope.display = {'unit': '1', 'n_year': '10', 'format': 1};
         $scope.year_arrange = [];
 
         year_from = year_to - 9;

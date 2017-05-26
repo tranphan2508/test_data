@@ -97,3 +97,10 @@ myApp.filter('nozero', function () {
         return input;
     }
 });
+myApp.filter('hString', function(){
+    return function(input){
+        if(input && input.indexOf('.')) return input.substr(input.indexOf('.')+1, input.length);
+        return input;
+    }
+});
+

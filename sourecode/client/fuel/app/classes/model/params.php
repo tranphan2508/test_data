@@ -9,6 +9,7 @@ class Model_Params extends \Orm\Model
         'type',
         'parent_id',
         'level',
+        'template',
         'created_date',
         'updated_date',
         'del'
@@ -30,15 +31,15 @@ class Model_Params extends \Orm\Model
 
     public static function getParamsInfo($type)
     {
-        $res=array();
+        $res = array();
         $params = Model_Params::query()
-            ->select('id','title','parent_id','level','description','col_id')
-            ->where('type',$type)
+            ->select('id', 'title', 'parent_id', 'level', 'description', 'col_id', 'template')
+            ->where('type', $type)
             ->where('del', 0)
             ->order_by('id', 'ASC')
             ->get();
-        foreach($params as $p){
-            $res[]=$p->to_array();
+        foreach ($params as $p) {
+            $res[] = $p->to_array();
         }
         return $res;
     }

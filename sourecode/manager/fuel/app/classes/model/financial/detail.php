@@ -72,8 +72,8 @@ class Model_Financial_Detail extends \Orm\Model
                     $s = bcadd($s, $v);
                 }
                 $sum[$key1][$key2] = $s;
-                $sum[$key1]['title'] = 'Tổng cộng';
             }
+            $sum[$key1]['title'] = 'Tổng cộng';
 
         }
         foreach ($res as $k => $r) {
