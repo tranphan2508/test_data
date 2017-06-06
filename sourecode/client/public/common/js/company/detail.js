@@ -81,7 +81,9 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams,
                         var result = data.result;
                         for (var i1 in result) {
                             for (var i2 in result[i1]) {
-                                result[i1][i2][0]['chart'] = $sce.trustAsHtml(makeTableChart($scope.year_arrange, result[i1][i2][0]));
+                                for(var i3 in result[i1][i2]){
+                                    result[i1][i2][i3]['chart'] = $sce.trustAsHtml(makeTableChart($scope.year_arrange, result[i1][i2][i3]));
+                                }
                             }
                         }
                         $scope.values = result;console.log(result);

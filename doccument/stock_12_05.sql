@@ -305,16 +305,18 @@ CREATE TABLE IF NOT EXISTS `m_cost_factor` (
 
 DROP TABLE IF EXISTS `params`;
 CREATE TABLE IF NOT EXISTS `params` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `col_id` int(11) DEFAULT NULL,
   `title` varchar(256) CHARACTER SET utf8 NOT NULL,
   `description` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `type` int(3) NOT NULL COMMENT '1-balance sheet; 2-income statement;3-statement of cash flow',
   `parent_id` int(11) NOT NULL,
   `level` int(11) NOT NULL,
-  `template` tinyint(4) DEFAULT '0'COMMENT
-) ;
-
+  `template` tinyint(4) DEFAULT '0',
+  `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `del` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='name of all data type';
 --
 -- Dumping data for table `params`
 --
