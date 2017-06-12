@@ -21,13 +21,6 @@ myApp.directive('numberInput', function ($filter, $browser) {
 
             //$element.bind('change', listener)
             $element.bind('keydown', function (event) {
-                /*var key = event.keyCode
-                 // If the keys include the CTRL, SHIFT, ALT, or META keys, or the arrow keys, do nothing.
-                 // This lets us support copy and paste too
-                 if (key == 91 || (15 < key && key < 19) || (37 <= key && key <= 40))
-                 return*/
-
-
                 $browser.defer(listener) // Have to do this or changes don't get picked up properly
             })
 
@@ -38,68 +31,105 @@ myApp.directive('numberInput', function ($filter, $browser) {
     };
 });
 
-// display string to number format
-myApp.filter('toNumber', function () {
-    return function (input) {
-        var i = new BigNumber(input);
-        return i.intPart;
-    }
-});
-
-myApp.filter('nozero', function () {
-    return function (input,prev_input, type, unit, format, year, total1, total2) {
-        //unit: 1, 1000, 1000000
-        //format: number, percentage
-        //type: 1- balance sheet, 2- income statement, 3- cashflow
-        //total1: tổng tài sản, tổng doanh thu hoạt động kinh doanh
-        //total2: tiền và tương đương tiền cuối kỳ
+myApp.filter('fUnit', function () {
+    return function (input, unit) {
         if (input != null) {
-            if(type!='4'){
-                if (format == '1') {
-                    if (input == 0) input = null;
-                    else {
-                        switch (unit) {
-                            case '1000':
-                                input = input.length > 3 ? input.substring(0, input.length - 3) : '0';
-                                break;
-                            case '1000000':
-                                input = input.length > 6 ? input.substring(0, input.length - 6) : '0';
-                                break;
-                            case '1000000000':
-                                input = input.length > 9 ? input.substring(0, input.length - 9) : '0';
-                                break;
-                        }
-                    }
-                } else if(format=='0'){
-                    if (type == '3' && total2 || type != '3' && total1) {
-                        var b_total;
-                        if (type == '3') {
-                            b_total = new BigNumber(total2);
-                        } else {
-                            b_total = new BigNumber(total1);
-                        }
-                        var b_input = new BigNumber(input);
-                        b_input=b_input.mul(100);
-                        var percent = (b_input.comparedTo(0) == 0) ? '0' : b_input.dividedBy(b_total);
-                        input = (percent != '0') ? percent.toFormat(2) : '0';
-                    } else input = '0';
-                }else{
-                    if(prev_input){
-                        var b_input=new BigNumber(input);
-                        var b_prev_input=new BigNumber(prev_input);
-                        var percent=(b_input.minus(b_prev_input)).dividedBy(b_prev_input);
-                        input = (percent != '0') ? percent.toFormat(2) : 'aaa';
-                    }else input='0';
-
-                }
+            switch (unit) {
+                case '1000':
+                    input = input.length > 3 ? input.substring(0, input.length - 3) : '0';
+                    break;
+                case '1000000':
+                    input = input.length > 6 ? input.substring(0, input.length - 6) : '0';
+                    break;
+                case '1000000000':
+                    input = input.length > 9 ? input.substring(0, input.length - 9) : '0';
+                    break;
             }
         }
         return input;
     }
 });
-myApp.filter('hString', function(){
-    return function(input){
-        if(input && input.indexOf('.')) return input.substr(input.indexOf('.')+1, input.length);
+
+myApp.filter('fRatio', function () {
+    return function (input, total) {
+        if (input != null && input!= '' && total != null && total!= '') {
+            var b_input = new BigNumber(input);
+            var b_total = new BigNumber(total);
+            var percent = (b_total.comparedTo(0) == 0) ? b_total : b_input.mul(100).dividedBy(b_total);
+            return percent.toFormat(2);
+        }
+        return input;
+    }
+});
+
+myApp.filter('fGrowth', function () {
+    return function (input1, input2) {
+        if (input1 != null && input2 != null) {
+            var b_input = new BigNumber(input1);
+            var b_prev_input = new BigNumber(input2);
+            var percent = (b_prev_input.comparedTo(0) == 0) ? b_prev_input : (b_input.minus(b_prev_input)).mul(100).dividedBy(b_prev_input);
+            return percent.toFormat(2);
+        }
+        return '0';
+    }
+});
+
+myApp.filter('fNumber', function (fUnitFilter, fRatioFilter, fGrowthFilter) {
+    return function (input, prev_input, type, unit, format, year, total1, total2) {
+        //unit: 1, 1000, 1000000
+        //format: number, percentage
+        //type: 1- balance sheet, 2- income statement, 3- cashflow
+        //total1: tổng tài sản, tổng doanh thu hoạt động kinh doanh
+        //total2: tiền và tương đương tiền cuối kỳ
+        var result = input;
+        if (input != null && type != '4') {
+            switch (format) {
+                case 0:
+                    if (type == '3' || type == '5') result = fRatioFilter(input, total2);
+                    else result = fRatioFilter(input, total1);
+                    break;
+                case 1:
+                    result = fUnitFilter(input, unit);
+                    break;
+                case 2:
+                    result = fGrowthFilter(input, prev_input);
+                    break;
+            }
+        }
+        return result;
+    }
+});
+
+myApp.filter('fNumber2', function (fUnitFilter, fRatioFilter, fGrowthFilter) {
+    return function (input, prev_input, type, unit, format, year, key, totalObj) {
+        //unit: 1, 1000, 1000000
+        //format: number, percentage
+        //type: 1- balance sheet, 2- income statement, 3- other
+        //total:
+        var result = input;
+        if (input != null && type != '4') {
+            switch (format) {
+                case 0:
+                    var total;
+                    var keyObj = Object.keys(totalObj);
+                    total = totalObj[keyObj[keyObj.length - 1]][key][year];
+                    result = fRatioFilter(input, total);
+                    break;
+                case 1:
+                    result = fUnitFilter(input, unit);
+                    break;
+                case 2:
+                    result = fGrowthFilter(input, prev_input);
+                    break;
+            }
+        }
+        return result;
+    }
+});
+
+myApp.filter('hString', function () {
+    return function (input) {
+        if (input && input.indexOf('.')) return input.substr(input.indexOf('.') + 1, input.length);
         return input;
     }
 });

@@ -1,28 +1,3 @@
-myApp.controller('DetailCompanyCtrl', function ($scope, RestAPI, $routeParams) {
-    var id = $routeParams.id;
-
-    //get information of company
-    function getCompanyInfo() {
-        RestAPI.do('get', 'company/companyByID', {'id': id},
-            function (data, status) {
-                if (data.success) {
-                    $scope.companyInfo = data.result;
-                } else {
-                    alert(data.error);
-                }
-            })
-    };
-
-    function init() {
-        $scope.companyInfo = null;
-        $scope.tab = {'profile': true, 'finance': false};
-        getCompanyInfo();
-
-    }
-
-    init();
-});
-
 myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams, $sce) {
     var id = $routeParams.id;
     var today = new Date().getFullYear();
@@ -33,6 +8,7 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams,
     //get financial report
     $scope.changeType = function (type, flag) {
         $scope.type = type;
+        $scope.flag = flag;
         $scope.params = null;
         $scope.values = null;
         if (type >= 1 && type <= 5) {
@@ -81,12 +57,12 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams,
                         var result = data.result;
                         for (var i1 in result) {
                             for (var i2 in result[i1]) {
-                                for(var i3 in result[i1][i2]){
+                                for (var i3 in result[i1][i2]) {
                                     result[i1][i2][i3]['chart'] = $sce.trustAsHtml(makeTableChart($scope.year_arrange, result[i1][i2][i3]));
                                 }
                             }
                         }
-                        $scope.values = result;console.log(result);
+                        $scope.values = result;
                     } else {
                         alert(data.error);
                     }
@@ -114,16 +90,17 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams,
         $scope.year_arrange = [];
         year_from = year_to - parseInt($scope.display.n_year) + 1;
         for (var i = year_from; i <= year_to; i++)$scope.year_arrange.push(i);
-        $scope.getValues($scope.type);
+        $scope.getValues($scope.type, $scope.flag);
     }
 
-    function init() {
+    $scope.init = function () {
         $scope.display_filter = true;
         $scope.type = 1;
-        $scope.display = {'unit': '1', 'n_year': '10', 'format': 1};
+        $scope.flag = null;
+        $scope.display = {'unit': '1', 'n_year': '3', 'format': 1};
         $scope.year_arrange = [];
 
-        year_from = year_to - 9;
+        year_from = year_to - parseInt($scope.display.n_year) + 1;
         for (var i = year_from; i <= year_to; i++)$scope.year_arrange.push(i);
 
         $scope.params = null;
@@ -132,5 +109,5 @@ myApp.controller('financialReportCtrl', function ($scope, RestAPI, $routeParams,
         $scope.changeType('1');
     }
 
-    init();
+    //init();
 });

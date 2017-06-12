@@ -39,6 +39,8 @@
                                                         ng-click="changeType(1,1)">Balance Sheet</a></li>
                         <li class="ng-isolate-scope"><a data-toggle="tab" data-target="#f_detail"
                                                         ng-click="changeType(2,1)">Income Statement</a></li>
+                        <li class="ng-isolate-scope"><a data-toggle="tab" data-target="#f_detail"
+                                                        ng-click="changeType(2,1)">Other</a></li>
                     </ul>
                 </li>
                 <li class="ng-isolate-scope">
@@ -84,11 +86,11 @@
                     <div class="col-md-4 col-sm-4" ng-hide="type=='4'">
                         <div class="btn-group pull-right btn-group-circle">
                             <label class="btn green btn-sm ng-pristine ng-untouched ng-valid"
-                                   ng-model="display.format" uib-btn-radio="0">Ratio</label>
+                                   ng-model="display.format" uib-btn-radio="0">Ratio (%)</label>
                             <label class="btn green btn-sm ng-pristine ng-untouched ng-valid"
                                    ng-model="display.format" uib-btn-radio="1">Number</label>
                             <label class="btn green btn-sm ng-pristine ng-untouched ng-valid"
-                                   ng-model="display.format" uib-btn-radio="2">Growth(ratio)</label>
+                                   ng-model="display.format" uib-btn-radio="2">Growth (%)</label>
 
                         </div>
                     </div>
@@ -129,7 +131,7 @@
                 <span uib-tooltip="{{data.description}}">{{data.title}}</span></td>
             <td ng-bind-html="values[data.id]['chart']"></td>
             <td ng-repeat="year in year_arrange track by $index" ng-init="yearIndex=$index">
-                <span>{{values[data.id][year] | nozero: values[data.id][year_arrange[yearIndex-1]] :  type: display.unit : display.format : year: values[params[0].id][year] :  values[params[params.length-1].id][year]  | number}}</span>
+                <span>{{values[data.id][year] | fNumber: values[data.id][year_arrange[yearIndex-1]] :  type: display.unit : display.format : year: values[params[0].id][year] :  values[params[params.length-1].id][year]  | number}}</span>
             </td>
         </tr>
         </tbody>
@@ -159,7 +161,7 @@
                         <tr ng-if="data.template==1" ng-repeat="(key, value) in values[data.id] track by $index">
                             <td>{{key}}</td>
                             <td ng-bind-html="value[0]['chart']"></td>
-                            <td ng-repeat="year in year_arrange track by $index">{{value[0][year] | number}}</td>
+                            <td ng-repeat="year in year_arrange track by $index" ng-init="yearIndex=$index">{{value[0][year] | fNumber2 : value[0][year_arrange[yearIndex - 1]] : type: display.unit : display.format : year :  0 : values[data.id] | number}}</td>
                         </tr>
 
                         </tbody>
@@ -170,27 +172,17 @@
                         <tr class="uppercase">
                             <th></th>
                             <th></th>
-                            <th></th>
                             <th ng-repeat="year in year_arrange">{{year}}</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="(key, value) in values[data.id] track by $index"> `
+                        <tr ng-repeat-start="(key, value) in values[data.id] track by $index"> `
                             <td>{{key}}</td>
-                            <td colspan="{{year_arrange.length+2}}">
-                                <table>
-                                    <tr>
-                                        <td>
-                                        </td>
-                                    </tr>
-                                    <tr ng-repeat="(key1,pt) in data.p_template">
-                                        <td>{{pt.title}}</td>
-                                        <td ng-bind-html="value[key1]['chart']"></td>
-                                        <td ng-repeat="year in year_arrange">{{value[key1][year] | number}}</td>
-                                    </tr>
-                                </table>
-
-                            </td>
+                        </tr>
+                        <tr ng-repeat-end ng-repeat="(key1,pt) in data.p_template">
+                            <td> - {{pt.title}}</td>
+                            <td ng-bind-html="value[key1]['chart']"></td>
+                            <td ng-repeat="year in year_arrange track by $index" ng-init="yearIndex=$index">{{value[key1][year] | fNumber2 : value[key1][year_arrange[yearIndex - 1]] : type: display.unit : display.format : year : key1 : values[data.id] | number}}</td>
                         </tr>
                         </tbody>
                     </table>
