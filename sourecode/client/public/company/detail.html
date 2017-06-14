@@ -28,12 +28,16 @@
                         <a data-toggle="tab" data-target="#finance" tab-heading-transclude=""
                            class="ng-binding" ng-click="getFinance()">Finance</a>
                     </li>
+                    <li class="ng-isolate-scope">
+                        <a data-toggle="tab" data-target="#analysis" tab-heading-transclude=""
+                           class="ng-binding" ng-click="getAnalysis()">Analysis</a>
+                    </li>
 
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="profile" ng-include="'company/profile/index.html'"></div>
-
                     <div class="tab-pane" id="finance" ng-include="'company/finance/index.html'"></div>
+                    <div class="tab-pane" id="analysis" ng-include="'company/finance/analysis.html'"></div>
                 </div>
             </div>
         </div>

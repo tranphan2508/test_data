@@ -142,10 +142,10 @@
     <div ng-repeat="data in params track by $index">
         <uib-accordion ng-show="data.template !=0 || displayParams.indexOf(data.id)!=-1">
             <div uib-accordion-group class="panel-info" is-open="status.open"
-                 is-disabled="displayParams.indexOf(data.id)==-1 && displayParams.indexOf(1 * data.parent_id)!=-1">
+                 is-disabled="displayParams.indexOf(data.id)!=-1">
                 <uib-accordion-heading>
                     <div>{{data.title | hString}} <i class="pull-right glyphicon"
-                                                     ng-class="{'glyphicon-chevron-up': status.open && displayParams.indexOf(1 * data.parent_id)==-1, 'glyphicon-chevron-down': !status.open &&displayParams.indexOf(1 * data.parent_id)==-1}"></i>
+                                                     ng-class="{'glyphicon-chevron-up': status.open && displayParams.indexOf(data.id)==-1, 'glyphicon-chevron-down': !status.open &&displayParams.indexOf(data.id)==-1}"></i>
                     </div>
                 </uib-accordion-heading>
                 <div ng-hide="displayParams.indexOf(data.id)!=-1">
