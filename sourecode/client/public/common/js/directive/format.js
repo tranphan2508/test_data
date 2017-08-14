@@ -67,7 +67,7 @@ myApp.filter('fGrowth', function () {
         if (input1 != null && input2 != null) {
             var b_input = new BigNumber(input1);
             var b_prev_input = new BigNumber(input2);
-            var percent = (b_prev_input.comparedTo(0) == 0) ? b_prev_input : (b_input.minus(b_prev_input)).mul(100).dividedBy(b_prev_input);
+            var percent = (b_prev_input.comparedTo(0) == 0) ? b_prev_input : (b_input.minus(b_prev_input)).mul(100).dividedBy(b_prev_input.abs());
             return percent.toFormat(2);
         }
         return '0';
@@ -82,7 +82,7 @@ myApp.filter('fNumber', function (fUnitFilter, fRatioFilter, fGrowthFilter) {
         //total1: tổng tài sản, tổng doanh thu hoạt động kinh doanh
         //total2: tiền và tương đương tiền cuối kỳ
         var result = input;
-        if (input != null && type != '4') {
+        if (input != null) {
             switch (format) {
                 case 0:
                     if (type == '3' || type == '5') result = fRatioFilter(input, total2);
@@ -107,7 +107,7 @@ myApp.filter('fNumber2', function (fUnitFilter, fRatioFilter, fGrowthFilter) {
         //type: 1- balance sheet, 2- income statement, 3- other
         //total:
         var result = input;
-        if (input != null && type != '4') {
+        if (input != null) {
             switch (format) {
                 case 0:
                     var total;
