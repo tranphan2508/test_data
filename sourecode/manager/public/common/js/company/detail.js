@@ -73,7 +73,7 @@ myApp.controller('DetailCompanyCtrl', function ($scope, $uibModal, RestAPI, $rou
                 var col_id = 'col_id'+p_name[0];
                 var old_value = 0;
                 if (col_id in original_values) old_value = new BigNumber(original_values[col_id]);
-                if ($scope.type_report.value != '2') updateParentParamValue(p_insert_value, p_id, old_value, new_value);
+                if ($scope.type_report.value != '2' && $scope.type_report.value != '4') updateParentParamValue(p_insert_value, p_id, old_value, new_value);
             }
             if ($scope.type_report.value == '2') updateIncomeValue(p_insert_value);
             if ($scope.type_report.value == '3') {

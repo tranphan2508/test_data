@@ -26,6 +26,28 @@ class Model_Indicator extends \Orm\Model
         $value = array();
         $dup_key = array();
         foreach ($val_arr as $key => $val) {
+            $str = explode('_', $val);
+            $id = '`col_id' . $str[0] . '`';
+            $param_id[] = $id;
+            $value[] = $str[1];
+            $dup_key[] = $id . '=VALUES(' . $id . ')';
+        }
+        // UPDATE by using INSERT with DUPLICATE KEY
+        if ($val_arr) {
+            $sql = 'INSERT INTO `indicators` (`company_id`,`year`,' .
+                implode(',', $param_id) . ',' .
+                '`created_date`,`updated_date`) VALUES (' . $company_id . ',' . $year . ',' . implode(',', $value) . ',"' . date("Y-m-d H:i:s") . '","' . date("Y-m-d H:i:s") . '")
+                 ON DUPLICATE KEY UPDATE `updated_date`= VALUES(`updated_date`),' . implode(',', $dup_key);
+            $res = DB::query($sql)->execute();
+        } else $res = true;
+        return $res;
+    }
+    public static function updateData($company_id, $year, $val_arr)
+    {
+        $param_id = array();
+        $value = array();
+        $dup_key = array();
+        foreach ($val_arr as $key => $val) {
             $param_id[] = '`col_id' . $key . '`';
             $value[] = $val ? $val : '""';
             $dup_key[] = '`col_id' . $key . '`=VALUES(`col_id' . $key . '`)';

@@ -84,6 +84,7 @@ body {
 
 .divRightAlign {
     float: right;
+    margin-left:20px;
 }
 
 .row {

@@ -110,11 +110,23 @@ class Controller_Company_Finance extends Controller_Base
 
                 $ind = array();
                 //calculate indicator
+                //********* Kha nang sinh loi ***************
+                //Ty le lai gop GOS
+                $ind[207] = $this->bcdiv_ex(bcmul($values[117], 100), $values[113]);
+                //Ty le EBIT
+                $ind[208] = $this->bcdiv_ex(bcmul(bcadd($values[128], $values[120]), 100), $values[113]);
+                //Ty le EBITDA
+                $ind[209] = $this->bcdiv_ex(bcmul(bcadd(bcadd($values[128], $values[120]), $values[138]), 100), $values[113]);
+                //Ty le lai rong
+                $ind[214] = $this->bcdiv_ex(bcmul($values[134], 100), $values[113]);
                 //*********Nhom chi so dinh gia**********
                 //EPS
-                $ind[196] = $this->bcdiv_ex($values[134], $values['share_holding_avrg']);
+                //$ind[196] = $this->bcdiv_ex($values[134], $values['share_holding_avrg']);
                 //book value
                 $ind[216] = $this->bcdiv_ex(bcsub($values[91][$year], $values[188]), $values['total_share']);
+                //ROIC
+                //$ebit = bcadd($values[128], $values[120]);
+                $ind[192] = $this->bcdiv_ex(bcmul($values[132] ,  100) , bcsub($values[1][$year], $values[62]));
 
                 //**********Nhom chi so thanh khoan va don bay tai chinh *****************
                 //thanh toan nhanh
@@ -154,15 +166,6 @@ class Controller_Company_Finance extends Controller_Base
                 $ind[229] = $this->bcdiv_ex($values[115], $tmp[37]);
 
 
-                //********* Kha nang sinh loi ***************
-                //Ty le lai gop GOS
-                $ind[207] = $this->bcdiv_ex(bcmul($values[117], 100), $values[113]);
-                //Ty le EBIT
-                $ind[208] = $this->bcdiv_ex(bcmul(bcadd($values[128], $values[120]), 100), $values[113]);
-                //Ty le EBITDA
-                $ind[209] = $this->bcdiv_ex(bcmul(bcadd(bcadd($values[128], $values[120]), $values[138]), 100), $values[113]);
-                //Ty le lai rong
-                $ind[214] = $this->bcdiv_ex(bcmul($values[134], 100), $values[113]);
 
                 //******** Hieu qua quan ly************
                 //ROA
@@ -175,7 +178,7 @@ class Controller_Company_Finance extends Controller_Base
                     if (empty($val)) $ind[$key] = '';
                     else $ind[$key] = Common::bcround($ind[$key], 2);
                 }
-                \Model_Indicator::insertData($company_id, $year, $this->convertToColID($ind));
+                \Model_Indicator::updateData($company_id, $year, $this->convertToColID($ind));
             } catch (Database_exception $e) {
                 $error = $e->getMessage();
                 $success = false;
@@ -191,9 +194,9 @@ class Controller_Company_Finance extends Controller_Base
     private function getValueForCalcIndicator($id, $year)
     {
         $col_id_1 = '1,3,5,6,7,8,22,29,36,60,61,64,78,90,112';
-        $col_id_2 = '1,2,3,4,5,8,16,22';
+        $col_id_2 = '1,2,3,4,5,8,16,20,22';
         $col_id_3 = '4';
-        $p_id = '1,3,5,6,7,8,23,30,37,61,62,65,79,91,113,114,115,116,117,120,128,134,138,188';
+        $p_id = '1,3,5,6,7,8,23,30,37,61,62,65,79,91,113,114,115,116,117,120,128,132,134,138,188';
         $result = array();
         $tmp = array();
         $avr_ary = array(1, 7, 8, 22, 29, 36, 64, 78, 90);
@@ -236,6 +239,9 @@ class Controller_Company_Finance extends Controller_Base
     private function bcdiv_ex($lef_opr, $right_opr){
         if(empty($right_opr) || $right_opr==0) return 0;
         return bcdiv($lef_opr, $right_opr, 2);
+    }
+    private function getTax(){
+        return 0.1;
     }
 }
 

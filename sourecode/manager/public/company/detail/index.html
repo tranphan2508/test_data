@@ -46,13 +46,13 @@
                             </div>
 
                             <button class="btn btn-sm btn-success divRightAlign btn-form " ng-click="edit=!edit" type="button"
-                                    ng-show="!edit && type_report.value!=4">Edit
+                                    ng-show="!edit">Edit
                             </button>
                             <button class="btn btn-sm btn-success divRightAlign btn-form " type="submit"
-                                    ng-click="save()" ng-show="edit && type_report.value!=4">Save
+                                    ng-click="save()" ng-show="edit">Save
                             </button>
                             <button class="btn btn-sm btn-success divRightAlign btn-form " type="submit"
-                                    ng-click="updateIndicators()" ng-show="type_report.value==4">Update
+                                    ng-click="updateIndicators()" ng-show="type_report.value==4 && !edit">Update
                             </button>
                             <button class="btn btn-sm btn-warning divRightAlign btn-form mr20" ng-show="edit" type="button"
                                     ng-click="cancel()">Cancel
@@ -70,7 +70,7 @@
 
                                 <div class="col-md-3 divRightAlign">
                                     <span class="divRightAlign" ng-hide="edit">{{values['col_id'+data.col_id] | nozero | number }}</span>
-                                    <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187 && data.id!=274"
+                                    <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187 && data.id!=274 && (type_report.value!=4 || data.id==196)"
                                            type="text" name="{{data.col_id}}_{{data.id}}"
                                            ng-model="values['col_id'+data.col_id]"
                                            class="form-control ng-pristine"
