@@ -27,16 +27,19 @@ SET time_zone = "+00:00";
 --
 
 DROP TABLE IF EXISTS `params`;
-CREATE TABLE `params` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `params` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `col_id` int(11) DEFAULT NULL,
   `title` varchar(256) CHARACTER SET utf8 NOT NULL,
   `description` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `type` int(3) NOT NULL COMMENT '1-balance sheet; 2-income statement;3-statement of cash flow',
   `parent_id` int(11) NOT NULL,
   `level` int(11) NOT NULL,
-  `template` tinyint(4) DEFAULT '0'COMMENT
-) ;
+  `template` tinyint(4) DEFAULT '0',
+  `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `del` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='name of all data type';
 
 --
 -- Dumping data for table `params`
@@ -252,7 +255,7 @@ INSERT INTO `params` (`id`, `col_id`, `title`, `description`, `type`, `parent_id
 (209, 19, 'Tỷ lệ EBITDA (%)', 'Tỷ lệ EBITDA = (Lợi nhuận trước thuế + lãi vay + khấu hao) : doanh thu', 4, 206, 2, 0, '2016-11-02 08:12:27', '2016-12-12 03:48:27', 0),
 (210, 20, 'HIỆU QUẢ QUẢN LÝ', '', 4, 0, 1, 0, '2016-11-02 08:12:51', '2016-11-02 08:14:27', 0),
 (211, 21, 'ROA (%)', 'ROA thể hiện tương quan giữa mức sinh lợi của một công ty so với tài sản của nó. ROA = Net income  : Avg. Total Asset', 4, 210, 2, 0, '2016-11-02 08:12:57', '2017-02-28 07:28:01', 0),
-(212, 22, 'ROE (%)', 'ROE thể hiện tương quan giữa mức sinh lợi của một công ty so với vốn chủ sở hữu của nó. ROE = Net Income / Avg. Stockholder\'s Equity', 4, 210, 2, 0, '2016-11-02 08:13:08', '2017-02-28 06:24:00', 0),
+(212, 22, 'ROE (%)', 'ROE thể hiện tương quan giữa mức sinh lợi của một công ty so với vốn chủ sở hữu của nó. ROE = Net Income / Avg. Stockholder\s Equity', 4, 210, 2, 0, '2016-11-02 08:13:08', '2017-02-28 06:24:00', 0),
 (213, 23, 'ROS (%)', 'Hệ số lợi nhuận trên doanh thu thuần ROS=Net Income  /  Sales', 4, 210, 2, 0, '2016-11-02 08:13:19', '2017-02-28 07:28:16', 0),
 (216, 24, 'Book value (BVPS)', 'Giá trị sổ sách/cổ phiếu= (Vốn chủ sở hữu - TSVH) : số lượng cổ phiếu lưu hành', 4, 191, 2, 0, '2016-11-25 07:42:51', '2017-08-14 03:31:57', 0),
 (214, 25, 'Tỷ lệ lãi ròng (%)', 'Tỷ lệ lãi ròng = lợi nhuận sau thuế : doanh thu.', 4, 206, 2, 0, '2016-11-02 08:45:58', '2016-12-12 03:48:46', 0),
@@ -333,6 +336,7 @@ INSERT INTO `params` (`id`, `col_id`, `title`, `description`, `type`, `parent_id
 --
 -- AUTO_INCREMENT for table `params`
 --
+  
 ALTER TABLE `params`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
