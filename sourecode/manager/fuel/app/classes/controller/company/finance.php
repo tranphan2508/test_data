@@ -126,7 +126,7 @@ class Controller_Company_Finance extends Controller_Base
                 $ind[216] = $this->bcdiv_ex(bcsub($values[91][$year], $values[188]), $values['total_share']);
                 //ROIC
                 //$ebit = bcadd($values[128], $values[120]);
-                $ind[192] = $this->bcdiv_ex(bcmul($values[132] ,  100) , bcsub($values[1][$year], $values[62]));
+                $ind[192] = $this->bcdiv_ex(bcmul($values[134] ,  100) , bcsub($values[1][$year], $values[62]));
 
                 //**********Nhom chi so thanh khoan va don bay tai chinh *****************
                 //thanh toan nhanh
