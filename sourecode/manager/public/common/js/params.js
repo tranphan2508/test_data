@@ -65,7 +65,10 @@ myApp.controller('ParamsAdjustCtrl', function ($scope, info, $uibModalInstance, 
     $scope.info = info;
     if ($scope.info.flag == 1) {
         $scope.btnSubmit = 'Add';
-        $scope.message = 'Add new param';
+        $scope.message = 'Add new param to '+ $scope.info.title;
+        $scope.info.title = '';
+        $scope.info.template = 0;
+        $scope.info.description = '';
     } else if ($scope.info.flag == 2) {
         $scope.btnSubmit = 'Save';
         $scope.message = 'Change "' + $scope.info.title + '" to';
