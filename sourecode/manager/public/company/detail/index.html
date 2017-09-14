@@ -70,7 +70,7 @@
 
                                 <div class="col-md-3 divRightAlign">
                                     <span class="divRightAlign" ng-hide="edit">{{values['col_id'+data.col_id] | nozero | number }}</span>
-                                    <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187 && data.id!=274 && (type_report.value!=4 || data.id==196)"
+                                    <input ng-show="edit && !data.has_child && data.id!= 184 && data.id!=187 && data.id!=274 && (type_report.value!=4 || data.id==194 || data.id==195 || data.id==196)"
                                            type="text" name="{{data.col_id}}_{{data.id}}"
                                            ng-model="values['col_id'+data.col_id]"
                                            class="form-control ng-pristine"

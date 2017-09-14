@@ -127,6 +127,8 @@ class Controller_Company_Finance extends Controller_Base
                 //ROIC
                 //$ebit = bcadd($values[128], $values[120]);
                 $ind[192] = $this->bcdiv_ex(bcmul($values[134] ,  100) , bcsub($values[1][$year], $values[62]));
+                // Free cashflow
+                $ind[217] = $values[135] ? bcadd($values[135],$values[160]) : bcadd($values[230],$values[239]);
 
                 //**********Nhom chi so thanh khoan va don bay tai chinh *****************
                 //thanh toan nhanh
@@ -195,15 +197,17 @@ class Controller_Company_Finance extends Controller_Base
     {
         $col_id_1 = '1,3,5,6,7,8,22,29,36,60,61,64,78,90,112';
         $col_id_2 = '1,2,3,4,5,8,16,20,22';
-        $col_id_3 = '4';
-        $p_id = '1,3,5,6,7,8,23,30,37,61,62,65,79,91,113,114,115,116,117,120,128,132,134,138,188';
+        $col_id_3 = '1,4,26';
+        $col_id_5 = '1,10';
+        $p_id = '1,3,5,6,7,8,23,30,37,61,62,65,79,91,113,114,115,116,117,120,128,132,134,135,138,160,188,230,239';
         $result = array();
         $tmp = array();
         $avr_ary = array(1, 7, 8, 22, 29, 36, 64, 78, 90);
         $res1 = \Model_BalanceSheet::getDataForCalcIndicator($id, $year, $col_id_1, $avr_ary);
         $res2 = \Model_IncomeStatement::getDataForCalcIndicator($id, $year, $col_id_2);
         $res3 = \Model_Cashflow::getDataForCalcIndicator($id, $year, $col_id_3);
-        $result = $this->convertToParamID($res1, 1) + $this->convertToParamID($res2, 2) + $this->convertToParamID($res3, 3);
+        $res5 = \Model_CashflowDirect::getDataForCalcIndicator($id, $year, $col_id_5);
+        $result = $this->convertToParamID($res1, 1) + $this->convertToParamID($res2, 2) + $this->convertToParamID($res3, 3) + $this->convertToParamID($res5, 5);
         foreach (explode(",", $p_id) as $key => $val) {
             if (!in_array($val, $avr_ary)) {
                 if (empty($result[$val])) $result[$val] = 0;
