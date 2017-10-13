@@ -8,7 +8,7 @@ var makeTableChart = function (ary_x, obj_y) {
     var ary_y =[];
     for( var i in obj_y ) {
         if (obj_y.hasOwnProperty(i)){
-            if(obj_y[i] !== null && obj_y[i]!= '')  ary_y.push(obj_y[i]);
+            if(obj_y[i] !== null && obj_y[i]!= '' && /^\d+$/.test(obj_y[i]))  ary_y.push(obj_y[i]);
         }
     }
 
