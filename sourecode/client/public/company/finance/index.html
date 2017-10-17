@@ -171,7 +171,7 @@
                         <thead>
                         <tr class="uppercase">
                             <th></th>
-                            <th></th>
+                           <!-- <th></th>-->
                             <th ng-repeat="year in year_arrange">{{year}}</th>
                         </tr>
                         </thead>
@@ -180,9 +180,9 @@
                             <td>{{key}}</td>
                         </tr>
                         <tr ng-repeat-end ng-repeat="(key1,pt) in data.p_template">
-                            <td> - {{pt.title}}</td>
-                            <td ng-bind-html="value[key1]['chart']"></td>
-                            <td ng-repeat="year in year_arrange track by $index" ng-init="yearIndex=$index">{{value[key1][year] | fNumber2 : value[key1][year_arrange[yearIndex - 1]] : type: display.unit : display.format : year : key1 : values[data.id] | number}}</td>
+                            <td style="padding-left: 30px;"> - {{pt.title}}</td>
+                            <!--<td ng-bind-html="value[pt.id - 1]['chart']"></td>-->
+                            <td ng-repeat="year in year_arrange track by $index" ng-init="yearIndex=$index">{{value[pt.id - 1][year] | fNumber2 : value[pt.id - 1][year_arrange[yearIndex - 1]] : type: display.unit : display.format : year : (pt.id-1) : values[data.id] | number}}</td>
                         </tr>
                         </tbody>
                     </table>
